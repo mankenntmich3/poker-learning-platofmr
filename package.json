@@ -8,6 +8,11 @@
   },
   "scripts": {
     "dev": "next dev --webpack --hostname 127.0.0.1",
+    "db:setup": "tsx scripts/local-db.ts setup",
+    "db:migrate": "tsx scripts/local-db.ts migrate",
+    "db:seed": "tsx scripts/local-db.ts seed",
+    "db:reset": "tsx scripts/local-db.ts reset",
+    "setup:local": "pnpm db:setup && pnpm db:seed",
     "build": "next build --webpack",
     "start": "next start --hostname 127.0.0.1",
     "typecheck": "next typegen && tsc --noEmit",
@@ -16,9 +21,11 @@
     "test:unit": "vitest run tests/domain tests/solver",
     "test:integration": "vitest run tests/server",
     "test:e2e": "playwright test",
+    "test:dev-access": "playwright test --config playwright.dev.config.ts",
     "solve": "tsx scripts/solve.ts"
   },
   "dependencies": {
+    "@next/env": "^16.3.4",
     "@electric-sql/pglite": "^0.5.8",
     "@fontsource-variable/manrope": "^5.3.0",
     "lucide-react": "^1.41.0",

@@ -1,4 +1,4 @@
-export type StudyUser = { id: string; name: string; email: string; weeklyGoal: number; experience: string; createdAt: string };
+export type StudyUser = { id: string; name: string; email: string; weeklyGoal: number; experience: string; createdAt: string; developmentOnly: boolean };
 export type Lesson = { id: string; title: string; subtitle: string; minutes: number; category: string; sections: { title: string; body: string }[]; takeaway: string; quiz: { question: string; options: string[] } };
 export type StudyDashboard = { user: StudyUser; lessonCompleted: boolean; decisions: number; xp: number; averageRegret: number | null; bestDecisions: number; recent: { id: string; label: string; detail: string; createdAt: string }[]; daily: { date: string; decisions: number }[] };
 export type TrainingSpot = { id: string; game: 'KUHN'; card: 'J' | 'Q' | 'K'; history: string; position: string; pot: number; actions: { id: string; label: string }[]; context: string; solutionId: string; solutionVersion: string; sourceType: 'COMPUTED' };

@@ -2,6 +2,23 @@
 
 Repository: `mankenntmich3/poker-learning-platofmr` (confirmed spelling). Updated 2026-09-07.
 
+## PRIORITY — local development access
+
+The previous acceptance record did not establish practical local usability. Authentication was real and database-backed, but local hostname canonicalization could reject valid login requests with HTTP 403. Protected pages rendered signup instead of a clear login destination, the demo seed was missing, and training had no explicit session completion.
+
+Implemented fixes:
+
+- Literal loopback Host/Origin validation for development; production retains strict configured-origin checks.
+- Explicit login redirects with a validated return destination, verified session-cookie retention and working logout/relogin. Login controls wait until the page can handle their actions.
+- Real development-only account `demo@poker.local`, seeded with three clearly labeled, computed sample decisions. Personal signup/login works independently. No auth bypass.
+- Local database setup, ordered migrations, idempotent seed and explicit reset commands. A process lock rejects concurrent access and recovers from an exited process.
+- Academy → one course → existing original lesson/quiz → associated trainer; session start, up to twelve decisions, feedback, early/full completion and durable per-decision progress.
+- Exact commands and demo credentials in [LOCAL DEVELOPMENT — QUICK START](../README.md#local-development--quick-start).
+
+Local access browser suite: four scenarios passed, including personal signup, demo course/training/relogin, both loopback aliases, protected destinations, expired sessions and mobile accessibility. Strict typecheck, lint, 35 domain/solver tests, 16 server tests and the production build passed; the additional external PostgreSQL case runs in CI. Fresh-checkout acceptance and final CI are being recorded before release.
+
+No secondary product expansion is in progress. Current session position resets on reload; all answered decisions and completed lessons remain stored. The complete product currently contains one course/lesson and the Kuhn training dataset only.
+
 ## DONE — first complete learning flow
 
 - Verified private repository read/write access. Source, original product specification, migrations, computed data, tests and documentation are versioned here. Delivery: [PR #1](https://github.com/mankenntmich3/poker-learning-platofmr/pull/1).

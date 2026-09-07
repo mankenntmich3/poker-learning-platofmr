@@ -6,6 +6,7 @@ import { ApiError } from './errors';
 import { enforceRateLimit, hashPassword, newSessionToken, SESSION_SECONDS, sha256, verifyPassword } from './security';
 import { isLessonAnswerCorrect, lesson, LESSON_ID } from './lesson';
 import { evaluateDecision } from '@/strategy';
+import { DEVELOPMENT_DEMO, developmentAccessEnabled } from './development';
 
 const nameSchema = z.string().trim().min(1).max(80);
 const emailSchema = z.string().trim().toLowerCase().email().max(254);
@@ -21,14 +22,15 @@ export const completionSchema = z.object({ answer: z.number().int().min(0).max(2
 export const deleteAccountSchema = z.object({ password: z.string().min(1).max(128) }).strict();
 export const emptySchema = z.object({}).strict();
 
-type UserRow = SqlRow & { id: string; name: string; email: string; password_hash: string; weekly_goal: number; experience: string; created_at: Date | string };
+type UserRow = SqlRow & { id: string; name: string; email: string; password_hash: string; weekly_goal: number; experience: string; created_at: Date | string; development_only: boolean };
 function iso(value: Date | string): string { return new Date(value).toISOString(); }
 function toUser(row: UserRow): StudyUser {
-  return { id: row.id, name: row.name, email: row.email, weeklyGoal: row.weekly_goal, experience: row.experience, createdAt: iso(row.created_at) };
+  return { id: row.id, name: row.name, email: row.email, weeklyGoal: row.weekly_goal, experience: row.experience, createdAt: iso(row.created_at), developmentOnly: row.development_only };
 }
 
 export async function register(db: Database, input: z.infer<typeof registerSchema>): Promise<{ user: StudyUser; token: string }> {
   const data = registerSchema.parse(input);
+  if (data.email === DEVELOPMENT_DEMO.email) throw new ApiError(400, 'Diese Adresse ist für das lokale Demo-Konto reserviert. Verwende den Demo-Zugang oder eine eigene E-Mail-Adresse.', 'RESERVED_ACCOUNT');
   await enforceRateLimit(db, 'register:global', 30, 3600);
   await enforceRateLimit(db, `register:${data.email}`, 5, 3600);
   const passwordHash = await hashPassword(data.password);
@@ -61,7 +63,7 @@ export async function login(db: Database, input: z.infer<typeof loginSchema>): P
   await enforceRateLimit(db, `login:${data.email}`, 12, 900);
   const rows = await db.query<UserRow>('SELECT * FROM study_users WHERE email = $1', [data.email]);
   const valid = await verifyPassword(data.password, rows[0]?.password_hash);
-  if (!rows[0] || !valid) throw new ApiError(401, 'E-Mail-Adresse oder Passwort ist nicht korrekt.', 'INVALID_CREDENTIALS');
+  if (!rows[0] || !valid || (rows[0].development_only && !developmentAccessEnabled())) throw new ApiError(401, 'E-Mail-Adresse oder Passwort ist nicht korrekt.', 'INVALID_CREDENTIALS');
   const token = newSessionToken();
   await db.query('DELETE FROM study_sessions WHERE expires_at <= now()');
   await db.query('INSERT INTO study_sessions (token_hash, user_id, expires_at) VALUES ($1, $2, $3)',
@@ -74,7 +76,7 @@ export async function sessionUser(db: Database, token: string | null): Promise<S
   const rows = await db.query<UserRow>(
     `SELECT u.* FROM study_users u JOIN study_sessions s ON s.user_id = u.id WHERE s.token_hash = $1 AND s.expires_at > now()`, [sha256(token)],
   );
-  return rows[0] ? toUser(rows[0]) : null;
+  return rows[0] && (!rows[0].development_only || developmentAccessEnabled()) ? toUser(rows[0]) : null;
 }
 export async function requireUser(db: Database, token: string | null): Promise<StudyUser> {
   const user = await sessionUser(db, token);

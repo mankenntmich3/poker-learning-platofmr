@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
-import { useRouter } from "next/navigation";
 import { Check, Download, LogOut, ShieldCheck, Trash2 } from "lucide-react";
 import type { StudyUser } from "@/shared/contracts";
 import { SessionGate } from "./auth-screen";
@@ -11,7 +10,6 @@ import { ErrorNotice, PageHeader } from "./ui";
 export function Settings() { return <SessionGate><SettingsContent /></SessionGate>; }
 function SettingsContent() {
   const { user, setUser } = useSession();
-  const router = useRouter();
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const [saved, setSaved] = useState(false);
@@ -25,14 +23,18 @@ function SettingsContent() {
   }
   async function logout() {
     setBusy(true); setError("");
-    try { await api("/api/auth/logout", { method: "POST", body: "{}" }); setUser(null); router.push("/login"); }
+    // Full navigation discards cached account data and avoids racing the protected-route redirect.
+    // eslint-disable-next-line @next/next/no-location-assign-relative-destination
+    try { await api("/api/auth/logout", { method: "POST", body: "{}" }); window.location.assign("/login"); }
     catch (cause) { setError(cause instanceof Error ? cause.message : "Abmelden fehlgeschlagen. Bitte versuche es erneut."); }
     finally { setBusy(false); }
   }
   async function removeAccount(event: FormEvent<HTMLFormElement>) {
     event.preventDefault(); setBusy(true); setError("");
     const form = new FormData(event.currentTarget);
-    try { await api("/api/account", { method: "DELETE", body: JSON.stringify({ password: form.get("confirmPassword") }) }); setUser(null); router.push("/login"); }
+    // Account deletion must discard the entire authenticated document, just like logout.
+    // eslint-disable-next-line @next/next/no-location-assign-relative-destination
+    try { await api("/api/account", { method: "DELETE", body: JSON.stringify({ password: form.get("confirmPassword") }) }); window.location.assign("/login"); }
     catch (cause) { setError(cause instanceof Error ? cause.message : "Das Konto konnte nicht gelöscht werden. Versuche es erneut."); }
     finally { setBusy(false); }
   }

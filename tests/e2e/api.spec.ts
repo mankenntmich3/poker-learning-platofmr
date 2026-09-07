@@ -7,6 +7,7 @@ const headers = { Origin: origin };
 
 test('private, idempotent solver-backed learning with account lifecycle', async ({ request, playwright }) => {
   expect((await request.get('/api/dashboard')).status()).toBe(401);
+  expect((await request.post('/api/auth/register', { headers, data: { name: 'Demo', email: 'demo@poker.local', password: 'Poker-Local-Demo-2026!' } })).status()).toBe(400);
   const crossOrigin = await request.post('/api/auth/register', {
     headers: { Origin: 'https://unrelated.invalid' }, data: { name: 'Other', email: 'other@example.test', password: 'a-long-test-password' },
   });

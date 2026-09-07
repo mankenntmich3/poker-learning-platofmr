@@ -54,6 +54,16 @@ export function sessionCookie(token: string, clear = false): string {
 }
 export function configuredOrigin(request: Request): string {
   const configured = process.env.APP_ORIGIN;
+  const requested = new URL(request.url);
+  // In development, accept the address actually opened in the browser, but only
+  // for loopback and still require an exact same-origin mutation below.
+  const host = request.headers.get('host');
+  if (process.env.NODE_ENV === 'development') {
+    // Next's internal request URL can canonicalize loopback aliases. The browser
+    // sends its actual authority in Host; accept only a literal loopback authority.
+    if (host && /^(localhost|127\.0\.0\.1|\[::1\])(?::\d+)?$/i.test(host)) return new URL(`${requested.protocol}//${host}`).origin;
+    if (!host && ['localhost', '127.0.0.1', '[::1]'].includes(requested.hostname)) return requested.origin;
+  }
   if (process.env.NODE_ENV === 'production' && !configured) throw new ApiError(503, 'Serverkonfiguration unvollständig.', 'CONFIGURATION_REQUIRED');
   const origin = configured ? new URL(configured).origin : new URL(request.url).origin;
   if (configured && configured.replace(/\/$/, '') !== origin) throw new ApiError(503, 'Ungültige Serverkonfiguration.', 'CONFIGURATION_REQUIRED');

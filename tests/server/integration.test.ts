@@ -1,5 +1,6 @@
 import { randomUUID } from 'node:crypto';
-import { mkdtemp, rm } from 'node:fs/promises';
+import { mkdtemp, rm, writeFile } from 'node:fs/promises';
+import { spawnSync } from 'node:child_process';
 import os from 'node:os';
 import path from 'node:path';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
@@ -21,12 +22,16 @@ describe('accounts and durable learning data', () => {
     let local: Database | undefined;
     try {
       local = await createLocalDatabase(directory);
+      await expect(createLocalDatabase(directory)).rejects.toThrow('bereits geöffnet');
       const created = await register(local, account());
       await completeLesson(local, created.user, 1);
       const [spot] = await getTrainingSpots();
       await recordDecision(local, created.user, { spotId: spot.id, action: spot.actions[0].id, attemptId: randomUUID(), solutionVersion: spot.solutionVersion });
       await local.close();
       local = undefined;
+      const exited = spawnSync(process.execPath, ['-e', 'process.exit(0)']);
+      if (!exited.pid || exited.status !== 0) throw new Error('Could not create a completed test process');
+      await writeFile(path.join(directory, '.rangeform-process-lock'), String(exited.pid));
       local = await createLocalDatabase(directory);
       expect(await sessionUser(local, created.token)).toEqual(created.user);
       const restored = await dashboard(local, created.user);

@@ -1,5 +1,4 @@
-import { readFile } from 'node:fs/promises';
-import { mkdir } from 'node:fs/promises';
+import { readFile, readdir, mkdir, open, unlink } from 'node:fs/promises';
 import path from 'node:path';
 import { PGlite } from '@electric-sql/pglite';
 import { Pool } from 'pg';
@@ -12,8 +11,12 @@ export interface Database {
 
 /** The identical versioned SQL runs against PostgreSQL and local PostgreSQL WASM. */
 export async function migrate(db: Database): Promise<void> {
-  const sql = await readFile(path.join(process.cwd(), 'migrations/001_initial.sql'), 'utf8');
-  await db.query(`BEGIN;\n${sql}\nCOMMIT;`);
+  const directory = path.join(process.cwd(), 'migrations');
+  const files = (await readdir(directory)).filter(file => /^\d+_[a-z_]+\.sql$/.test(file)).sort();
+  for (const file of files) {
+    const sql = await readFile(path.join(directory, file), 'utf8');
+    await db.query(`BEGIN;\n${sql}\nCOMMIT;`);
+  }
 }
 
 export async function createMemoryDatabase(): Promise<Database> {
@@ -41,13 +44,32 @@ async function connectDatabase(): Promise<Database> {
 
 export async function createLocalDatabase(directory: string): Promise<Database> {
   await mkdir(directory, { recursive: true });
-  const engine = new PGlite(directory);
+  const lock = path.join(directory, '.rangeform-process-lock');
+  const acquire = async () => {
+    const handle = await open(lock, 'wx');
+    try { await handle.writeFile(String(process.pid)); } finally { await handle.close(); }
+  };
+  try { await acquire(); } catch (error) {
+    if (!(error instanceof Error) || !('code' in error) || error.code !== 'EEXIST') throw error;
+    const owner = Number(await readFile(lock, 'utf8'));
+    let active = true;
+    if (Number.isSafeInteger(owner) && owner > 0) {
+      try { process.kill(owner, 0); } catch (cause) {
+        active = !(cause instanceof Error && 'code' in cause && cause.code === 'ESRCH');
+      }
+    }
+    if (active) throw new Error('Die lokale Datenbank ist bereits geöffnet. Stoppe den Entwicklungsserver vor Migration, Seed oder Reset.');
+    await unlink(lock);
+    await acquire();
+  }
+  let engine: PGlite;
+  try { engine = new PGlite(directory); } catch (error) { await unlink(lock); throw error; }
   const db: Database = {
     query: async <T extends SqlRow>(sql: string, params?: unknown[]) => {
       if (!params && sql.includes(';')) { await engine.exec(sql); return [] as T[]; }
       return (await engine.query<T>(sql, params)).rows;
     },
-    close: () => engine.close(),
+    close: async () => { try { await engine.close(); } finally { await unlink(lock); } },
   };
   try { await migrate(db); return db; } catch (error) { await db.close(); throw error; }
 }

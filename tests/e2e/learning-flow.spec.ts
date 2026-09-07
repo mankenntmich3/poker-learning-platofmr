@@ -15,12 +15,14 @@ test('learn, train, persist, inspect and return on desktop and mobile', async ({
   const password = `Study-${randomUUID()}`;
   await page.setViewportSize({ width: 1440, height: 1000 });
   await page.goto('/');
-  await expect(page.getByRole('button', { name: 'Trainingsraum erstellen' })).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Mit Demo-Konto anmelden' })).toHaveCount(0);
+  expect(await page.content()).not.toContain('Poker-Local-Demo-2026!');
+  await page.getByRole('button', { name: 'Konto erstellen', exact: true }).click();
   await page.screenshot({ path: testInfo.outputPath('login-desktop.png'), fullPage: true });
   await page.locator('input[name="name"]').fill('Mara');
   await page.locator('input[name="email"]').fill(email);
   await page.locator('input[name="password"]').fill(password);
-  await page.getByRole('button', { name: 'Trainingsraum erstellen' }).click();
+  await page.getByRole('button', { name: 'Konto erstellen und starten' }).click();
   await expect(page.getByRole('heading', { name: 'Dein Trainingsraum, Mara.' })).toBeVisible();
   await expect(page.getByText('Deine erste Entscheidung wartet')).toBeVisible();
   await page.getByRole('link', { name: 'Lektion beginnen' }).click();
@@ -33,6 +35,7 @@ test('learn, train, persist, inspect and return on desktop and mobile', async ({
   await expect(page.getByText('Richtig. Deine Lektion ist abgeschlossen und gespeichert.')).toBeVisible();
   await page.screenshot({ path: testInfo.outputPath('academy-desktop.png'), fullPage: true });
   await page.getByRole('link', { name: 'Am Tisch anwenden' }).click();
+  await page.getByRole('button', { name: 'Trainingssitzung starten' }).click();
   await expect(page.getByRole('heading', { name: 'Wie spielst du diese Hand?' })).toBeVisible();
   await expect(page.getByRole('heading', { name: 'Berechnete Strategie' })).toHaveCount(0);
   await page.getByRole('button', { name: 'Fold', exact: true }).click();
@@ -43,14 +46,16 @@ test('learn, train, persist, inspect and return on desktop and mobile', async ({
   const trained = await (await page.request.get('/api/dashboard')).json() as StudyDashboard;
   expect(trained.decisions).toBe(1);
   expect(trained.lessonCompleted).toBe(true);
-  // Cover every information set and the transition back to the first question.
+  // Cover every information set, session completion and a new session.
   for (let decision = 2; decision <= 12; decision++) {
     await page.getByRole('button', { name: 'Nächste Entscheidung', exact: true }).click();
     await expect(page.getByText(`Entscheidung ${decision} / 12`, { exact: true })).toBeVisible();
     await page.locator('.action-buttons button').first().click();
     await expect(page.getByRole('heading', { name: 'Deine Entscheidung ist gespeichert.' })).toBeVisible();
   }
-  await page.getByRole('button', { name: 'Nächste Entscheidung', exact: true }).click();
+  await page.getByRole('button', { name: 'Training abschließen', exact: true }).click();
+  await expect(page.getByRole('heading', { name: 'Training abgeschlossen.' })).toBeVisible();
+  await page.getByRole('button', { name: 'Neue Sitzung starten', exact: true }).click();
   await expect(page.getByText('Entscheidung 1 / 12', { exact: true })).toBeVisible();
   // Simulate a lost response after the server persisted an action. Retry must deduplicate.
   await page.route('**/api/trainer/decision', async route => {
@@ -73,7 +78,10 @@ test('learn, train, persist, inspect and return on desktop and mobile', async ({
       await page.goto(route);
       await expect(page.locator('h1')).toBeVisible();
       if (route === '/') await expect(page.getByRole('link', { name: 'Training starten', exact: true })).toBeVisible();
-      if (route === '/trainer') await expect(page.getByRole('button', { name: 'Fold', exact: true })).toBeVisible();
+      if (route === '/trainer') {
+        await page.getByRole('button', { name: 'Trainingssitzung starten' }).click();
+        await expect(page.getByRole('button', { name: 'Fold', exact: true })).toBeVisible();
+      }
       if (route === '/ranges') await expect(page.getByRole('button', { name: 'AKs, 4 Kombinationen', exact: true })).toBeVisible();
       await noOverflow(page);
       if (width === 390 || width === 1440) {
@@ -104,7 +112,7 @@ test('learn, train, persist, inspect and return on desktop and mobile', async ({
   await expect(page.getByText('Gespeichert', { exact: true })).toBeVisible();
   await page.getByRole('button', { name: 'Abmelden', exact: true }).click();
   await expect(page.getByRole('button', { name: 'Konto erstellen', exact: true })).toBeVisible();
-  await page.getByRole('button', { name: 'Anmelden', exact: true }).click();
+  await page.getByRole('button', { name: 'Anmelden', exact: true }).first().click();
   await page.locator('input[name="email"]').fill(email);
   await page.locator('input[name="password"]').fill(password);
   await page.getByRole('button', { name: 'Anmelden', exact: true }).last().click();
@@ -120,5 +128,5 @@ test('a failed data request gives a working retry', async ({ page }) => {
   await page.goto('/');
   await expect(page.getByText('Sitzung vorübergehend nicht erreichbar.')).toBeVisible();
   await page.getByRole('button', { name: /Erneut versuchen/ }).click();
-  await expect(page.getByRole('button', { name: 'Trainingsraum erstellen' })).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Konto erstellen', exact: true })).toBeVisible();
 });

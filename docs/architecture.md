@@ -34,6 +34,10 @@ Users have stable UUID identities, unique normalized email, password verifier, d
 
 The long-term model adds courses/modules/chapters, lesson revisions, versioned trainer spots, solution/node indexes, solver jobs, subscriptions, feature flags and recommendation history. Those additions are intentionally not represented by empty screens in this release.
 
+Local access now uses a real seeded development account, never a bypass. The account carries a database flag that excludes it from production authentication and sessions. A small fixed Academy course links to the existing original lesson, with stable course/lesson URLs. A trainer session has explicit start and completion screens; its answered decisions are persisted immediately. The current session position and summary live in the browser and restart on a page reload; saved decisions and lesson completion remain durable.
+
+`scripts/local-db.ts` provides local setup, migrations, idempotent seed and explicit reset. It loads the same development environment files as Next.js and refuses production or `DATABASE_URL`. A process lock prevents the local CLI and web app from opening the same PGlite directory together. Hosted PostgreSQL remains separate.
+
 ## Security and deployment boundaries
 
 Session cookies are HttpOnly with SameSite policy and Secure over production HTTPS. Server authorization and same-origin checks protect writes. Password hashing is scrypt with individual salts. Queries use parameters; inputs are validated and bounded. Account data is private and never included in source control. Account export/deletion support personal data control. There are no trackers, payment requests, real-money tables or gambling referrals.

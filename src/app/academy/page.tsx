@@ -1,2 +1,2 @@
-import { Academy } from "@/components/academy";
-export default function AcademyPage() { return <Academy />; }
+import { AcademyOverview } from "@/components/academy-overview";
+export default function AcademyPage() { return <AcademyOverview />; }
