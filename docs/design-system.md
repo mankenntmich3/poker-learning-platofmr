@@ -34,4 +34,4 @@ The distinctive element is the restrained elliptical table with paper-colored pr
 
 Applied frontend-design, Vercel React best practices, and Web Interface Guidelines during implementation. Route shells remain server components, with interactive study modules as client boundaries. Independent API requests run in parallel. Server-only solver modules never enter the client bundle. Icons are optimized by Next.js. No charting or animation library is needed for the first flow.
 
-Visual QA covers desktop and 320/390px mobile layouts, keyboard navigation, empty accounts, form validation, actual training feedback, long names, and range inspection. Further commercial release work is tracked separately in PROJECT_STATUS.md.
+Visual QA covers nine viewport widths from 320 to 1920px, keyboard navigation, empty accounts, form validation, actual training feedback and range inspection. Six axe scans cover the three main study views on mobile and desktop. Results and permanent screenshots are recorded in [QA evidence](qa/README.md). Further commercial release work is tracked separately in PROJECT_STATUS.md.

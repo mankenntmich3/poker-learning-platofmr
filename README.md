@@ -4,6 +4,10 @@ A focused poker study workspace: learn a concept, make a decision, inspect compu
 
 The initial training dataset is **genuinely computed Kuhn poker**, a small three-card game. It is visibly identified in the interface and is not an NLHE GTO dataset. The Hold'em range explorer teaches the 169 hand classes and 1,326 exact combinations without presenting invented opening frequencies.
 
+![Rangeform study dashboard](docs/qa/dashboard-desktop.png)
+
+See the [acceptance results and mobile screenshots](docs/qa/README.md).
+
 ## Run locally
 
 Requirements: Node.js 24 and pnpm 10.28.2.

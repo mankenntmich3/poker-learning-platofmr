@@ -262,7 +262,7 @@
   .table-pot > span { color: #9bb0ca; font-size: 10px; }
   .table-pot strong { display: block; font-size: 24px; color: #dbe7f8; font-weight: 650; }
   .table-pot small { color: #a5bad4; font-size: 10px; font-weight: 500; margin-left: 6px; }
-  .table-brand { position: absolute; top: 165px; left: 28px; color: #708aa8; font-size: 12px; font-weight: 600; letter-spacing: -0.5px; transform: rotate(-90deg); }
+  .table-brand { position: absolute; top: 165px; left: 28px; color: #8a9fb9; font-size: 12px; font-weight: 600; letter-spacing: -0.5px; transform: rotate(-90deg); }
   .hero-seat { position: absolute; bottom: -22px; left: 50%; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; gap: 9px; }
   .hero-seat .playing-card { width: 72px; height: 104px; }
   .hero-seat .card-rank { font-size: 44px; }
@@ -334,11 +334,11 @@
   .range-matrix-scroll { overflow-x: auto; overscroll-behavior-x: contain; scrollbar-color: #657da6 #1d2a3e; scrollbar-width: thin; padding: 4px; margin: -4px; }
   .range-matrix { display: grid; grid-template-columns: repeat(13, minmax(0, 1fr)); gap: 3px; min-width: 390px; }
   .range-cell { aspect-ratio: 1 / 0.96; padding: 2px; font-size: clamp(9px, 0.9vw, 12px); font-weight: 600; line-height: 1; border: 1px solid transparent; border-radius: 3px; }
-  .range-cell.pair, .range-legend .pair { background: #647fba; color: #f4f6ff; }
+  .range-cell.pair, .range-legend .pair { background: #496394; color: #f4f6ff; }
   .range-cell.suited, .range-legend .suited { background: #3c5d69; color: #d1edea; }
   .range-cell.offsuit, .range-legend .offsuit { background: #2b3e55; color: #bfd0e7; }
   .range-cell:hover { filter: brightness(1.3); border-color: #abbce0; }
-  .range-cell.selected { box-shadow: inset 0 0 0 2px #e8edf5; color: white; background: #738aac; }
+  .range-cell.selected { box-shadow: inset 0 0 0 2px #e8edf5; color: white; background: #4f689d; }
   .range-cell.dimmed { opacity: 0.45; }
   .range-legend { display: flex; flex-wrap: wrap; gap: 19px; margin-top: 22px; }
   .range-legend span { display: flex; align-items: center; gap: 7px; font-size: 10px; color: #b1c1d9; }
@@ -426,7 +426,7 @@
     .range-matrix-panel { padding: 16px; }
     .range-toolbar { gap: 8px; }
     .range-filter { gap: 8px; }
-    .range-filter label { display: none; }
+    .range-filter label { display: block; }
     .range-toolbar .text-button { font-size: 10px; }
     .range-inspector { padding: 18px; }
     .settings-layout { grid-template-columns: minmax(0, 1fr) 260px; gap: 28px; }

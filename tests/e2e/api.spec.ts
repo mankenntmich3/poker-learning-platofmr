@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test';
 import { randomUUID } from 'node:crypto';
 import type { Evaluation, StudyDashboard, TrainingSpot } from '../../src/shared/contracts';
 
-const origin = 'http://127.0.0.1:3000';
+const origin = 'http://localhost:3000';
 const headers = { Origin: origin };
 
 test('private, idempotent solver-backed learning with account lifecycle', async ({ request, playwright }) => {

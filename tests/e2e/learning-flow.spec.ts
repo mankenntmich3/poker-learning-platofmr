@@ -39,15 +39,33 @@ test('learn, train, persist, inspect and return on desktop and mobile', async ({
   await expect(page.getByRole('heading', { name: 'Deine Entscheidung ist gespeichert.' })).toBeVisible();
   await expect(page.getByRole('heading', { name: 'Berechnete Strategie' })).toBeVisible();
   await expect(page.getByRole('button', { name: 'Fold', exact: true })).toBeDisabled();
-  await page.screenshot({ path: testInfo.outputPath('trainer-desktop.png'), fullPage: true });
+  await page.screenshot({ path: testInfo.outputPath('trainer-feedback-desktop.png'), fullPage: true });
   const trained = await (await page.request.get('/api/dashboard')).json() as StudyDashboard;
   expect(trained.decisions).toBe(1);
   expect(trained.lessonCompleted).toBe(true);
+  // Cover every information set and the transition back to the first question.
+  for (let decision = 2; decision <= 12; decision++) {
+    await page.getByRole('button', { name: 'Nächste Entscheidung', exact: true }).click();
+    await expect(page.getByText(`Entscheidung ${decision} / 12`, { exact: true })).toBeVisible();
+    await page.locator('.action-buttons button').first().click();
+    await expect(page.getByRole('heading', { name: 'Deine Entscheidung ist gespeichert.' })).toBeVisible();
+  }
+  await page.getByRole('button', { name: 'Nächste Entscheidung', exact: true }).click();
+  await expect(page.getByText('Entscheidung 1 / 12', { exact: true })).toBeVisible();
+  // Simulate a lost response after the server persisted an action. Retry must deduplicate.
+  await page.route('**/api/trainer/decision', async route => {
+    await route.fetch();
+    await route.abort('failed');
+  }, { times: 1 });
+  await page.getByRole('button', { name: 'Fold', exact: true }).click();
+  await expect(page.getByRole('button', { name: 'Call 1', exact: true })).toBeDisabled();
+  await page.getByRole('button', { name: /Erneut versuchen/ }).click();
+  await expect(page.getByRole('heading', { name: 'Deine Entscheidung ist gespeichert.' })).toBeVisible();
   await page.goto('/');
   await expect(page.getByRole('link', { name: 'Training starten', exact: true })).toBeVisible();
   await page.reload();
   await expect(page.getByRole('link', { name: 'Training starten', exact: true })).toBeVisible();
-  expect((await (await page.request.get('/api/dashboard')).json()).decisions).toBe(1);
+  expect((await (await page.request.get('/api/dashboard')).json()).decisions).toBe(13);
 
   for (const width of [320, 375, 390, 430, 768, 1024, 1280, 1440, 1920]) {
     await page.setViewportSize({ width, height: width < 600 ? 844 : 1000 });
@@ -62,7 +80,7 @@ test('learn, train, persist, inspect and return on desktop and mobile', async ({
         const label = route === '/' ? 'dashboard' : route.slice(1);
         await page.screenshot({ path: testInfo.outputPath(`${label}-${width === 390 ? 'mobile' : 'desktop'}.png`), fullPage: true });
         const accessibility = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21aa']).analyze();
-        expect(accessibility.violations, JSON.stringify(accessibility.violations.map(v => ({ id: v.id, nodes: v.nodes.map(n => n.target) })))).toEqual([]);
+        expect(accessibility.violations.map(v => ({ id: v.id, nodes: v.nodes.map(n => n.target) }))).toEqual([]);
       }
     }
   }
@@ -93,7 +111,7 @@ test('learn, train, persist, inspect and return on desktop and mobile', async ({
   await expect(page.getByRole('heading', { name: 'Dein Trainingsraum, Mara.' })).toBeVisible();
   const persisted = await (await page.request.get('/api/dashboard')).json() as StudyDashboard;
   expect(persisted.user.weeklyGoal).toBe(5);
-  expect(persisted.decisions).toBe(1);
+  expect(persisted.decisions).toBe(13);
   expect(crashes).toEqual([]);
 });
 

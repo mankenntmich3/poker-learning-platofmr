@@ -8,7 +8,7 @@ import { PageHeader, number } from "./ui";
 const classes = allHandClasses();
 const suitGlyphs: Record<string, string> = { s: "♠", h: "♥", d: "♦", c: "♣" };
 const suitNames: Record<string, string> = { s: "Pik", h: "Herz", d: "Karo", c: "Kreuz" };
-function HandCard({ card }: { card: string }) { return <span className={`combo-card suit-${card[1]}`} aria-label={`${card[0]} ${suitNames[card[1]]}`}>{card[0]}<span aria-hidden="true">{suitGlyphs[card[1]]}</span></span>; }
+function HandCard({ card }: { card: string }) { return <span className={`combo-card suit-${card[1]}`} role="img" aria-label={`${card[0]} ${suitNames[card[1]]}`}>{card[0]}<span aria-hidden="true">{suitGlyphs[card[1]]}</span></span>; }
 
 export function RangeExplorer() {
   const [selected, setSelected] = useState("AKs");

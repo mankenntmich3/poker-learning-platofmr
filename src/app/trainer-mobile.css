@@ -1,0 +1,18 @@
+/* Keep the decision reachable above phone navigation; feedback follows the table. */
+@layer responsive {
+  @media (max-width: 600px) {
+    .main-content:has(.trainer-layout) { padding-top: 23px; }
+    .main-content:has(.trainer-layout) .page-heading { margin-bottom: 18px; }
+    .main-content:has(.trainer-layout) .page-heading h1 { font-size: 24px; }
+    .main-content:has(.trainer-layout) .session-chip { display: none; }
+    .trainer-context { padding: 11px 14px; }
+    .poker-table { height: 250px; margin-top: 12px; margin-bottom: 27px; }
+    .opponent-seat .card-small { width: 40px; height: 54px; }
+    .hero-seat .playing-card { width: 54px; height: 78px; }
+    .hero-seat .card-rank { font-size: 34px; }
+    .hero-seat { bottom: -18px; gap: 5px; }
+    .table-pot { top: 111px; }
+    .decision-zone { padding: 17px 14px; }
+    .feedback-empty h3 br { display: initial; }
+  }
+}

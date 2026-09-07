@@ -19,8 +19,8 @@ export function ActionLink({ href, children, secondary = false }: { href: string
   return <Link className={secondary ? "button button-secondary" : "button button-primary"} href={href}>{children}<ArrowRight size={17} aria-hidden="true" /></Link>;
 }
 export function PlayingCard({ rank = "K", hidden = false, small = false }: { rank?: string; hidden?: boolean; small?: boolean }) {
-  return <div className={`playing-card${hidden ? " card-back" : ""}${small ? " card-small" : ""}`} aria-label={hidden ? "Verdeckte Karte" : `${rank} – Kuhn-Spielkarte`}>{hidden ? <span aria-hidden="true">r</span> : <><span className="card-corner" aria-hidden="true">{rank}</span><span className="card-rank" aria-hidden="true">{rank}</span><span className="card-corner card-corner-bottom" aria-hidden="true">{rank}</span></>}</div>;
+  return <div className={`playing-card${hidden ? " card-back" : ""}${small ? " card-small" : ""}`} role="img" aria-label={hidden ? "Verdeckte Karte" : `${rank} – Kuhn-Spielkarte`}>{hidden ? <span aria-hidden="true">r</span> : <><span className="card-corner" aria-hidden="true">{rank}</span><span className="card-rank" aria-hidden="true">{rank}</span><span className="card-corner card-corner-bottom" aria-hidden="true">{rank}</span></>}</div>;
 }
 export function MiniDeck() {
-  return <div className="mini-deck" aria-label="Kuhn Poker verwendet die drei Karten Bube, Dame und König"><PlayingCard rank="J" /><PlayingCard rank="Q" /><PlayingCard rank="K" /></div>;
+  return <div className="mini-deck" role="group" aria-label="Kuhn Poker verwendet die drei Karten Bube, Dame und König"><PlayingCard rank="J" /><PlayingCard rank="Q" /><PlayingCard rank="K" /></div>;
 }

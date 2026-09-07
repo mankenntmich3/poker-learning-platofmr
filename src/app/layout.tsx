@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import "@fontsource-variable/manrope";
 import "./globals.css";
+import "./trainer-mobile.css";
 import { AppShell } from "@/components/app-shell";
 import { StudyProvider } from "@/components/study-context";
 
