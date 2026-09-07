@@ -1,0 +1,65 @@
+import { test, expect } from '@playwright/test';
+import { randomUUID } from 'node:crypto';
+import type { Evaluation, StudyDashboard, TrainingSpot } from '../../src/shared/contracts';
+
+const origin = 'http://127.0.0.1:3000';
+const headers = { Origin: origin };
+
+test('private, idempotent solver-backed learning with account lifecycle', async ({ request, playwright }) => {
+  expect((await request.get('/api/dashboard')).status()).toBe(401);
+  const crossOrigin = await request.post('/api/auth/register', {
+    headers: { Origin: 'https://unrelated.invalid' }, data: { name: 'Other', email: 'other@example.test', password: 'a-long-test-password' },
+  });
+  expect(crossOrigin.status()).toBe(403);
+  const email = `api-${randomUUID()}@example.test`;
+  const password = `Test-${randomUUID()}`;
+  const registered = await request.post('/api/auth/register', { headers, data: { name: 'API Study', email, password, weeklyGoal: 3 } });
+  expect(registered.status()).toBeLessThan(300);
+  const cookie = registered.headers()['set-cookie'];
+  expect(cookie).toContain('HttpOnly');
+  expect(cookie).toContain('SameSite=Strict');
+  expect(cookie).toContain('Secure');
+  const blank = await (await request.get('/api/dashboard')).json() as StudyDashboard;
+  expect(blank.decisions).toBe(0);
+  expect(blank.averageRegret).toBeNull();
+  const wrong = await request.post('/api/lesson/complete', { headers, data: { answer: 0 } });
+  expect((await wrong.json()).correct).toBe(false);
+  const correct = await request.post('/api/lesson/complete', { headers, data: { answer: 1 } });
+  expect((await correct.json()).correct).toBe(true);
+  const { spots } = await (await request.get('/api/trainer')).json() as { spots: TrainingSpot[] };
+  expect(spots.length).toBe(12);
+  expect(JSON.stringify(spots)).not.toContain('frequency');
+  expect(JSON.stringify(spots)).not.toContain('bestEv');
+  const decision = { spotId: spots[0].id, action: spots[0].actions[0].id, attemptId: randomUUID(), solutionVersion: spots[0].solutionVersion };
+  const evaluated = await request.post('/api/trainer/decision', { headers, data: decision });
+  expect(evaluated.status()).toBe(200);
+  const result = await evaluated.json() as Evaluation;
+  expect(result.sourceType).toBe('COMPUTED');
+  expect(result.exploitability).toBeLessThan(0.01);
+  expect(result.regret).toBeGreaterThanOrEqual(0);
+  const retry = await request.post('/api/trainer/decision', { headers, data: decision });
+  expect(await retry.json()).toEqual(result);
+  const conflict = await request.post('/api/trainer/decision', { headers, data: { ...decision, action: spots[0].actions[1].id } });
+  expect(conflict.status()).toBe(409);
+  const stale = await request.post('/api/trainer/decision', { headers, data: { ...decision, attemptId: randomUUID(), solutionVersion: 'outdated-version' } });
+  expect(stale.status()).toBe(409);
+  const illegal = await request.post('/api/trainer/decision', { headers, data: { ...decision, attemptId: randomUUID(), action: 'raise-infinite' } });
+  expect(illegal.status()).toBe(400);
+  const after = await (await request.get('/api/dashboard')).json() as StudyDashboard;
+  expect(after.decisions).toBe(1);
+  expect(after.lessonCompleted).toBe(true);
+  const anonymous = await playwright.request.newContext({ baseURL: origin });
+  expect((await anonymous.get('/api/account/export')).status()).toBe(401);
+  await anonymous.dispose();
+  expect((await request.post('/api/auth/logout', { headers, data: {} })).ok()).toBe(true);
+  expect((await request.get('/api/dashboard')).status()).toBe(401);
+  expect((await request.post('/api/auth/login', { headers, data: { email, password } })).ok()).toBe(true);
+  expect((await (await request.get('/api/dashboard')).json()).decisions).toBe(1);
+  const exported = await (await request.get('/api/account/export')).json();
+  expect(exported.trainingDecisions).toHaveLength(1);
+  expect(JSON.stringify(exported)).not.toContain('password_hash');
+  expect(JSON.stringify(exported)).not.toContain('token_hash');
+  expect((await request.delete('/api/account', { headers, data: { password: 'incorrect-password' } })).status()).toBe(401);
+  expect((await request.delete('/api/account', { headers, data: { password } })).ok()).toBe(true);
+  expect((await request.get('/api/dashboard')).status()).toBe(401);
+});

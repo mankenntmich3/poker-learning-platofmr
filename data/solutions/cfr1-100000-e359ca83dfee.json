@@ -1,0 +1,304 @@
+{
+  "schemaVersion": 1,
+  "id": "kuhn-3card-ante1-bet1",
+  "version": "cfr1-100000-e359ca83dfee",
+  "sourceType": "COMPUTED",
+  "solverVersion": "kuhn-full-tree-cfr/1.0.0",
+  "generatedAt": "2026-09-06T17:14:59.712Z",
+  "config": {
+    "game": "kuhn",
+    "players": 2,
+    "cards": [
+      "J",
+      "Q",
+      "K"
+    ],
+    "ante": 1,
+    "bet": 1,
+    "maxBets": 1,
+    "rake": 0,
+    "chance": "uniform ordered deals without replacement"
+  },
+  "configHash": "3aa10f7dbb9770463abd6116ec4d17c642f8fbeacbfdaefbfe5a3a84f3fbd08b",
+  "rangeHash": "ab02878e4d6ec7f309f0f928dc86ad4f65adc8b032fec3bc762164cf8422b194",
+  "treeHash": "fa1e076ed5d74465ed3100483b4cbcf2bb1ad5d00cdb5e21e160863c49474847",
+  "iterations": 100000,
+  "computeTimeMs": 893,
+  "accuracy": {
+    "metric": "exploitability",
+    "value": 0.0006762196802849174,
+    "nashConv": 0.0013524393605698348,
+    "target": 0.005,
+    "unit": "ante/hand"
+  },
+  "expectedValue": -0.05555470109818003,
+  "profile": {
+    "J:root": [
+      0.7946682606402136,
+      0.20533173935978644
+    ],
+    "Q:root": [
+      0.9999654166666666,
+      0.000034583333333242895
+    ],
+    "K:root": [
+      0.37563584498311126,
+      0.6243641550168886
+    ],
+    "J:x": [
+      0.664330748771335,
+      0.33566925122866487
+    ],
+    "Q:x": [
+      0.9999622727272728,
+      0.00003772727272717407
+    ],
+    "K:x": [
+      0.000004999999999986929,
+      0.9999950000000001
+    ],
+    "J:b": [
+      0.9999950000000001,
+      0.000004999999999986929
+    ],
+    "Q:b": [
+      0.6665882878277102,
+      0.3334117121722897
+    ],
+    "K:b": [
+      0.000004999999999986929,
+      0.9999950000000001
+    ],
+    "J:xb": [
+      0.999996854033156,
+      0.000003145966844054614
+    ],
+    "Q:xb": [
+      0.4588440720789562,
+      0.5411559279210438
+    ],
+    "K:xb": [
+      0.000006655381890171895,
+      0.9999933446181097
+    ]
+  },
+  "nodes": [
+    {
+      "card": "J",
+      "history": "",
+      "player": 0,
+      "actions": [
+        {
+          "action": "check",
+          "frequency": 0.7946682606402136,
+          "ev": -1.0000015730349014
+        },
+        {
+          "action": "bet",
+          "frequency": 0.20533173935978644,
+          "ev": -1.0001100682584347
+        }
+      ],
+      "totalEV": -1.0000238505478618
+    },
+    {
+      "card": "Q",
+      "history": "",
+      "player": 0,
+      "actions": [
+        {
+          "action": "check",
+          "frequency": 0.9999654166666666,
+          "ev": -0.33377175461455194
+        },
+        {
+          "action": "bet",
+          "frequency": 0.000034583333333242895,
+          "ev": -0.49999000000000005
+        }
+      ],
+      "totalEV": -0.3337775029955381
+    },
+    {
+      "card": "K",
+      "history": "",
+      "player": 0,
+      "actions": [
+        {
+          "action": "check",
+          "frequency": 0.37563584498311126,
+          "ev": 1.167850137863478
+        },
+        {
+          "action": "bet",
+          "frequency": 0.6243641550168886,
+          "ev": 1.1667083560861449
+        }
+      ],
+      "totalEV": 1.1671372502488595
+    },
+    {
+      "card": "J",
+      "history": "x",
+      "player": 1,
+      "actions": [
+        {
+          "action": "check",
+          "frequency": 0.664330748771335,
+          "ev": -1
+        },
+        {
+          "action": "bet",
+          "frequency": 0.33566925122866487,
+          "ev": -0.9993523926304457
+        }
+      ],
+      "totalEV": -0.9997826181191715
+    },
+    {
+      "card": "Q",
+      "history": "x",
+      "player": 1,
+      "actions": [
+        {
+          "action": "check",
+          "frequency": 0.9999622727272728,
+          "ev": 0.3580542985738892
+        },
+        {
+          "action": "bet",
+          "frequency": 0.00003772727272717407,
+          "ev": 0.037089992648425385
+        }
+      ],
+      "totalEV": 0.3580421894659839
+    },
+    {
+      "card": "K",
+      "history": "x",
+      "player": 1,
+      "actions": [
+        {
+          "action": "check",
+          "frequency": 0.000004999999999986929,
+          "ev": 1
+        },
+        {
+          "action": "bet",
+          "frequency": 0.9999950000000001,
+          "ev": 1.3015321286945118
+        }
+      ],
+      "totalEV": 1.3015306210338684
+    },
+    {
+      "card": "J",
+      "history": "b",
+      "player": 1,
+      "actions": [
+        {
+          "action": "fold",
+          "frequency": 0.9999950000000001,
+          "ev": -0.9999999999999999
+        },
+        {
+          "action": "call",
+          "frequency": 0.000004999999999986929,
+          "ev": -1.9999999999999998
+        }
+      ],
+      "totalEV": -1.000005
+    },
+    {
+      "card": "Q",
+      "history": "b",
+      "player": 1,
+      "actions": [
+        {
+          "action": "fold",
+          "frequency": 0.6665882878277102,
+          "ev": -1
+        },
+        {
+          "action": "call",
+          "frequency": 0.3334117121722897,
+          "ev": -1.0100867522597743
+        }
+      ],
+      "totalEV": -1.003363041341189
+    },
+    {
+      "card": "K",
+      "history": "b",
+      "player": 1,
+      "actions": [
+        {
+          "action": "fold",
+          "frequency": 0.000004999999999986929,
+          "ev": -0.9999999999999999
+        },
+        {
+          "action": "call",
+          "frequency": 0.9999950000000001,
+          "ev": 1.9999999999999998
+        }
+      ],
+      "totalEV": 1.999985
+    },
+    {
+      "card": "J",
+      "history": "xb",
+      "player": 0,
+      "actions": [
+        {
+          "action": "fold",
+          "frequency": 0.999996854033156,
+          "ev": -1
+        },
+        {
+          "action": "call",
+          "frequency": 0.000003145966844054614,
+          "ev": -2
+        }
+      ],
+      "totalEV": -1.0000031459668441
+    },
+    {
+      "card": "Q",
+      "history": "xb",
+      "player": 0,
+      "actions": [
+        {
+          "action": "fold",
+          "frequency": 0.4588440720789562,
+          "ev": -1
+        },
+        {
+          "action": "call",
+          "frequency": 0.5411559279210438,
+          "ev": -0.9947496134005656
+        }
+      ],
+      "totalEV": -0.9971587221678389
+    },
+    {
+      "card": "K",
+      "history": "xb",
+      "player": 0,
+      "actions": [
+        {
+          "action": "fold",
+          "frequency": 0.000006655381890171895,
+          "ev": -1
+        },
+        {
+          "action": "call",
+          "frequency": 0.9999933446181097,
+          "ev": 2
+        }
+      ],
+      "totalEV": 1.9999800338543292
+    }
+  ],
+  "checksum": "4be06dfc31fa57102b0ee5bc1942ff6440141cf83b566ef270dc4daff25d86eb"
+}
