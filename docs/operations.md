@@ -10,6 +10,8 @@ The application does not provision infrastructure. Hosting, domain registration,
 
 Use Node 24 and the pinned pnpm version. Install from the lockfile, run the quality gates and start the app. A hosted environment must supply `DATABASE_URL` and `APP_ORIGIN`; see the configuration checks in the server code. The local-preview flag is for running a production build on your own machine and must not be used for horizontal deployments.
 
+`pnpm typecheck` first generates Next.js route/environment types, so a fresh checkout does not require a previous build. The generated `next-env.d.ts` is ignored: development and production legitimately reference different generated paths. Next.js's managed guidance block is retained in `AGENTS.md` alongside the project rules.
+
 `GET /api/health` is a readiness check for the application, database and strategy storage. Unconfigured queues and solver workers must be represented as inactive, not healthy services. Worker execution is a separate command and never part of a trainer request.
 
 ## Backups and recovery

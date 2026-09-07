@@ -11,11 +11,14 @@ Verified locally on **2026-09-07**, Windows, Node 24.19.0, locked dependencies, 
 | `pnpm test` | 47 passed; 1 skipped because local `TEST_DATABASE_URL` was not supplied |
 | `pnpm build` | Passed; all implemented routes built |
 | `pnpm test:e2e` | 3 passed, including the complete learning flow |
+| GitHub PostgreSQL 16 acceptance | 35 domain/solver + 13 server integration + 3 browser tests passed; typecheck, lint and build passed |
 | Accessibility | Zero axe WCAG 2 A/AA and 2.1 AA violations on dashboard, trainer and ranges at 390px and 1440px |
 | Responsive overflow | Passed on dashboard, trainer and ranges at 320, 375, 390, 430, 768, 1024, 1280, 1440 and 1920px |
 | Private GitHub access | Repository metadata confirms pull/push; project commits persisted through authenticated GitHub integration |
 
 The GitHub workflow repeats the gates on Ubuntu with **PostgreSQL 16**. It supplies the skipped local database test and exercises the same browser journey through the real PostgreSQL adapter. Current revision results and downloadable reports are attached to [PR #1](https://github.com/mankenntmich3/poker-learning-platofmr/pull/1). Reports/traces are retained for 14 days; representative screenshots below are permanent repository artifacts.
+
+Recorded successful PostgreSQL run: [34135665830](https://github.com/mankenntmich3/poker-learning-platofmr/actions/runs/34135665830), application revision `4ff468c3dc20c529a6933452cec9495e057d9434`. Subsequent tooling/documentation commits rerun the same workflow.
 
 ## Acceptance exercised
 
