@@ -56,6 +56,17 @@ Reset clears local tables and keeps the schema; it never recursively deletes fil
 
 ### Troubleshooting
 
+**Codex on Windows:** its bundled terminal may resolve `pnpm` to version 11 despite this project's pinned version 10. If `pnpm --version` reports 11 or a command unexpectedly tries to reinstall dependencies, select the already bundled version 10 for the current PowerShell session:
+
+```powershell
+function pnpm {
+  & "$env:USERPROFILE\.cache\codex-runtimes\codex-primary-runtime\dependencies\node\bin\node.exe" "$env:USERPROFILE\.cache\codex-runtimes\codex-primary-runtime\dependencies\node\node_modules\pnpm\bin\pnpm.cjs" @args
+}
+pnpm --version
+```
+
+This workstation's launcher reports `10.28.2`. Then use the ordinary quick-start commands above. This workaround is specific to the bundled Codex Windows runtime; a normal Node/pnpm installation only needs the documented version prerequisite.
+
 - Wrong login: use the exact credentials above, or stop the server and run `pnpm db:seed` again.
 - Database already open: stop the other development/test server before setup, migration, seed or reset. A process lock prevents concurrent PGlite access and recovers after a dead process.
 - Cookies blocked: allow cookies for the chosen local address. The login screen verifies the session before navigating.
