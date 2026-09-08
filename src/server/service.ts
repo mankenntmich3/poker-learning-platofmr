@@ -7,13 +7,15 @@ import { enforceRateLimit, hashPassword, newSessionToken, SESSION_SECONDS, sha25
 import { isLessonAnswerCorrect, lesson, LESSON_ID } from './lesson';
 import { evaluateDecision } from '@/strategy';
 import { DEVELOPMENT_DEMO, developmentAccessEnabled } from './development';
+import { nlheProgress } from './nlhe-service';
+import { requireStagingInvite } from './staging';
 
 const nameSchema = z.string().trim().min(1).max(80);
 const emailSchema = z.string().trim().toLowerCase().email().max(254);
 const passwordSchema = z.string().min(10, 'Das Passwort muss mindestens 10 Zeichen enthalten.').max(128);
 const experienceSchema = z.enum(['beginner', 'intermediate', 'advanced']);
 export const registerSchema = z.object({ name: nameSchema, email: emailSchema, password: passwordSchema,
-  weeklyGoal: z.number().int().min(1).max(7).optional(), experience: experienceSchema.optional() }).strict();
+  weeklyGoal: z.number().int().min(1).max(7).optional(), experience: experienceSchema.optional(), inviteCode: z.string().max(128).optional() }).strict();
 export const loginSchema = z.object({ email: emailSchema, password: z.string().min(1).max(128) }).strict();
 export const settingsSchema = z.object({ name: nameSchema.optional(), weeklyGoal: z.number().int().min(1).max(7).optional(), experience: experienceSchema.optional() }).strict()
   .refine((value) => Object.keys(value).length > 0, 'Mindestens eine Einstellung ist erforderlich.');
@@ -33,6 +35,7 @@ export async function register(db: Database, input: z.infer<typeof registerSchem
   if (data.email === DEVELOPMENT_DEMO.email) throw new ApiError(400, 'Diese Adresse ist für das lokale Demo-Konto reserviert. Verwende den Demo-Zugang oder eine eigene E-Mail-Adresse.', 'RESERVED_ACCOUNT');
   await enforceRateLimit(db, 'register:global', 30, 3600);
   await enforceRateLimit(db, `register:${data.email}`, 5, 3600);
+  requireStagingInvite(data.inviteCode);
   const passwordHash = await hashPassword(data.password);
   const token = newSessionToken();
   const expiry = new Date(Date.now() + SESSION_SECONDS * 1000).toISOString();
@@ -88,7 +91,7 @@ export async function logout(db: Database, token: string | null): Promise<void> 
 }
 
 export async function dashboard(db: Database, user: StudyUser): Promise<StudyDashboard> {
-  const [stats, lessons, recent, daily] = await Promise.all([
+  const [stats, lessons, recent, daily, nlhe] = await Promise.all([
     db.query<{ decisions: number; average_regret: number | null; best_decisions: number }>(
       `SELECT count(*)::integer AS decisions, avg(regret) AS average_regret,
        count(*) FILTER (WHERE regret <= 0.01)::integer AS best_decisions FROM training_decisions WHERE user_id = $1`, [user.id]),
@@ -104,8 +107,9 @@ export async function dashboard(db: Database, user: StudyUser): Promise<StudyDas
       `SELECT to_char(created_at AT TIME ZONE 'UTC', 'YYYY-MM-DD') AS date, count(*)::integer AS decisions
        FROM training_decisions WHERE user_id = $1 AND created_at >= now() - interval '30 days'
        GROUP BY date ORDER BY date`, [user.id]),
+    nlheProgress(db, user.id),
   ]);
-  return { user, lessonCompleted: lessons.length > 0, decisions: stats[0].decisions,
+  return { user, nlhe, lessonCompleted: lessons.length > 0, decisions: stats[0].decisions,
     xp: stats[0].decisions * 10 + (lessons.length > 0 ? 50 : 0), averageRegret: stats[0].average_regret,
     bestDecisions: stats[0].best_decisions,
     recent: recent.map((row) => {
@@ -169,11 +173,13 @@ export async function updateSettings(db: Database, user: StudyUser, input: z.inf
 
 export async function exportAccount(db: Database, user: StudyUser): Promise<Record<string, unknown>> {
   await enforceRateLimit(db, `export:${user.id}`, 6, 3600);
-  const [lessons, decisions] = await Promise.all([
+  const [lessons, decisions, nlheSessions, nlheDecisions] = await Promise.all([
     db.query('SELECT lesson_id, completed_at FROM lesson_completions WHERE user_id = $1 ORDER BY completed_at', [user.id]),
     db.query('SELECT id, attempt_id, spot_id, action, regret, evaluation, created_at FROM training_decisions WHERE user_id = $1 ORDER BY created_at, id', [user.id]),
+    db.query('SELECT id, config, solution_version, created_at, completed_at FROM nlhe_sessions WHERE user_id = $1 ORDER BY created_at', [user.id]),
+    db.query('SELECT q.id, q.session_id, q.ordinal, q.cards, d.action, d.feedback, d.created_at FROM nlhe_questions q JOIN nlhe_sessions s ON s.id = q.session_id LEFT JOIN nlhe_decisions d ON d.question_id = q.id WHERE s.user_id = $1 ORDER BY q.created_at', [user.id]),
   ]);
-  return { schemaVersion: 1, exportedAt: new Date().toISOString(), user, lessonCompletions: lessons, trainingDecisions: decisions };
+  return { schemaVersion: 2, exportedAt: new Date().toISOString(), user, lessonCompletions: lessons, trainingDecisions: decisions, nlheSessions, nlheDecisions };
 }
 export async function deleteAccount(db: Database, user: StudyUser, password: string): Promise<void> {
   deleteAccountSchema.parse({ password });

@@ -1,12 +1,12 @@
 # Rangeform
 
-A focused poker study workspace: learn a concept, make a decision, inspect computed strategy feedback and keep your progress. Built in the private repository **mankenntmich3/poker-learning-platofmr**.
+A No-Limit Texas Hold’em study workspace for **6-max Cash**: choose a preflop spot, study its full 169-hand matrix, train real two-card combinations and retain progress. Permanent private repository: **mankenntmich3/poker-learning-platofmr**.
 
-The initial training dataset is **genuinely computed Kuhn poker**, a small three-card game. It is visibly identified in the interface and is not an NLHE GTO dataset. The Hold'em range explorer teaches the 169 hand classes and 1,326 exact combinations without presenting invented opening frequencies.
+Current ranges are **APPROXIMATED original educational heuristics**, with coarse 25% mixes. They are **not validated GTO**, licensed ranges, or measured EV values. No range files were supplied by the owner. Kuhn remains an internal solver/API regression only.
 
-![Rangeform study dashboard](docs/qa/dashboard-desktop.png)
+Preflop supports RFI, responses to one open (fold/call/3-bet), and responses to one 3-bet after opening (fold/call/4-bet), for all legal position pairs. All eleven requested stack presets (10–200 BB) and custom depths from 10–500 BB in 0.01-BB units work. The first bounded flop is 100 BB BTN-vs-BB SRP on A♠ 7♦ 2♣ after BB checks, with check/bet 1.8 BB.
 
-See the [local access acceptance results and mobile screenshots](docs/qa/local-access.md).
+See [strategy scope and provenance](docs/decisions/0003-nlhe-first.md), [current status](docs/PROJECT_STATUS.md) and [private staging setup](docs/staging.md).
 
 ## LOCAL DEVELOPMENT — QUICK START
 
@@ -26,9 +26,11 @@ Open **[http://localhost:3000](http://localhost:3000)**. The alternative [127.0.
 
 **Development demo login:** `demo@poker.local` / `Poker-Local-Demo-2026!`. Use the login form or **Mit Demo-Konto anmelden**. You can also choose **Konto erstellen** to register a personal account. The demo uses real password verification and database sessions; no authentication bypass is implemented.
 
-`db:setup` creates `.env.local` from `.env.example` if absent and creates/migrates the local database. `db:migrate` is safe to repeat. `db:seed` creates or recovers the development demo and adds three explicitly labeled sample decisions evaluated by the existing solver; it preserves subsequent progress. `pnpm setup:local` combines setup and seed. No manual environment editing, mail provider, Docker or external database is required for local use.
+`db:setup` creates `.env.local` from `.env.example` if absent and creates/migrates the local database. `db:migrate` is safe to repeat. `db:seed` creates or recovers the development demo and adds three explicitly labeled sample decisions evaluated against the labelled NLHE learning range; it preserves subsequent progress. `pnpm setup:local` combines setup and seed. No manual environment editing, mail provider, Docker or external database is required for local use.
 
-**Try the product:** log in → Dashboard → Academy → **Kurs öffnen** → **Lektion öffnen** → read and answer the quiz → **Am Tisch anwenden** → **Trainingssitzung starten** → choose an action → read feedback → **Sitzung jetzt abschließen** → **Fortschritt ansehen**. A full session ends after twelve decisions. Log out under Einstellungen, log in again and confirm your saved progress.
+**Range flow:** log in → Preflop → choose stack/position/history/opponent → tap a matrix cell → **Diese Range trainieren** → start → act → compare frequencies → next hand or finish → return to Dashboard. The trainer keeps the exact selected spot. For the bounded flop, use **Postflop** → **Diesen Flop trainieren**.
+
+**Academy flow:** log in → Dashboard → Academy → **Kurs öffnen** → **Lektion öffnen** → read and answer the quiz → **Am Tisch anwenden** → **Trainingssitzung starten** → choose an action → read feedback → **Sitzung jetzt abschließen** → **Fortschritt ansehen**. A full session ends after ten decisions. Current question, feedback and session completion also survive reload. Log out under Einstellungen, log in again and confirm your saved progress.
 
 PGlite stores data under `.data/postgres`, excluded from Git. The demo account is marked development-only in the database. Seed/reset commands refuse production mode and any `DATABASE_URL`; login and existing sessions for that account are rejected outside local development, even if its database is accidentally copied. Demo credentials and the instant-access button are absent from the production interface.
 
@@ -91,7 +93,15 @@ pnpm test:dev-access
 
 The regular browser suite starts a production build on loopback with an isolated local database. GitHub CI supplies PostgreSQL 16 for that flow. The separate development-access suite runs setup, migrations and demo seed before testing the actual development server, both loopback addresses, protected destinations, Academy, training completion and persistence. Production credentials must never be used for tests.
 
-## Compute a solution
+## Reproduce strategy data
+
+```sh
+pnpm ranges:generate
+```
+
+This publishes a content-hashed NLHE **APPROXIMATED** policy and checks 385 preflop contexts plus one flop for structural validity. It does not solve GTO or measure accuracy. Published sessions snapshot the exact version and remain resumable after a library update.
+
+### Internal solver regression
 
 ```sh
 pnpm solve
@@ -110,7 +120,8 @@ src/strategy    Provider boundary and immutable artifact storage
 src/server      Authentication, SQL and learning services
 src/shared      Browser-safe request/response contracts
 migrations      PostgreSQL schema
-data/solutions  Computed, versioned strategy artifacts
+data/nlhe       Immutable NLHE heuristic policy versions
+data/solutions  Computed Kuhn regression artifacts
 tests           Domain, solver, integration and browser checks
 docs            Product specification, decisions and project memory
 ```

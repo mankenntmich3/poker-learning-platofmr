@@ -24,8 +24,8 @@ test('learn, train, persist, inspect and return on desktop and mobile', async ({
   await page.locator('input[name="password"]').fill(password);
   await page.getByRole('button', { name: 'Konto erstellen und starten' }).click();
   await expect(page.getByRole('heading', { name: 'Dein Trainingsraum, Mara.' })).toBeVisible();
-  await expect(page.getByText('Deine erste Entscheidung wartet')).toBeVisible();
-  await page.getByRole('link', { name: 'Lektion beginnen' }).click();
+  await expect(page.getByText('Dein Lernverlauf entsteht mit deiner ersten Hold’em-Entscheidung.')).toBeVisible();
+  await page.getByRole('link', { name: 'Zuerst die Grundlagen lesen' }).click();
   await expect(page.getByRole('heading', { name: 'Verstehen kommt vor Gewinnen.' })).toBeVisible();
   await page.getByRole('radio').nth(0).check();
   await page.getByRole('button', { name: 'Antwort überprüfen' }).click();
@@ -36,53 +36,55 @@ test('learn, train, persist, inspect and return on desktop and mobile', async ({
   await page.screenshot({ path: testInfo.outputPath('academy-desktop.png'), fullPage: true });
   await page.getByRole('link', { name: 'Am Tisch anwenden' }).click();
   await page.getByRole('button', { name: 'Trainingssitzung starten' }).click();
-  await expect(page.getByRole('heading', { name: 'Wie spielst du diese Hand?' })).toBeVisible();
-  await expect(page.getByRole('heading', { name: 'Berechnete Strategie' })).toHaveCount(0);
+  await expect(page.getByRole('heading', { name: 'Welche Aktion wählst du?' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Dein Range-Vergleich' })).toHaveCount(0);
   await page.getByRole('button', { name: 'Fold', exact: true }).click();
   await expect(page.getByRole('heading', { name: 'Deine Entscheidung ist gespeichert.' })).toBeVisible();
-  await expect(page.getByRole('heading', { name: 'Berechnete Strategie' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Dein Range-Vergleich' })).toBeVisible();
   await expect(page.getByRole('button', { name: 'Fold', exact: true })).toBeDisabled();
   await page.screenshot({ path: testInfo.outputPath('trainer-feedback-desktop.png'), fullPage: true });
   const trained = await (await page.request.get('/api/dashboard')).json() as StudyDashboard;
-  expect(trained.decisions).toBe(1);
+  expect(trained.nlhe.decisions).toBe(1);
   expect(trained.lessonCompleted).toBe(true);
-  // Cover every information set, session completion and a new session.
-  for (let decision = 2; decision <= 12; decision++) {
-    await page.getByRole('button', { name: 'Nächste Entscheidung', exact: true }).click();
-    await expect(page.getByText(`Entscheidung ${decision} / 12`, { exact: true })).toBeVisible();
-    await page.locator('.action-buttons button').first().click();
+  // Cover a full ten-hand session, session completion and a new session.
+  for (let decision = 2; decision <= 10; decision++) {
+    await page.getByRole('button', { name: 'Nächste Hand', exact: true }).click();
+    await expect(page.getByText(`Hand ${decision} / 10`, { exact: true })).toBeVisible();
+    await page.locator('.nlhe-action-buttons button').first().click();
     await expect(page.getByRole('heading', { name: 'Deine Entscheidung ist gespeichert.' })).toBeVisible();
   }
   await page.getByRole('button', { name: 'Training abschließen', exact: true }).click();
   await expect(page.getByRole('heading', { name: 'Training abgeschlossen.' })).toBeVisible();
-  await page.getByRole('button', { name: 'Neue Sitzung starten', exact: true }).click();
-  await expect(page.getByText('Entscheidung 1 / 12', { exact: true })).toBeVisible();
+  await page.getByRole('link', { name: 'Neue Sitzung starten', exact: true }).click();
+  await page.getByRole('button', { name: 'Trainingssitzung starten' }).click();
+  await expect(page.getByText('Hand 1 / 10', { exact: true })).toBeVisible();
   // Simulate a lost response after the server persisted an action. Retry must deduplicate.
-  await page.route('**/api/trainer/decision', async route => {
+  await page.route('**/api/nlhe/decision', async route => {
     await route.fetch();
     await route.abort('failed');
   }, { times: 1 });
   await page.getByRole('button', { name: 'Fold', exact: true }).click();
-  await expect(page.getByRole('button', { name: 'Call 1', exact: true })).toBeDisabled();
-  await page.getByRole('button', { name: /Erneut versuchen/ }).click();
+  await expect(page.getByRole('button', { name: /Raise auf/ })).toBeDisabled();
+  await page.getByRole('button', { name: 'Fold · Wiederholen', exact: true }).click();
   await expect(page.getByRole('heading', { name: 'Deine Entscheidung ist gespeichert.' })).toBeVisible();
   await page.goto('/');
-  await expect(page.getByRole('link', { name: 'Training starten', exact: true })).toBeVisible();
+  await expect(page.getByRole('link', { name: 'Preflop entdecken', exact: true })).toBeVisible();
   await page.reload();
-  await expect(page.getByRole('link', { name: 'Training starten', exact: true })).toBeVisible();
-  expect((await (await page.request.get('/api/dashboard')).json()).decisions).toBe(13);
+  await expect(page.getByRole('link', { name: 'Preflop entdecken', exact: true })).toBeVisible();
+  expect((await (await page.request.get('/api/dashboard')).json()).nlhe.decisions).toBe(11);
 
   for (const width of [320, 375, 390, 430, 768, 1024, 1280, 1440, 1920]) {
     await page.setViewportSize({ width, height: width < 600 ? 844 : 1000 });
-    for (const route of ['/', '/trainer', '/ranges']) {
+    for (const route of ['/', '/trainer', '/ranges', '/postflop']) {
       await page.goto(route);
       await expect(page.locator('h1')).toBeVisible();
-      if (route === '/') await expect(page.getByRole('link', { name: 'Training starten', exact: true })).toBeVisible();
+      if (route === '/') await expect(page.getByRole('link', { name: 'Preflop entdecken', exact: true })).toBeVisible();
       if (route === '/trainer') {
         await page.getByRole('button', { name: 'Trainingssitzung starten' }).click();
         await expect(page.getByRole('button', { name: 'Fold', exact: true })).toBeVisible();
       }
-      if (route === '/ranges') await expect(page.getByRole('button', { name: 'AKs, 4 Kombinationen', exact: true })).toBeVisible();
+      if (route === '/ranges') await expect(page.getByRole('gridcell', { name: /^AKs:/ })).toBeVisible();
+      if (route === '/postflop') await expect(page.getByRole('gridcell')).toHaveCount(169);
       await noOverflow(page);
       if (width === 390 || width === 1440) {
         const label = route === '/' ? 'dashboard' : route.slice(1);
@@ -94,15 +96,16 @@ test('learn, train, persist, inspect and return on desktop and mobile', async ({
   }
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto('/ranges');
-  const aceKing = page.getByRole('button', { name: 'AKs, 4 Kombinationen', exact: true });
+  const aceKing = page.getByRole('gridcell', { name: /^AKs:/ });
   await aceKing.click();
   await aceKing.press('ArrowRight');
   await expect(page.getByRole('heading', { name: 'AQs', exact: true })).toBeVisible();
-  await page.getByLabel('Handtyp').selectOption('pair');
-  await page.getByRole('button', { name: 'AA, 6 Kombinationen', exact: true }).click();
+  await page.getByLabel('Deine Position', { exact: true }).selectOption('CO');
+  await page.getByRole('gridcell', { name: /^AA:/ }).click();
   await expect(page.getByRole('heading', { name: 'AA', exact: true })).toBeVisible();
-  await expect(page.locator('.combo-pair')).toHaveCount(6);
-  await page.getByRole('button', { name: 'Fokusansicht', exact: true }).click();
+  await page.getByText('Konkrete Kombinationen', { exact: true }).click();
+  await expect(page.locator('.nlhe-combo-list .nlhe-cards')).toHaveCount(6);
+
   await noOverflow(page);
 
   await page.goto('/settings');
@@ -119,7 +122,7 @@ test('learn, train, persist, inspect and return on desktop and mobile', async ({
   await expect(page.getByRole('heading', { name: 'Dein Trainingsraum, Mara.' })).toBeVisible();
   const persisted = await (await page.request.get('/api/dashboard')).json() as StudyDashboard;
   expect(persisted.user.weeklyGoal).toBe(5);
-  expect(persisted.decisions).toBe(13);
+  expect(persisted.nlhe.decisions).toBe(11);
   expect(crashes).toEqual([]);
 });
 

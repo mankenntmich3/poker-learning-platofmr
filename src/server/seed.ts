@@ -2,7 +2,9 @@ import { randomUUID } from 'node:crypto';
 import type { Database } from './db';
 import { DEVELOPMENT_DEMO, requireDevelopmentDatabase } from './development';
 import { hashPassword, sha256 } from './security';
-import { evaluateDecision, getTrainingSpots } from '@/strategy';
+import { getNlheProvider } from '@/strategy/nlhe-provider';
+import { DEFAULT_NLHE } from '@/shared/nlhe';
+import { answerNlhe, finishNlheSession, nextNlheQuestion, startNlheSession } from './nlhe-service';
 
 /** Idempotent, real persisted sample decisions; existing learning progress is preserved. */
 export async function seedDevelopmentAccount(db: Database): Promise<void> {
@@ -15,15 +17,19 @@ export async function seedDevelopmentAccount(db: Database): Promise<void> {
      WHERE study_users.development_only = true RETURNING id`,
     [randomUUID(), DEVELOPMENT_DEMO.email, passwordHash]);
   if (!users[0]) throw new Error('Die Demo-Adresse gehört zu einem persönlichen Konto. Dieses Konto wird nicht überschrieben.');
-  const spots = (await getTrainingSpots()).slice(0, 3);
-  for (const [index, spot] of spots.entries()) {
-    const attemptId = `de000000-0000-4000-8000-${String(index + 1).padStart(12, '0')}`;
-    const action = spot.actions[index % spot.actions.length].id;
-    const evaluation = await evaluateDecision(spot.id, action, spot.solutionVersion);
-    const created = new Date(Date.now() - (3 - index) * 86_400_000).toISOString();
-    await db.query(`INSERT INTO training_decisions (id, user_id, attempt_id, spot_id, action, regret, evaluation, created_at)
-      VALUES ($1, $2, $3, $4, $5, $6, $7::jsonb, $8) ON CONFLICT (user_id, attempt_id) DO NOTHING`,
-    [randomUUID(), users[0].id, attemptId, spot.id, action, evaluation.regret, JSON.stringify(evaluation), created]);
+  const existing = await db.query('SELECT id FROM nlhe_sessions WHERE user_id = $1 AND client_id = $2 AND completed_at IS NOT NULL', [users[0].id, 'de000000-0000-4000-8000-000000000100']);
+  if (!existing.length) {
+    const range = await (await getNlheProvider()).getRangeStrategy(DEFAULT_NLHE);
+    let session = await startNlheSession(db, users[0].id, { config: DEFAULT_NLHE, solutionVersion: range.provenance.solutionVersion, clientId: 'de000000-0000-4000-8000-000000000100' });
+    while (session.answered < 3) {
+      const combo = range.combos.find(c => c.cards.join('') === session.question.cards.join(''))!;
+      const action = [...combo.actions].sort((a, b) => b.frequency - a.frequency)[0].action;
+      await answerNlhe(db, users[0].id, { sessionId: session.id, questionId: session.question.id, action });
+      await db.query('UPDATE nlhe_decisions SET created_at = $2 WHERE question_id = $1', [session.question.id, new Date(Date.now() - (3 - session.answered) * 86400000).toISOString()]);
+      if (session.answered === 2) break;
+      session = await nextNlheQuestion(db, users[0].id, session.id);
+    }
+    await finishNlheSession(db, users[0].id, session.id);
   }
   // Re-seeding recovers demo login after mistyped passwords without resetting study records.
   await db.query('DELETE FROM request_limits WHERE key = $1', [sha256(`login:${DEVELOPMENT_DEMO.email}`)]);

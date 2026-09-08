@@ -8,6 +8,7 @@
   },
   "scripts": {
     "dev": "next dev --webpack --hostname 127.0.0.1",
+    "ranges:generate": "tsx scripts/nlhe.ts",
     "db:setup": "tsx scripts/local-db.ts setup",
     "db:migrate": "tsx scripts/local-db.ts migrate",
     "db:seed": "tsx scripts/local-db.ts seed",
@@ -15,6 +16,8 @@
     "setup:local": "pnpm db:setup && pnpm db:seed",
     "build": "next build --webpack",
     "start": "next start --hostname 127.0.0.1",
+    "start:hosted": "node scripts/start-hosted.mjs",
+    "db:migrate:hosted": "tsx scripts/migrate-hosted.ts",
     "typecheck": "next typegen && tsc --noEmit",
     "lint": "eslint .",
     "test": "vitest run",

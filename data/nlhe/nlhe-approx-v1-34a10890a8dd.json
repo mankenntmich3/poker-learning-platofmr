@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "version": "nlhe-approx-v1-34a10890a8dd",
+  "checksum": "34a10890a8dde65f4f83e2c15d645300bf921fe8653ab7a7d90fe630818dce91",
+  "algorithmChecksum": "2ccd6c192d812e0a88ed49671cbd6797d1cfa3c48e3dd2e63183af3a5b3a02e5",
+  "generatedAt": "2026-09-08T00:00:00.000Z",
+  "policy": {
+    "algorithm": "rangeform-nlhe-heuristic/1.0.0",
+    "authorship": "Original Rangeform educational policy; no third-party range data",
+    "openCoverage": {
+      "UTG": 0.18,
+      "HJ": 0.22,
+      "CO": 0.29,
+      "BTN": 0.45,
+      "SB": 0.4
+    },
+    "vsOpenContinue": {
+      "UTG": 0.12,
+      "HJ": 0.14,
+      "CO": 0.18,
+      "BTN": 0.24,
+      "SB": 0.28
+    },
+    "vsOpenRaise": {
+      "UTG": 0.04,
+      "HJ": 0.05,
+      "CO": 0.065,
+      "BTN": 0.09,
+      "SB": 0.11
+    },
+    "vs3betContinue": 0.42,
+    "vs3betRaise": 0.14,
+    "mixStep": 0.25,
+    "boundaryCombos": 24
+  }
+}

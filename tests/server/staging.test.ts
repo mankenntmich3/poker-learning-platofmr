@@ -1,0 +1,22 @@
+import { afterEach, beforeEach, expect, test, vi } from 'vitest';
+import { createMemoryDatabase, type Database } from '@/server/db';
+import { register, login, exportAccount } from '@/server/service';
+import { stagingInviteRequired } from '@/server/staging';
+let db: Database;
+beforeEach(async () => { db = await createMemoryDatabase(); vi.stubEnv('STAGING_MODE', 'true'); });
+afterEach(async () => { vi.unstubAllEnvs(); await db.close(); });
+test('private staging refuses missing configuration and uninvited signup without storing the invitation', async () => {
+  vi.stubEnv('STAGING_INVITE_CODE', '');
+  expect(() => stagingInviteRequired()).toThrow();
+  const invite = 'a-staging-test-invite-only-2026'; vi.stubEnv('STAGING_INVITE_CODE', invite);
+  const account = { name: 'Staging', email: 'staging@example.test', password: 'Staging-test-password!' };
+  await expect(register(db, account)).rejects.toMatchObject({ status: 403 });
+  await expect(register(db, { ...account, inviteCode: 'wrong' })).rejects.toMatchObject({ status: 403 });
+  expect(await db.query('SELECT id FROM study_users')).toEqual([]);
+  const created = await register(db, { ...account, inviteCode: invite });
+  expect((await login(db, { email: account.email, password: account.password })).user.id).toBe(created.user.id);
+  expect(JSON.stringify(await exportAccount(db, created.user))).not.toContain(invite);
+  vi.stubEnv('STAGING_INVITE_CODE', 'rotated-staging-invite-code-2026');
+  expect((await login(db, { email: account.email, password: account.password })).user.id).toBe(created.user.id);
+  await expect(register(db, { ...account, email: 'new@example.test', inviteCode: invite })).rejects.toMatchObject({ status: 403 });
+});

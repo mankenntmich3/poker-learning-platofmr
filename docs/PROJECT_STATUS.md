@@ -2,6 +2,20 @@
 
 Repository: `mankenntmich3/poker-learning-platofmr` (confirmed spelling). Updated 2026-09-08.
 
+## CURRENT — NLHE first, private staging in progress
+
+The owner replaced the Kuhn-facing milestone with No-Limit Texas Hold'em. The user-facing app now offers 6-max NLHE preflop RFI, responses to an open and responses to a 3-bet, all eleven requested 10–200 BB presets plus custom 10–500 BB stacks, a complete 169-class/1,326-combo mixed-frequency explorer, exact-spot ten-hand training and durable sessions/progress. The Academy lesson now teaches NLHE position, stacks, combos and mixed frequencies. A bounded 100 BB BTN-vs-BB SRP flop on A♠ 7♦ 2♣ supports hero cards, blocker-adjusted opponent range and check/bet feedback.
+
+No owned/licensed ranges were supplied. The owner explicitly authorized original **APPROXIMATED** educational data as the initial fallback. All user-facing ranges expose provenance and immutable version, with solver version and measured accuracy unavailable. There is no GTO or EV claim. Current policy: `nlhe-approx-v1-34a10890a8dd`. Its 386 context checks validate structure and legal actions only. Kuhn remains an internal solver/API regression, absent from primary navigation and training.
+
+Five real development Chromium flows passed: personal signup with protected return URL, exact preflop selection/training/relogin, every stack/position plus custom depth, mobile keyboard/accessibility, and bounded flop/blockers/feedback/persistence. Full production and final combined gates are being completed; do not treat this section as final milestone acceptance yet.
+
+The owner additionally requested a stable HTTPS staging address with managed PostgreSQL and authorized **free tiers only**. Render Free + Neon Free configuration is prepared with invitation-only signup and separate host secrets. Account setup and actual deployment are in progress. **No live deployment is claimed yet.** See [staging](staging.md) and [NLHE decision](decisions/0003-nlhe-first.md).
+
+## Historical acceptance — pre-NLHE local release
+
+The sections below record the previous Kuhn milestone. Current training is NLHE and server-persisted session position now survives reload. Earlier test counts and screenshots do not validate the new release.
+
 ## DONE — local development access
 
 The previous acceptance record did not establish practical local usability. Authentication was real and database-backed, but local hostname canonicalization could reject valid login requests with HTTP 403. Protected pages rendered signup instead of a clear login destination, the demo seed was missing, and training had no explicit session completion.
@@ -19,7 +33,7 @@ Local access browser suite: four scenarios passed, including personal signup, de
 
 Fresh-checkout acceptance is complete: a separate clone of the GitHub-identical commit began without dependencies, environment files or a database. Frozen installation, environment/database setup, migrations and seed succeeded. The real development browser completed demo login → dashboard → course → lesson/quiz → training/action/feedback/completion → saved progress → logout/login. Progress also survived a stopped/restarted server and reseed. Explicit reset restored the three sample decisions and incomplete lesson; the full flow passed again. See [local access QA evidence](qa/local-access.md) for revisions, commands, screenshots and limits.
 
-No secondary product expansion is in progress. Current session position resets on reload; all answered decisions and completed lessons remain stored. The complete product currently contains one course/lesson and the Kuhn training dataset only.
+At this historical checkpoint, session position reset on reload and the course used Kuhn. These limitations are superseded by the current NLHE work above.
 
 ## DONE — first complete learning flow
 

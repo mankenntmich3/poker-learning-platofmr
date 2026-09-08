@@ -2,13 +2,16 @@ import { getSolutionSummary, getTrainingSpots } from '@/strategy';
 import { body, json, route } from './http';
 import { lesson } from './lesson';
 import { readSessionToken, sessionCookie } from './security';
+import { stagingInviteRequired } from './staging';
+import { getNlheProvider } from '@/strategy/nlhe-provider';
+import { DEFAULT_NLHE } from '@/shared/nlhe';
 import {
   completeLesson, completionSchema, dashboard, decisionSchema, deleteAccount, deleteAccountSchema,
   emptySchema, exportAccount, login, loginSchema, logout, recordDecision, register, registerSchema,
   requireUser, sessionUser, settingsSchema, updateSettings,
 } from './service';
 
-export const sessionGet = route(async (request, db) => ({ user: await sessionUser(db, readSessionToken(request)) }));
+export const sessionGet = route(async (request, db) => ({ user: await sessionUser(db, readSessionToken(request)), stagingInviteRequired: stagingInviteRequired() }));
 export const registerPost = route(async (request, db) => {
   const result = await register(db, await body(request, registerSchema));
   await logout(db, readSessionToken(request));
@@ -60,9 +63,9 @@ export const accountDelete = route(async (request, db) => {
 }, { mutation: true });
 export const healthGet = route(async (_request, db) => {
   await db.query('SELECT 1 AS ready');
-  const solution = await getSolutionSummary();
+  const solution = await (await getNlheProvider()).getNode(DEFAULT_NLHE);
   return { status: 'ok', database: { status: 'ready', engine: process.env.DATABASE_URL ? 'postgresql' : 'pglite', durable: true },
-    strategy: { status: 'ready', storage: 'versioned-local-artifact', version: solution.version, cloudCompute: 'disabled' },
+    strategy: { status: 'ready', game: 'nlhe', sourceType: solution.provenance.sourceType, storage: 'versioned-local-artifact', version: solution.provenance.solutionVersion, cloudCompute: 'disabled' },
     queue: { status: 'inactive', reason: 'The MVP does not enqueue background jobs.' },
     worker: { status: 'inactive', reason: 'Strategies are generated offline; no worker is running.' } };
 });
