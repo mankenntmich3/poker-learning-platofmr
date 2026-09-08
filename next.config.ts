@@ -1,6 +1,7 @@
 import type { NextConfig } from 'next';
 const config: NextConfig = {
   poweredByHeader: false,
+  devIndicators: false,
   experimental: { optimizePackageImports: ['lucide-react'] },
   serverExternalPackages: ['@electric-sql/pglite', 'pg'],
   outputFileTracingIncludes: { '/**': ['./data/solutions/**/*', './migrations/**/*'] },
