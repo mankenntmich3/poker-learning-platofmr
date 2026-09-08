@@ -6,7 +6,7 @@ The initial training dataset is **genuinely computed Kuhn poker**, a small three
 
 ![Rangeform study dashboard](docs/qa/dashboard-desktop.png)
 
-See the [acceptance results and mobile screenshots](docs/qa/README.md).
+See the [local access acceptance results and mobile screenshots](docs/qa/local-access.md).
 
 ## LOCAL DEVELOPMENT — QUICK START
 

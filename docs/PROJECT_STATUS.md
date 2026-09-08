@@ -1,8 +1,8 @@
 # Project status
 
-Repository: `mankenntmich3/poker-learning-platofmr` (confirmed spelling). Updated 2026-09-07.
+Repository: `mankenntmich3/poker-learning-platofmr` (confirmed spelling). Updated 2026-09-08.
 
-## PRIORITY — local development access
+## DONE — local development access
 
 The previous acceptance record did not establish practical local usability. Authentication was real and database-backed, but local hostname canonicalization could reject valid login requests with HTTP 403. Protected pages rendered signup instead of a clear login destination, the demo seed was missing, and training had no explicit session completion.
 
@@ -15,7 +15,9 @@ Implemented fixes:
 - Academy → one course → existing original lesson/quiz → associated trainer; session start, up to twelve decisions, feedback, early/full completion and durable per-decision progress.
 - Exact commands and demo credentials in [LOCAL DEVELOPMENT — QUICK START](../README.md#local-development--quick-start).
 
-Local access browser suite: four scenarios passed, including personal signup, demo course/training/relogin, both loopback aliases, protected destinations, expired sessions and mobile accessibility. Strict typecheck, lint, 35 domain/solver tests, 16 server tests and the production build passed; the additional external PostgreSQL case runs in CI. Fresh-checkout acceptance and final CI are being recorded before release.
+Local access browser suite: four scenarios passed, including personal signup, demo course/training/relogin, both loopback aliases, protected destinations, expired sessions and mobile accessibility. Strict typecheck, lint, 35 domain/solver tests, 16 local server tests and the production build passed. GitHub additionally passed the external PostgreSQL test and both browser suites: **59 tests passed** in [run 34160222732](https://github.com/mankenntmich3/poker-learning-platofmr/actions/runs/34160222732).
+
+Fresh-checkout acceptance is complete: a separate clone of the GitHub-identical commit began without dependencies, environment files or a database. Frozen installation, environment/database setup, migrations and seed succeeded. The real development browser completed demo login → dashboard → course → lesson/quiz → training/action/feedback/completion → saved progress → logout/login. Progress also survived a stopped/restarted server and reseed. Explicit reset restored the three sample decisions and incomplete lesson; the full flow passed again. See [local access QA evidence](qa/local-access.md) for revisions, commands, screenshots and limits.
 
 No secondary product expansion is in progress. Current session position resets on reload; all answered decisions and completed lessons remain stored. The complete product currently contains one course/lesson and the Kuhn training dataset only.
 

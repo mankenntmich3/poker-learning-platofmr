@@ -1,5 +1,7 @@
 # Learning foundation — acceptance evidence
 
+For the current local authentication, demo seed, course navigation, completed training session and fresh-checkout acceptance, see [Local development access — acceptance evidence](local-access.md). The record below covers the earlier foundation baseline.
+
 Verified locally on **2026-09-07**, Windows, Node 24.19.0, locked dependencies, Next.js production build and Playwright Chromium. Screenshots contain synthetic test accounts only.
 
 ## Executed checks

@@ -8,6 +8,8 @@ The application does not provision infrastructure. Hosting, domain registration,
 
 ## Startup and health
 
+For local development, follow [LOCAL DEVELOPMENT — QUICK START](../README.md#local-development--quick-start): `pnpm install --frozen-lockfile`, `pnpm db:setup`, `pnpm db:migrate`, `pnpm db:seed`, then `pnpm dev`. Setup creates the local environment file and database. The seeded demo uses real authentication and is allowed only in local development; no bypass exists. Stop the server before reseeding or resetting. `pnpm db:reset --confirm` clears all local accounts and progress, and `pnpm db:seed` then recreates the demo. These local commands reject production mode and `DATABASE_URL`.
+
 Use Node 24 and the pinned pnpm version. Install from the lockfile, run the quality gates and start the app. A hosted environment must supply `DATABASE_URL` and `APP_ORIGIN`; see the configuration checks in the server code. The local-preview flag is for running a production build on your own machine and must not be used for horizontal deployments.
 
 `pnpm typecheck` first generates Next.js route/environment types, so a fresh checkout does not require a previous build. The generated `next-env.d.ts` is ignored: development and production legitimately reference different generated paths. Next.js's managed guidance block is retained in `AGENTS.md` alongside the project rules.
