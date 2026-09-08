@@ -1942,7 +1942,6 @@ Do not rely on chat history as the only project memory.
 Do not stop after creating a plan.
 Begin implementation now.
 
-
 ## Confirmed repository
 
 The user confirmed `mankenntmich3/poker-learning-platofmr` as the actual permanent repository on 2026-09-06. References to `poker-learning-platform` above describe the original requested spelling.

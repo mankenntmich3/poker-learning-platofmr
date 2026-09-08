@@ -1,0 +1,12 @@
+{
+  "id": "kuhn-b04d8088b8d123cd9efc156a",
+  "status": "completed",
+  "iterations": 100000,
+  "configHash": "3aa10f7dbb9770463abd6116ec4d17c642f8fbeacbfdaefbfe5a3a84f3fbd08b",
+  "createdAt": "2026-09-06T23:28:46.404Z",
+  "startedAt": "2026-09-06T23:28:46.406Z",
+  "completedAt": "2026-09-06T23:28:46.418Z",
+  "computeTimeMs": 893,
+  "solutionVersion": "cfr1-100000-e359ca83dfee",
+  "exploitability": 0.0006762196802849174
+}

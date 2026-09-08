@@ -1,0 +1,11 @@
+{
+  "id": "kuhn-cfr-100000",
+  "status": "completed",
+  "iterations": 100000,
+  "createdAt": "2026-09-06T17:14:58.817Z",
+  "startedAt": "2026-09-06T17:14:58.817Z",
+  "completedAt": "2026-09-06T17:14:59.716Z",
+  "computeTimeMs": 893,
+  "solutionVersion": "cfr1-100000-e359ca83dfee",
+  "exploitability": 0.0006762196802849174
+}
