@@ -47,6 +47,11 @@ test('bounded BTN-vs-BB flop offers card removal, check/bet feedback and retaine
 test('demo explores mixed NLHE ranges, switches stack, trains exact spot and retains progress after relogin', async ({ page }, info) => {
   await demoLogin(page); const baseline = await (await page.request.get('/api/nlhe/progress')).json();
   await page.getByRole('link', { name: 'Preflop entdecken' }).click();
+  // Slow server navigation must not make successive controls overwrite an earlier selection.
+  await page.route('**/ranges?**', async route => {
+    await new Promise(resolve => setTimeout(resolve, 500));
+    await route.continue();
+  });
   await page.getByLabel('Effektiver Stack', { exact: true }).selectOption('25');
   await page.getByLabel('Deine Position', { exact: true }).selectOption('SB');
   await page.getByLabel('Vorgeschichte', { exact: true }).selectOption('vs-open');
