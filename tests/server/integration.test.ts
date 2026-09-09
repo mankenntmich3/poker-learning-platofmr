@@ -8,6 +8,9 @@ import { createLocalDatabase, createMemoryDatabase, createPostgresDatabase, type
 import { completeLesson, dashboard, deleteAccount, exportAccount, login, logout, recordDecision, register, requireUser, sessionUser, updateSettings } from '@/server/service';
 import { enforceRateLimit, sha256, verifyPassword } from '@/server/security';
 import { getTrainingSpots } from '@/strategy';
+import { DEFAULT_NLHE } from '@/shared/nlhe';
+import { getNlheProvider } from '@/strategy/nlhe-provider';
+import { startNlheSession, answerNlhe, getNlheSession } from '@/server/nlhe-service';
 
 const password = 'correct-horse-poker-2026';
 const account = () => ({ name: 'Testspieler', email: `player-${randomUUID()}@example.test`, password });
@@ -27,6 +30,9 @@ describe('accounts and durable learning data', () => {
       await completeLesson(local, created.user, 1);
       const [spot] = await getTrainingSpots();
       await recordDecision(local, created.user, { spotId: spot.id, action: spot.actions[0].id, attemptId: randomUUID(), solutionVersion: spot.solutionVersion });
+      const range = await (await getNlheProvider()).getNode(DEFAULT_NLHE);
+      const nlhe = await startNlheSession(local, created.user.id, { config: DEFAULT_NLHE, clientId: randomUUID(), solutionVersion: range.provenance.solutionVersion });
+      await answerNlhe(local, created.user.id, { sessionId: nlhe.id, questionId: nlhe.question.id, action: 'fold' });
       await local.close();
       local = undefined;
       const exited = spawnSync(process.execPath, ['-e', 'process.exit(0)']);
@@ -38,6 +44,10 @@ describe('accounts and durable learning data', () => {
       expect(restored.decisions).toBe(1);
       expect(restored.lessonCompleted).toBe(true);
       expect(restored.xp).toBe(60);
+      expect(restored.nlhe.decisions).toBe(1);
+      const resumed = await getNlheSession(local, created.user.id, nlhe.id);
+      expect(resumed.question.id).toBe(nlhe.question.id);
+      expect(resumed.feedback?.chosenAction).toBe('fold');
     } finally {
       if (local) await local.close();
       const resolved = path.resolve(directory);

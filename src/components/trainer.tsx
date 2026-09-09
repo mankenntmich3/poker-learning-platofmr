@@ -20,7 +20,7 @@ function TrainerContent() {
   async function start() {
     if (!range.data || busy) return; setBusy(true); setError('');
     const key = configSearch(range.data.config); client.current = client.current?.key === key ? client.current : { key, id: crypto.randomUUID() };
-    try { const result = await api<NlheSession>('/api/nlhe/start', { method: 'POST', body: JSON.stringify({ config: range.data.config, solutionVersion: range.data.provenance.solutionVersion, clientId: client.current.id }) }); setUpdated(result); router.replace(`/trainer?session=${result.id}`, { scroll: false }); }
+    try { const result = await api<NlheSession>('/api/nlhe/start', { method: 'POST', body: JSON.stringify({ config: range.data.config, solutionVersion: range.data.provenance.solutionVersion, clientId: client.current.id }) }); client.current = null; setUpdated(result); router.replace(`/trainer?session=${result.id}`, { scroll: false }); }
     catch (cause) { setError(cause instanceof Error ? cause.message : 'Die Sitzung konnte nicht gestartet werden.'); } finally { setBusy(false); }
   }
   async function answer(action: NlheAction) {

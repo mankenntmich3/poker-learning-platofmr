@@ -21,6 +21,7 @@ export async function seedDevelopmentAccount(db: Database): Promise<void> {
   if (!existing.length) {
     const range = await (await getNlheProvider()).getRangeStrategy(DEFAULT_NLHE);
     let session = await startNlheSession(db, users[0].id, { config: DEFAULT_NLHE, solutionVersion: range.provenance.solutionVersion, clientId: 'de000000-0000-4000-8000-000000000100' });
+    await db.query('UPDATE nlhe_sessions SET is_sample = true WHERE id = $1', [session.id]);
     while (session.answered < 3) {
       const combo = range.combos.find(c => c.cards.join('') === session.question.cards.join(''))!;
       const action = [...combo.actions].sort((a, b) => b.frequency - a.frequency)[0].action;
@@ -31,6 +32,7 @@ export async function seedDevelopmentAccount(db: Database): Promise<void> {
     }
     await finishNlheSession(db, users[0].id, session.id);
   }
+  await db.query('UPDATE nlhe_sessions SET is_sample = true WHERE user_id = $1 AND client_id = $2', [users[0].id, 'de000000-0000-4000-8000-000000000100']);
   // Re-seeding recovers demo login after mistyped passwords without resetting study records.
   await db.query('DELETE FROM request_limits WHERE key = $1', [sha256(`login:${DEVELOPMENT_DEMO.email}`)]);
 }

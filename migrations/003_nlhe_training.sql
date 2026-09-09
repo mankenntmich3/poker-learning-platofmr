@@ -26,5 +26,6 @@ CREATE TABLE IF NOT EXISTS nlhe_decisions (
 CREATE INDEX IF NOT EXISTS nlhe_sessions_user ON nlhe_sessions(user_id, created_at DESC);
 ALTER TABLE nlhe_sessions ADD COLUMN IF NOT EXISTS range_snapshot jsonb;
 ALTER TABLE nlhe_sessions ADD COLUMN IF NOT EXISTS opponent_snapshot jsonb;
+ALTER TABLE nlhe_sessions ADD COLUMN IF NOT EXISTS is_sample boolean NOT NULL DEFAULT false;
 CREATE INDEX IF NOT EXISTS nlhe_decisions_user ON nlhe_decisions(user_id, created_at DESC);
 INSERT INTO schema_migrations (version) VALUES (3) ON CONFLICT DO NOTHING;

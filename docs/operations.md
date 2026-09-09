@@ -2,15 +2,15 @@
 
 ## Environment separation
 
-Development uses `.data/postgres` and checked-in computed solution artifacts. Tests use isolated in-memory PostgreSQL and an isolated browser database directory. Staging and production must each use their own PostgreSQL, storage location, secrets, canonical HTTPS origin and backups. Never reuse a production database for local tests. The environment example contains no secrets.
+Development uses `.data/postgres` and checked-in versioned strategy artifacts. User-facing NLHE data is explicitly APPROXIMATED; computed Kuhn data is an internal regression. Tests use isolated in-memory PostgreSQL and isolated browser database directories. Staging and production must each use their own PostgreSQL, storage location, secrets, canonical HTTPS origin and backups. Never reuse a production database for local tests. The environment example contains no secrets.
 
-The application does not provision infrastructure. Hosting, domain registration, email delivery and paid compute have not been purchased or configured. A production build passing does not establish commercial readiness.
+The owner authorized Render Free web hosting and Neon Free PostgreSQL. Provisioning and live verification are tracked in [staging](staging.md). No paid compute, domain purchase or email delivery is included. A production build passing does not establish commercial readiness.
 
 ## Startup and health
 
 For local development, follow [LOCAL DEVELOPMENT — QUICK START](../README.md#local-development--quick-start): `pnpm install --frozen-lockfile`, `pnpm db:setup`, `pnpm db:migrate`, `pnpm db:seed`, then `pnpm dev`. Setup creates the local environment file and database. The seeded demo uses real authentication and is allowed only in local development; no bypass exists. Stop the server before reseeding or resetting. `pnpm db:reset --confirm` clears all local accounts and progress, and `pnpm db:seed` then recreates the demo. These local commands reject production mode and `DATABASE_URL`.
 
-Use Node 24 and the pinned pnpm version. Install from the lockfile, run the quality gates and start the app. A hosted environment must supply `DATABASE_URL` and `APP_ORIGIN`; see the configuration checks in the server code. The local-preview flag is for running a production build on your own machine and must not be used for horizontal deployments.
+Use Node 24 and the pinned pnpm version. Install from the lockfile, run the quality gates and start the app. A hosted environment must supply `DATABASE_URL` and `APP_ORIGIN`; `pnpm start:hosted` can derive the latter from Render's assigned HTTPS URL. Private staging additionally requires its invitation secret. The local-preview flag is only for running a production build on your own machine and must never be enabled on the host.
 
 `pnpm typecheck` first generates Next.js route/environment types, so a fresh checkout does not require a previous build. The generated `next-env.d.ts` is ignored: development and production legitimately reference different generated paths. Next.js's managed guidance block is retained in `AGENTS.md` alongside the project rules.
 

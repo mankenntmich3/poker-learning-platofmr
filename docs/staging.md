@@ -1,6 +1,6 @@
 # Private staging — Render Free + Neon Free
 
-Status: **prepared, not yet deployed**. The owner approved free tiers only on 2026-09-08 and is completing both account registrations. No live URL or hosted database has been verified yet.
+Status: **deployment in progress** (2026-09-09). Both owner accounts and repository access are ready. The Neon Free project `rangeform-staging` (`green-base-17157640`) exists in AWS Frankfurt with PostgreSQL 18, database `neondb`. Render's Free web service form is prepared. No live application URL has been verified yet.
 
 ## Ownership and limits
 
@@ -10,10 +10,10 @@ Render Free provides a stable `onrender.com` HTTPS address but sleeps after 15 m
 
 ## Setup
 
-1. Create a Neon Free project named `rangeform-staging`, ideally AWS Frankfurt, PostgreSQL 17. Use a separate `rangeform_staging` database. No existing production database is involved.
+1. Use the dedicated Neon Free project `rangeform-staging`, AWS Frankfurt, PostgreSQL 18, database `neondb`. No existing production database is involved.
 2. Import `render.yaml` from this private repository into the owner's Render workspace. Confirm web compute **Free**, Frankfurt, branch `main`, and deployment after successful checks.
 3. Enter the **direct, non-pooled** Neon connection string as secret `DATABASE_URL`. Use certificate-verifying TLS (`sslmode=verify-full`). The startup migrator holds a session advisory lock, so the transaction-pooler address is not suitable for schema initialization.
-4. Set `APP_ORIGIN` to the exact assigned `https://…onrender.com` URL, without a path. Set `STAGING_MODE=true`; let Render generate secret `STAGING_INVITE_CODE` (at least 24 characters). Never set `ALLOW_LOCAL_DB`, `DATA_DIR`, `TEST_DATABASE_URL`, `DEV_AUTH_BYPASS` or development credentials on the host.
+4. `pnpm start:hosted` uses Render's assigned HTTPS `RENDER_EXTERNAL_URL` as `APP_ORIGIN` when `RENDER=true`. A custom domain requires an explicit exact HTTPS `APP_ORIGIN` without a path. Set `STAGING_MODE=true`; let Render generate secret `STAGING_INVITE_CODE` (at least 24 characters). Pin `NODE_VERSION=24`. Never set `ALLOW_LOCAL_DB`, `DATA_DIR`, `TEST_DATABASE_URL`, `DEV_AUTH_BYPASS` or development credentials on the host.
 5. Deploy. The server binds `0.0.0.0:$PORT`. Its first database access applies ordered, idempotent SQL migrations. To explicitly apply them in an environment holding the hosted secret, use `pnpm db:migrate:hosted`. This command does not seed accounts.
 6. Verify `/api/health`: database `postgresql`, strategy game `nlhe`, source `APPROXIMATED`. The hosting health check is `/api/live`, which avoids repeatedly waking the database.
 7. Create a personal application account using the staging invitation, then choose a private password. Never use the local demo credentials on the host. The invitation is only needed for signup; subsequent login uses the personal account. Keep the invitation in the owner's password manager and host secret store. Rotating it does not revoke existing accounts; account/session management remains separate.

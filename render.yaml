@@ -13,7 +13,7 @@ services:
     autoDeployTrigger: checksPass
     envVars:
       - key: NODE_VERSION
-        value: 24.14.0
+        value: '24'
       - key: NODE_ENV
         value: production
       - key: STAGING_MODE
@@ -22,5 +22,4 @@ services:
         generateValue: true
       - key: DATABASE_URL
         sync: false
-      - key: APP_ORIGIN
-        sync: false
+# start:hosted uses Render's assigned HTTPS URL as APP_ORIGIN.
