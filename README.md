@@ -8,6 +8,8 @@ Preflop supports RFI, responses to one open (fold/call/3-bet), and responses to 
 
 See [strategy scope and provenance](docs/decisions/0003-nlhe-first.md), [current status](docs/PROJECT_STATUS.md) and [private staging setup](docs/staging.md).
 
+**Online staging:** [https://rangeform-staging.onrender.com](https://rangeform-staging.onrender.com). Use a personal account; initial registration requires the owner's private invitation. Local demo credentials do not work online. Render Free may need about a minute to wake after inactivity; PostgreSQL progress is stored separately on Neon. The local setup below remains independent.
+
 ## LOCAL DEVELOPMENT — QUICK START
 
 Requirements: Node.js 24, Git and pnpm 10.28.2. If pnpm is missing, install it once with `npm install --global pnpm@10.28.2`. Authenticate Git with your GitHub account to clone this private repository.

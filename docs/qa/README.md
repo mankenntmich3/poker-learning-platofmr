@@ -1,6 +1,6 @@
 # Learning foundation — acceptance evidence
 
-For the current local authentication, demo seed, course navigation, completed training session and fresh-checkout acceptance, see [Local development access — acceptance evidence](local-access.md). The record below covers the earlier foundation baseline.
+For the current NLHE application, see [NLHE study — acceptance evidence](nlhe-acceptance.md). [Local development access](local-access.md) records the preceding authentication milestone. The screenshots and totals below cover the historical Kuhn foundation, not the current user-facing trainer.
 
 Verified locally on **2026-09-07**, Windows, Node 24.19.0, locked dependencies, Next.js production build and Playwright Chromium. Screenshots contain synthetic test accounts only.
 

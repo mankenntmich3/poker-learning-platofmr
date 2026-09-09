@@ -1,6 +1,15 @@
 # Private staging — Render Free + Neon Free
 
-Status: **deployment in progress** (2026-09-09). Both owner accounts and repository access are ready. The Neon Free project `rangeform-staging` (`green-base-17157640`) exists in AWS Frankfurt with PostgreSQL 18, database `neondb`. Render's Free web service form is prepared. No live application URL has been verified yet.
+Status: **online** (2026-09-09). Stable HTTPS: [rangeform-staging.onrender.com](https://rangeform-staging.onrender.com). Render confirmed `Deploy succeeded | Live`; `/api/health` verified the real PostgreSQL database and NLHE artifact. Personal account creation and the final authenticated hosted browser journey are in progress.
+
+## Deployed resources
+
+- Render Free web service: `rangeform-staging`, ID `srv-dagro2rl550s73e5suc0`, Frankfurt, Node 24.21.0, branch `main`.
+- Initial live revision: `a408c2981bf25b43d08c134b87f0a4f9fac3e1a2`, deploy `dep-dagro3jl550s73e5t190`, 2026-09-09 at 22:07 CEST.
+- Neon Free project: `rangeform-staging` (`green-base-17157640`), AWS Frankfurt, PostgreSQL 18, dedicated database `neondb`. The provider-created branch is called `production`; it holds only this staging application, not existing production data.
+- Both provider accounts belong to the owner. Database and invitation credentials exist only in the provider configuration, never in this repository.
+
+Verified public HTTPS checks: health `ok`, database `postgresql/ready`, NLHE policy `nlhe-approx-v1-34a10890a8dd`, invitation required, protected progress returns 401 while logged out, uninvited registration returns 403, and development demo login returns 401. The browser redirects a logged-out visitor to `/login?next=%2F`. No hosted demo account is seeded.
 
 ## Ownership and limits
 
@@ -11,7 +20,7 @@ Render Free provides a stable `onrender.com` HTTPS address but sleeps after 15 m
 ## Setup
 
 1. Use the dedicated Neon Free project `rangeform-staging`, AWS Frankfurt, PostgreSQL 18, database `neondb`. No existing production database is involved.
-2. Import `render.yaml` from this private repository into the owner's Render workspace. Confirm web compute **Free**, Frankfurt, branch `main`, and deployment after successful checks.
+2. Import `render.yaml` from this private repository into the owner's Render workspace. Confirm web compute **Free**, Frankfurt, branch `main`, and deployment after successful checks. Build with `corepack enable && pnpm install --frozen-lockfile --prod=false && pnpm build`; the explicit install flag retains TypeScript/build dependencies even with `NODE_ENV=production`. Start with `pnpm start:hosted`.
 3. Enter the **direct, non-pooled** Neon connection string as secret `DATABASE_URL`. Use certificate-verifying TLS (`sslmode=verify-full`). The startup migrator holds a session advisory lock, so the transaction-pooler address is not suitable for schema initialization.
 4. `pnpm start:hosted` uses Render's assigned HTTPS `RENDER_EXTERNAL_URL` as `APP_ORIGIN` when `RENDER=true`. A custom domain requires an explicit exact HTTPS `APP_ORIGIN` without a path. Set `STAGING_MODE=true`; let Render generate secret `STAGING_INVITE_CODE` (at least 24 characters). Pin `NODE_VERSION=24`. Never set `ALLOW_LOCAL_DB`, `DATA_DIR`, `TEST_DATABASE_URL`, `DEV_AUTH_BYPASS` or development credentials on the host.
 5. Deploy. The server binds `0.0.0.0:$PORT`. Its first database access applies ordered, idempotent SQL migrations. To explicitly apply them in an environment holding the hosted secret, use `pnpm db:migrate:hosted`. This command does not seed accounts.

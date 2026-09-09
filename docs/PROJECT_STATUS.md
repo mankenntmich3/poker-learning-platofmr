@@ -1,16 +1,16 @@
 # Project status
 
-Repository: `mankenntmich3/poker-learning-platofmr` (confirmed spelling). Updated 2026-09-08.
+Repository: `mankenntmich3/poker-learning-platofmr` (confirmed spelling). Updated 2026-09-09.
 
-## CURRENT — NLHE first, private staging in progress
+## CURRENT — NLHE usable locally, private staging online
 
 The owner replaced the Kuhn-facing milestone with No-Limit Texas Hold'em. The user-facing app now offers 6-max NLHE preflop RFI, responses to an open and responses to a 3-bet, all eleven requested 10–200 BB presets plus custom 10–500 BB stacks, a complete 169-class/1,326-combo mixed-frequency explorer, exact-spot ten-hand training and durable sessions/progress. The Academy lesson now teaches NLHE position, stacks, combos and mixed frequencies. A bounded 100 BB BTN-vs-BB SRP flop on A♠ 7♦ 2♣ supports hero cards, blocker-adjusted opponent range and check/bet feedback.
 
 No owned/licensed ranges were supplied. The owner explicitly authorized original **APPROXIMATED** educational data as the initial fallback. All user-facing ranges expose provenance and immutable version, with solver version and measured accuracy unavailable. There is no GTO or EV claim. Current policy: `nlhe-approx-v1-34a10890a8dd`. Its 386 context checks validate structure and legal actions only. Kuhn remains an internal solver/API regression, absent from primary navigation and training.
 
-Five real development Chromium flows passed: personal signup with protected return URL, exact preflop selection/training/relogin, every stack/position plus custom depth, mobile keyboard/accessibility, and bounded flop/blockers/feedback/persistence. Full production and final combined gates are being completed; do not treat this section as final milestone acceptance yet.
+Strict typecheck, lint, 67 local tests and the production build passed. All three production Chromium flows and five development Chromium flows passed, including a fresh GitHub-identical checkout with frozen installation, new environment/database, migrations and seed. Full ten-hand completion, a second session, lost-response recovery, exact-spot training, logout/relogin and filesystem restart persistence are verified. Eight automated accessibility scans and nine responsive widths passed. GitHub additionally passed all 68 unit/integration tests against PostgreSQL 16 and both browser suites in [run 34398395517](https://github.com/mankenntmich3/poker-learning-platofmr/actions/runs/34398395517). PR #2 is merged. See [NLHE acceptance](qa/nlhe-acceptance.md). Target-host validation remains open.
 
-The owner additionally requested a stable HTTPS staging address with managed PostgreSQL and authorized **free tiers only**. Render Free + Neon Free configuration is prepared with invitation-only signup and separate host secrets. Account setup and actual deployment are in progress. **No live deployment is claimed yet.** See [staging](staging.md) and [NLHE decision](decisions/0003-nlhe-first.md).
+The owner additionally requested a stable HTTPS staging address with managed PostgreSQL and authorized **free tiers only**. The application is live at [rangeform-staging.onrender.com](https://rangeform-staging.onrender.com), backed by Neon Free PostgreSQL 18 in Frankfurt and Render Free. HTTPS readiness, actual PostgreSQL access, invitation-only signup, logged-out route protection and rejection of the local demo credentials are verified. Personal hosted account creation and the authenticated hosted learning/relogin check remain open. The local app and development demo remain available independently. See [staging](staging.md) and [NLHE decision](decisions/0003-nlhe-first.md).
 
 ## Historical acceptance — pre-NLHE local release
 
