@@ -1,0 +1,93 @@
+@layer components {
+  .postflop-brief { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 32px; padding: 28px; margin-bottom: 32px; }
+  .postflop-brief h2 { margin: 16px 0; }
+  .postflop-brief p { font-size: 12px; margin: 14px 0; max-width: 65ch; }
+  .postflop-brief .button { margin-top: 8px; }
+  .postflop-board { text-align: center; }
+  .postflop-combo { margin-top: 20px; }
+  .nlhe-controls { display: grid; grid-template-columns: .8fr .7fr 1.8fr .9fr; gap: 18px; padding: 22px; margin-bottom: 22px; align-items: end; }
+  .nlhe-controls-note { color: var(--muted); font-size: 11px; line-height: 1.6; }
+  .custom-stack { grid-column: 1 / -1; display: flex; align-items: end; gap: 14px; }
+  .custom-stack label { max-width: 190px; }
+  .nlhe-provenance { border: 1px solid #695438; background: #26231e; border-radius: 8px; margin-bottom: 24px; }
+  .nlhe-provenance summary { padding: 13px 18px; cursor: pointer; color: #f0d5ae; font-size: 12px; }
+  .nlhe-provenance summary strong { margin-right: 14px; font-size: 11px; }
+  .nlhe-provenance > div { padding: 0 18px 18px; max-width: 90ch; }
+  .nlhe-provenance ul { padding: 14px 0 14px 20px; color: var(--muted); font-size: 12px; }
+  .nlhe-provenance dl { display: grid; grid-template-columns: 150px 1fr; font-size: 11px; gap: 7px 16px; margin-bottom: 0; }
+  .nlhe-provenance dd { margin: 0; overflow-wrap: anywhere; }
+  .nlhe-context { margin-bottom: 20px; }
+  .nlhe-context p { margin-top: 6px; max-width: 90ch; font-size: 12px; }
+  .nlhe-study-layout { display: grid; grid-template-columns: minmax(0, 1fr) 285px; gap: 24px; align-items: start; }
+  .nlhe-legend { display: flex; flex-wrap: wrap; gap: 12px 20px; margin-bottom: 14px; font-size: 12px; }
+  .nlhe-legend > span, .nlhe-frequencies > div > div > span { display: inline-flex; align-items: center; gap: 8px; }
+  .action-dot { display: inline-block; width: 12px; height: 12px; border-radius: 3px; border: 1px solid #8d9aab; flex-shrink: 0; }
+  .action-fold { background: #263c57; }
+  .action-call, .action-check { background: #28574c; }
+  .action-raise, .action-bet { background: #7d404a; }
+  .nlhe-matrix-scroll { overflow-x: auto; padding: 5px; margin: -5px; scrollbar-color: #617494 #151d28; }
+  .nlhe-matrix { min-width: 520px; border: 1px solid var(--line); padding: 3px; border-radius: 8px; background: #111923; }
+  .nlhe-matrix > [role=row] { display: grid; grid-template-columns: repeat(13, minmax(0, 1fr)); gap: 3px; margin-bottom: 3px; }
+  .nlhe-matrix > [role=row]:last-child { margin-bottom: 0; }
+  .nlhe-cell { position: relative; height: 42px; isolation: isolate; border-radius: 3px; padding: 2px; overflow: hidden; font-size: 12px; font-weight: 650; color: #fff; line-height: 1.2; }
+  .nlhe-cell small { display: block; font-size: 9px; margin-top: 3px; }
+  .nlhe-cell .cell-mixture { position: absolute; display: flex; inset: 0; z-index: -1; }
+  .cell-mixture i { height: 100%; }
+  .nlhe-cell[aria-selected=true] { outline: 2px solid #e5ebff; outline-offset: -2px; }
+  .nlhe-cell:focus-visible { outline: 3px solid #fff; outline-offset: -3px; }
+  .nlhe-cell:hover { filter: brightness(1.22); }
+  .nlhe-cell.unreachable-hand .cell-mixture { opacity: .12; }
+  .nlhe-cell.unreachable-hand { color: #a6b2c4; }
+  .matrix-help { font-size: 11px; margin-top: 16px; max-width: 80ch; }
+  .nlhe-hand-detail { padding: 22px; }
+  .selected-hand-title { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 20px; }
+  .selected-hand-title h2 { font-size: 34px; }
+  .selected-hand-title > span { font-size: 12px; color: var(--muted); }
+  .nlhe-hand-detail p { font-size: 12px; margin: 14px 0; }
+  .nlhe-hand-detail details { margin-top: 20px; }
+  .nlhe-hand-detail summary, .nlhe-villain-range summary { cursor: pointer; min-height: 44px; font-size: 12px; color: var(--accent); }
+  .nlhe-detail-note { padding-top: 16px; border-top: 1px solid var(--line); }
+  .nlhe-combo-list { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+  .nlhe-frequencies { display: grid; gap: 15px; margin: 18px 0; }
+  .nlhe-frequencies > div > div:first-child { display: flex; justify-content: space-between; gap: 14px; align-items: baseline; font-size: 12px; }
+  .nlhe-frequencies strong { white-space: nowrap; font-variant-numeric: tabular-nums; }
+  .frequency-track { margin-top: 8px; height: 7px; overflow: hidden; background: #101824; border-radius: 2px; }
+  .frequency-track > span { display: block; height: 100%; filter: brightness(1.6); }
+  .nlhe-related { margin-top: 36px; padding-top: 24px; border-top: 1px solid var(--line); }
+  .nlhe-related > div { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 18px; }
+  .nlhe-training-layout { display: grid; grid-template-columns: minmax(0, 1fr) 325px; gap: 24px; align-items: start; }
+  .nlhe-table { padding: 24px; text-align: center; }
+  .nlhe-opponent { font-size: 12px; }
+  .nlhe-felt { display: flex; flex-direction: column; align-items: center; gap: 16px; padding: 28px 20px; margin: 16px 0 26px; border-radius: 45% / 30%; background: #192b35; border: 1px solid #355264; box-shadow: inset 0 0 0 7px #14232e; min-height: 310px; }
+  .nlhe-felt > span:last-child { font-size: 12px; color: var(--muted); }
+  .nlhe-pot { font-size: 12px; }
+  .nlhe-pot strong { display: block; font-size: 24px; margin-top: 3px; }
+  .nlhe-cards { display: inline-flex; gap: 9px; justify-content: center; }
+  .nlhe-card { display: flex; flex-direction: column; justify-content: space-between; text-align: left; padding: 10px 12px; width: 68px; height: 96px; border-radius: 7px; background: #edf0f4; color: #243b55; box-shadow: 0 2px 0 #8593a1; line-height: 1; }
+  .nlhe-card b { font-size: 28px; }
+  .nlhe-card > span { align-self: flex-end; font-size: 29px; }
+  .nlhe-card.red-card { color: #a12c45; }
+  .nlhe-cards-small { gap: 5px; }
+  .nlhe-cards-small .nlhe-card { width: 33px; height: 47px; padding: 5px; border-radius: 4px; }
+  .nlhe-cards-small b, .nlhe-cards-small .nlhe-card > span { font-size: 15px; }
+  .nlhe-table > p { font-size: 12px; }
+  .nlhe-table h2 { margin: 23px 0 17px; font-size: 18px; }
+  .nlhe-action-buttons { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; }
+  .nlhe-action-buttons .chosen-action { border: 2px solid var(--accent); background: #344466; opacity: 1; }
+  .nlhe-feedback { padding: 25px; }
+  .nlhe-feedback h2 { font-size: 19px; margin-bottom: 18px; }
+  .nlhe-feedback p { font-size: 12px; margin: 16px 0; }
+  .nlhe-feedback .feedback-observation { color: var(--text); font-weight: 600; }
+  .nlhe-no-ev { border-top: 1px solid var(--line); padding-top: 14px; }
+  .nlhe-feedback .button { margin-top: 12px; }
+  .nlhe-villain-range { margin-top: 30px; padding: 20px; border: 1px solid var(--line); border-radius: 8px; }
+  .nlhe-villain-range > div { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 15px; }
+  .nlhe-villain-range > div > span { background: var(--surface); padding: 6px 10px; border: 1px solid var(--line); border-radius: 4px; font-size: 11px; }
+  .course-entry .button + .button { margin-left: 10px; }
+}
+@layer responsive {
+  @media (max-width: 800px) { .postflop-brief { grid-template-columns: minmax(0, 1fr); padding: 20px; } .postflop-board { grid-row: 1; } .postflop-board p { margin-left: auto; margin-right: auto; } .mobile-navigation { grid-template-columns: repeat(5, 1fr); } }
+  @media (max-width: 1200px) { .nlhe-study-layout { grid-template-columns: minmax(0, 1fr) 250px; gap: 20px; } .nlhe-controls { grid-template-columns: 1fr 1fr; } .nlhe-training-layout { grid-template-columns: minmax(0, 1fr) 290px; gap: 20px; } }
+  @media (max-width: 1000px) { .nlhe-study-layout, .nlhe-training-layout { grid-template-columns: minmax(0, 1fr); } .nlhe-hand-detail { max-width: none; } .nlhe-combo-list { grid-template-columns: repeat(4, 1fr); } .nlhe-felt { max-width: 650px; margin-left: auto; margin-right: auto; } }
+  @media (max-width: 600px) { .nlhe-controls { padding: 16px; gap: 15px; } .nlhe-controls > label:nth-child(3) { grid-column: 1 / -1; } .nlhe-controls-note { grid-column: 1 / -1; } .nlhe-provenance summary span { display: block; margin-top: 4px; } .nlhe-provenance dl { grid-template-columns: 1fr; } .nlhe-provenance dd { margin-bottom: 8px; } .nlhe-table, .nlhe-feedback { padding: 18px; } .nlhe-felt { border-radius: 35% / 22%; padding-left: 10px; padding-right: 10px; } .nlhe-action-buttons .button { flex: 1 1 auto; } .nlhe-combo-list { grid-template-columns: repeat(3, 1fr); } .course-entry .button + .button { margin-left: 0; margin-top: 10px; } }
+}

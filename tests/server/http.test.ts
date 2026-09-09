@@ -28,7 +28,7 @@ describe('HTTP security boundary', () => {
     const mutation = await decisionPost(request('/api/trainer/decision', 'POST', {}));
     expect(mutation.status).toBe(401);
     const session = await sessionGet(request('/api/session'));
-    expect(await session.json()).toEqual({ user: null });
+    expect(await session.json()).toEqual({ user: null, stagingInviteRequired: false });
   });
 
   it('rejects absent and cross-site origins and non-JSON mutation requests', async () => {

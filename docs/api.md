@@ -1,6 +1,6 @@
-# API — initial learning slice
+# API — NLHE learning and private staging
 
-The Next.js App Router serves JSON from `/api`. Public response types are versioned with the application in `src/shared/contracts.ts`. The initial product supports one original German lesson and twelve information-set exercises from an actually computed Kuhn-Poker solution. It does not serve No-Limit-Hold’em solutions.
+The Next.js App Router serves JSON from `/api`. Public response types are versioned with the application in `src/shared/contracts.ts` and `src/shared/nlhe.ts`. The current product supports an original German NLHE lesson, preflop study and one bounded flop. Every NLHE range is labelled APPROXIMATED, with immutable provenance and unavailable solver accuracy/EV. Kuhn endpoints remain internal regression infrastructure.
 
 ## Requests and authentication
 
@@ -16,13 +16,19 @@ Passwords contain 10–128 characters and use scrypt with `N=131072`, `r=8`, `p=
 
 | Method and path | Request body | Success response | Authentication |
 | --- | --- | --- | --- |
-| `GET /api/session` | — | `{ user: StudyUser \| null }` | Optional |
-| `POST /api/auth/register` | `{ name, email, password, weeklyGoal?, experience? }` | `201 { user: StudyUser }`, session cookie | No |
+| `GET /api/session` | — | `{ user: StudyUser \| null, stagingInviteRequired: boolean }` | Optional |
+| `POST /api/auth/register` | `{ name, email, password, weeklyGoal?, experience?, inviteCode? }` | `201 { user: StudyUser }`, session cookie | Staging invitation when enabled |
 | `POST /api/auth/login` | `{ email, password }` | `{ user: StudyUser }`, new session cookie | No |
 | `POST /api/auth/logout` | `{}` | `{ ok: true }`, cleared session cookie | Idempotent |
 | `GET /api/dashboard` | — | `StudyDashboard` | Required |
 | `GET /api/lesson` | — | `Lesson` | Required |
 | `POST /api/lesson/complete` | `{ answer: 0 \| 1 \| 2 }` | `{ correct: boolean }` | Required |
+| `GET /api/nlhe/range` | Query: `stack`, `hero`, `scenario`, optional `villain` | `NlheNode` with 169 classes | Required |
+| `POST /api/nlhe/start` | `{ config, solutionVersion, clientId }` | `NlheSession` | Required |
+| `GET /api/nlhe/session?id=<uuid>` | — | Owned `NlheSession` | Required |
+| `POST /api/nlhe/session` | `{ id, command: "next" \| "finish" }` | Updated `NlheSession` | Required |
+| `POST /api/nlhe/decision` | `{ sessionId, questionId, action }` | Session with saved feedback | Required |
+| `GET /api/nlhe/progress` | — | `NlheProgress` | Required |
 | `GET /api/trainer` | — | `{ spots: TrainingSpot[] }` | Required |
 | `POST /api/trainer/decision` | `{ spotId, action, attemptId, solutionVersion }` | `Evaluation` | Required |
 | `GET /api/solution` | — | `SolutionSummary` | Required |
@@ -30,6 +36,21 @@ Passwords contain 10–128 characters and use scrypt with `N=131072`, `r=8`, `p=
 | `GET /api/account/export` | — | JSON download of own account and learning records | Required |
 | `DELETE /api/account` | `{ password }` | `{ ok: true }`, cleared session cookie | Required + current password |
 | `GET /api/health` | — | Database, solution storage, queue and worker status | No |
+| `GET /api/live` | — | Database-free liveness | No |
+
+## NLHE semantics
+
+Configuration is `{ game: "nlhe", format: "6max-cash", stackBb, hero, villain, scenario }`. Stacks support 10–500 BB with two decimal places. Positions are UTG/HJ/CO/BTN/SB/BB. Scenarios are `rfi`, `vs-open`, `vs-3bet` and the fixed `flop-srp` (100 BB BTN vs BB, A♠ 7♦ 2♣). Impossible action histories are rejected. `raise` is contextual: open, 3-bet or 4-bet, with the node's exact total sizing; actions are bounded by the effective stack.
+
+Starting a session snapshots the selected version, full combo strategy and any opponent range. The ten-question trainer samples physical Hold'em combos weighted by prior reach. It returns hole cards and legal actions before an answer; frequencies and policy feedback follow the answer. There is no estimated EV regret. The same `clientId` UUID retries a start idempotently; a deliberately new session requires a new UUID. Question IDs deduplicate answer retries, while conflicting answers are rejected. Reload resumes saved question/feedback. `finish` allows an early completion; completing all ten questions also requires the explicit completion action in the UI.
+
+All session access is account-scoped. Missing or another user's session returns 404. Snapshots preserve existing training when the active library changes. Progress derives from persisted decisions and sessions; seeded examples are labelled explicitly. Export version 2 includes NLHE learning records but omits secret credentials and bulky internal range snapshots.
+
+When `STAGING_MODE=true`, registration requires the private invitation. Missing or too-short server configuration fails closed with 503, and an invalid invitation returns 403. The invitation is never returned by the API or stored in the account. Its rotation leaves existing personal login unaffected. Local demo accounts are not permitted on hosted PostgreSQL.
+
+## Shared account and legacy regression semantics
+
+The following `attemptId`, computed EV and historical XP rules describe the retained `/api/trainer*` Kuhn endpoints. They are absent from primary product navigation. The main dashboard displays `StudyDashboard.nlhe` actual study counts and NLHE activity.
 
 Names are trimmed and contain 1–80 characters. Emails are trimmed, lowercased, syntactically validated and limited to 254 characters. `weeklyGoal` is an integer from 1 to 7 learning days per week, default 3. `experience` is `beginner`, `intermediate` or `advanced`, default `beginner`. A settings update must supply at least one field.
 

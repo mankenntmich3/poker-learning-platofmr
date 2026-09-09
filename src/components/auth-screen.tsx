@@ -6,14 +6,15 @@ import { ArrowRight, BookOpen, Check, Eye, EyeOff, LockKeyhole, Target } from "l
 import type { StudyUser } from "@/shared/contracts";
 import { safeReturnTo } from "@/shared/navigation";
 import { api, useSession } from "./study-context";
-import { ErrorNotice, LoadingPanel, MiniDeck } from "./ui";
+import { HoldemCards } from "./nlhe-ui";
+import { ErrorNotice, LoadingPanel } from "./ui";
 
 export function SessionGate({ children }: { children: ReactNode }) {
   const { user, loading, error, reload } = useSession();
   const router = useRouter();
   const pathname = usePathname();
   useEffect(() => {
-    if (!loading && !error && !user) router.replace(`/login?next=${encodeURIComponent(safeReturnTo(pathname))}`);
+    if (!loading && !error && !user) router.replace(`/login?next=${encodeURIComponent(safeReturnTo(pathname + window.location.search))}`);
   }, [user, loading, error, pathname, router]);
   if (error) return <ErrorNotice message={error} retry={reload} />;
   if (loading || !user) return <LoadingPanel label="Anmeldung wird geprüft…" />;
@@ -21,7 +22,7 @@ export function SessionGate({ children }: { children: ReactNode }) {
 }
 
 export function AuthScreen({ returnTo = "/" }: { returnTo?: string }) {
-  const { user, setUser, developmentDemo, loading } = useSession();
+  const { user, setUser, developmentDemo, loading, stagingInviteRequired } = useSession();
   const router = useRouter();
   const destination = safeReturnTo(returnTo);
   const [mode, setMode] = useState<"register" | "login">("login");
@@ -49,14 +50,14 @@ export function AuthScreen({ returnTo = "/" }: { returnTo?: string }) {
     event.preventDefault();
     const form = new FormData(event.currentTarget);
     const credentials = { email: form.get("email"), password: form.get("password") };
-    void authenticate(mode === "login" ? credentials : { ...credentials, name: form.get("name"), weeklyGoal: Number(form.get("weeklyGoal") ?? 3), experience: form.get("experience") ?? "beginner" }, mode);
+    void authenticate(mode === "login" ? credentials : { ...credentials, name: form.get("name"), weeklyGoal: Number(form.get("weeklyGoal") ?? 3), experience: form.get("experience") ?? "beginner", ...(stagingInviteRequired ? { inviteCode: form.get("inviteCode") } : {}) }, mode);
   }
   return <div className="auth-layout">
     <section className="auth-introduction">
-      <span className="context-label"><span className="small-rule" />Dein persönlicher Poker-Trainingsraum</span>
+      <span className="context-label"><span className="small-rule" />No-Limit Texas Hold’em · 6-max Cash</span>
       <h1>Verstehe die Hand.<br />Verbessere die Entscheidung.</h1>
       <p>Öffne deine Lektion, übe am Tisch und kehre zu deinem gespeicherten Fortschritt zurück.</p>
-      <div className="auth-table"><div className="auth-table-oval"><MiniDeck /><span className="table-wordmark" aria-hidden="true">rangeform</span></div><span className="illustration-caption">Ein kleines Spiel. Große strategische Fragen.</span></div>
+      <div className="auth-table"><div className="auth-table-oval"><HoldemCards cards={["As", "Ks"]} /><span className="table-wordmark" aria-hidden="true">rangeform</span></div><span className="illustration-caption">No-Limit Texas Hold’em. Dein persönliches Studium.</span></div>
       <div className="auth-promises"><span><BookOpen size={18} aria-hidden="true" />Konzepte verstehen</span><span><Target size={18} aria-hidden="true" />Entscheidungen üben</span><span><Check size={18} aria-hidden="true" />Fortschritt festhalten</span></div>
     </section>
     <section className="auth-form-panel" aria-labelledby="auth-title">
@@ -68,12 +69,13 @@ export function AuthScreen({ returnTo = "/" }: { returnTo?: string }) {
       <p>{mode === "register" ? "Ein Konto öffnet Academy und Training. Deine Ziele kannst du jederzeit ändern." : "Melde dich an. Danach öffnet sich die von dir gewählte Seite."}</p>
       {developmentDemo ? <aside className="development-access" aria-label="Lokaler Demo-Zugang">
         <strong>Lokal direkt ausprobieren</strong>
-        <p>Demo-Konto mit drei gespeicherten Beispielentscheidungen. Deine weiteren Übungen bleiben erhalten.</p>
+        <p>Demo-Konto mit gespeicherten NLHE-Beispielübungen. Deine weiteren Übungen bleiben erhalten.</p>
         <p><span>E-Mail: </span><code>{developmentDemo.email}</code><br /><span>Passwort: </span><code>{developmentDemo.password}</code></p>
         <button type="button" className="button button-secondary full-width" disabled={busy || loading} onClick={() => void authenticate(developmentDemo, "login")}>Mit Demo-Konto anmelden</button>
         <small>Nur in der lokalen Entwicklung. Beim ersten Start einmal <code>pnpm db:seed</code> ausführen.</small>
       </aside> : null}
       <form onSubmit={submit} className="form-stack">
+        {mode === 'register' && stagingInviteRequired ? <label htmlFor="inviteCode">Einladungscode<input id="inviteCode" name="inviteCode" type="password" autoComplete="off" maxLength={128} required /><small>Privates Staging. Den Code erhältst du vom Eigentümer.</small></label> : null}
         {mode === "register" ? <label htmlFor="name">Dein Name<input id="name" name="name" autoComplete="name" required maxLength={80} placeholder="Wie möchtest du heißen…" /></label> : null}
         <label htmlFor="email">E-Mail-Adresse<input id="email" name="email" type="email" autoComplete="email" spellCheck={false} required placeholder="du@beispiel.de…" /></label>
         <label htmlFor="password"><span id="password-label">Passwort</span><div className="password-field"><input id="password" name="password" aria-labelledby="password-label" type={visible ? "text" : "password"} autoComplete={mode === "register" ? "new-password" : "current-password"} minLength={mode === "register" ? 10 : undefined} maxLength={128} required aria-describedby={mode === "register" ? "password-hint" : undefined} /><button type="button" aria-label={visible ? "Passwort verbergen" : "Passwort anzeigen"} onClick={() => setVisible(!visible)}>{visible ? <EyeOff size={18} aria-hidden="true" /> : <Eye size={18} aria-hidden="true" />}</button></div>{mode === "register" ? <small id="password-hint">Mindestens 10 Zeichen.</small> : null}</label>

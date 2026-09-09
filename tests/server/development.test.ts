@@ -10,19 +10,21 @@ import { safeReturnTo } from '@/shared/navigation';
 
 afterEach(() => vi.unstubAllEnvs());
 describe('local access and production isolation', () => {
-  it('seeds an actual account with computed decisions and preserves subsequent progress on reseed', async () => {
+  it('seeds actual NLHE practice and preserves later practice and internal regression records on reseed', async () => {
     vi.stubEnv('NODE_ENV', 'development'); vi.stubEnv('DATABASE_URL', '');
     const db = await createMemoryDatabase();
     try {
       await seedDevelopmentAccount(db);
       const { user, token } = await login(db, DEVELOPMENT_DEMO);
       expect(user.developmentOnly).toBe(true);
-      expect((await dashboard(db, user)).decisions).toBe(3);
+      expect((await dashboard(db, user)).nlhe.decisions).toBe(3);
+      expect((await dashboard(db, user)).decisions).toBe(0);
       expect((await dashboard(db, user)).lessonCompleted).toBe(false);
       const [spot] = await getTrainingSpots();
       await recordDecision(db, user, { spotId: spot.id, action: spot.actions[0].id, attemptId: randomUUID(), solutionVersion: spot.solutionVersion });
       await seedDevelopmentAccount(db);
-      expect((await dashboard(db, user)).decisions).toBe(4);
+      expect((await dashboard(db, user)).decisions).toBe(1);
+      expect((await dashboard(db, user)).nlhe.decisions).toBe(3);
       expect(await sessionUser(db, token)).toEqual(user);
       const data = await db.query<{ evaluation: { sourceType: string } }>('SELECT evaluation FROM training_decisions WHERE user_id = $1', [user.id]);
       expect(data.every(row => row.evaluation.sourceType === 'COMPUTED')).toBe(true);

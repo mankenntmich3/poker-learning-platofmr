@@ -29,11 +29,11 @@ export interface StrategyNode {
   provenance: Provenance;
 }
 export interface RangeStrategy { combos: ComboStrategy[]; provenance: Provenance }
-export interface StrategyProvider {
-  getNode(state: GameState): Promise<StrategyNode>;
-  getComboStrategy(state: GameState, combo: StrategyCombo): Promise<ComboStrategy>;
-  getRangeStrategy(state: GameState): Promise<RangeStrategy>;
-  getActionEVs(state: GameState, combo: StrategyCombo): Promise<ActionEV[]>;
-  getNextNodes(state: GameState): Promise<StrategyNode[]>;
-  hasSolution(state: GameState): Promise<boolean>;
+export interface StrategyProvider<State = GameState, Combo = StrategyCombo, Node = StrategyNode, Range = RangeStrategy, ComboResult = ComboStrategy, Action = ActionEV> {
+  getNode(state: State): Promise<Node>;
+  getComboStrategy(state: State, combo: Combo): Promise<ComboResult>;
+  getRangeStrategy(state: State): Promise<Range>;
+  getActionEVs(state: State, combo: Combo): Promise<Action[]>;
+  getNextNodes(state: State): Promise<Node[]>;
+  hasSolution(state: State): Promise<boolean>;
 }

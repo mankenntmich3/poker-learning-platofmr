@@ -1,0 +1,25 @@
+# Import this private repository in the owner's Render workspace. Free web tier only.
+# PostgreSQL is provisioned separately on Neon Free; Render Free Postgres expires.
+services:
+  - type: web
+    name: rangeform-staging
+    runtime: node
+    plan: free
+    region: frankfurt
+    branch: main
+    buildCommand: corepack enable && pnpm install --frozen-lockfile && pnpm build
+    startCommand: pnpm start:hosted
+    healthCheckPath: /api/live
+    autoDeployTrigger: checksPass
+    envVars:
+      - key: NODE_VERSION
+        value: '24'
+      - key: NODE_ENV
+        value: production
+      - key: STAGING_MODE
+        value: 'true'
+      - key: STAGING_INVITE_CODE
+        generateValue: true
+      - key: DATABASE_URL
+        sync: false
+# start:hosted uses Render's assigned HTTPS URL as APP_ORIGIN.

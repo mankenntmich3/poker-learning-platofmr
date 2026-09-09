@@ -19,7 +19,7 @@ export async function api<T>(path: string, init?: RequestInit): Promise<T> {
 }
 
 type DemoCredentials = { email: string; password: string };
-type Session = { user: StudyUser | null; loading: boolean; error: string; setUser: (user: StudyUser | null) => void; reload: () => void; developmentDemo: DemoCredentials | null };
+type Session = { user: StudyUser | null; loading: boolean; error: string; setUser: (user: StudyUser | null) => void; reload: () => void; developmentDemo: DemoCredentials | null; stagingInviteRequired: boolean };
 const SessionContext = createContext<Session | null>(null);
 
 export function StudyProvider({ children, developmentDemo = null }: { children: ReactNode; developmentDemo?: DemoCredentials | null }) {
@@ -27,6 +27,7 @@ export function StudyProvider({ children, developmentDemo = null }: { children: 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [revision, setRevision] = useState(0);
+  const [stagingInviteRequired, setStagingInviteRequired] = useState(false);
   const reload = () => {
     setLoading(true);
     setError("");
@@ -39,10 +40,10 @@ export function StudyProvider({ children, developmentDemo = null }: { children: 
   }, []);
   useEffect(() => {
     let active = true;
-    api<{ user: StudyUser | null }>("/api/session").then((result) => { if (active) setUser(result.user); }).catch((cause: unknown) => { if (active) setError(cause instanceof Error ? cause.message : "Deine Sitzung konnte nicht geladen werden."); }).finally(() => { if (active) setLoading(false); });
+    api<{ user: StudyUser | null; stagingInviteRequired: boolean }>("/api/session").then((result) => { if (active) { setUser(result.user); setStagingInviteRequired(result.stagingInviteRequired); } }).catch((cause: unknown) => { if (active) setError(cause instanceof Error ? cause.message : "Deine Sitzung konnte nicht geladen werden."); }).finally(() => { if (active) setLoading(false); });
     return () => { active = false; };
   }, [revision]);
-  return <SessionContext.Provider value={{ user, loading, error, setUser, reload, developmentDemo }}>{children}</SessionContext.Provider>;
+  return <SessionContext.Provider value={{ user, loading, error, setUser, reload, developmentDemo, stagingInviteRequired }}>{children}</SessionContext.Provider>;
 }
 
 export function useSession() {
@@ -52,16 +53,16 @@ export function useSession() {
 }
 
 export function useResource<T>(path: string, enabled = true) {
-  const [data, setData] = useState<T | null>(null);
-  const [error, setError] = useState("");
-  const [loading, setLoading] = useState(true);
+  const [result, setResult] = useState<{ path: string; revision: number; data: T | null; error: string } | null>(null);
   const [revision, setRevision] = useState(0);
   useEffect(() => {
     if (!enabled) return;
     let active = true;
-    api<T>(path).then((result) => { if (active) { setData(result); setError(""); } }).catch((cause: unknown) => { if (active) setError(cause instanceof Error ? cause.message : "Die Daten konnten nicht geladen werden."); }).finally(() => { if (active) setLoading(false); });
+    api<T>(path).then(data => { if (active) setResult({ path, revision, data, error: '' }); })
+      .catch((cause: unknown) => { if (active) setResult({ path, revision, data: null, error: cause instanceof Error ? cause.message : 'Die Daten konnten nicht geladen werden.' }); });
     return () => { active = false; };
   }, [path, enabled, revision]);
-  const reload = () => { setLoading(true); setRevision((value) => value + 1); };
-  return { data, error, loading, reload };
+  const reload = () => setRevision(value => value + 1);
+  const current = result?.path === path && result.revision === revision ? result : null;
+  return { data: enabled ? current?.data ?? null : null, error: enabled ? current?.error ?? '' : '', loading: enabled && !current, reload };
 }

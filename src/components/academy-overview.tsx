@@ -19,11 +19,11 @@ function OverviewContent({ course }: { course: boolean }) {
     {course ? <Link className="inline-link" href="/academy">Zur Academy</Link> : null}
     <section className="course-entry panel">
       <span className="lesson-tag">{data.lessonCompleted ? 'Lektion abgeschlossen' : 'Für deinen Einstieg'}</span>
-      <h2>{course ? 'Warum eine gute Strategie manchmal mischt' : 'Grundlagen guter Entscheidungen'}</h2>
-      <p>Unterscheide Ergebnis und Entscheidung. Verstehe Erwartungswert und gemischte Strategien in einem kleinen Drei-Karten-Spiel.</p>
-      <p>8 Minuten Lesezeit · Wissensfrage · zugehöriges Kuhn-Training</p>
+      <h2>{course ? 'Position, Stacks und Preflop-Ranges' : 'Grundlagen guter Entscheidungen'}</h2>
+      <p>Lerne Positionen, effektive Stacks und gemischte Ranges für No-Limit Texas Hold’em.</p>
+      <p>8 Minuten Lesezeit · Wissensfrage · zugehöriges NLHE-Training</p>
       <ActionLink href={course ? LESSON_PATH : COURSE_PATH}>{course ? 'Lektion öffnen' : 'Kurs öffnen'}</ActionLink>
     </section>
-    {course ? <section className="course-entry panel"><h2>Am Tisch anwenden</h2><p>Starte eine Sitzung mit zwölf berechneten Situationen. Jede Entscheidung wird ausgewertet und gespeichert.</p><ActionLink href="/trainer">Zur Trainingsübung</ActionLink></section> : null}
+    {course ? <section className="course-entry panel"><h2>Am Tisch anwenden</h2><p>Wähle eine Preflop-Range und trainiere zehn konkrete Hold’em-Hände. Jede Entscheidung wird gespeichert.</p><ActionLink href="/trainer">Zur Trainingsübung</ActionLink></section> : null}
   </>;
 }

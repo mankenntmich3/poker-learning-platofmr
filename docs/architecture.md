@@ -1,6 +1,6 @@
 # Architecture
 
-Rangeform is a personal poker learning application with a path to a hosted SaaS. The first release completes one learning loop, backed by an independently computed three-card Kuhn poker solution. It is not an NLHE solver release.
+Rangeform is a personal poker learning application with a path to a hosted SaaS. The current user-facing release completes an NLHE preflop learning loop plus one bounded flop. Original APPROXIMATED policies provide the initial study data; they are not equilibrium solutions. The independently computed Kuhn solution remains an internal regression.
 
 ## Boundaries
 
@@ -34,7 +34,7 @@ Users have stable UUID identities, unique normalized email, password verifier, d
 
 The long-term model adds courses/modules/chapters, lesson revisions, versioned trainer spots, solution/node indexes, solver jobs, subscriptions, feature flags and recommendation history. Those additions are intentionally not represented by empty screens in this release.
 
-Local access now uses a real seeded development account, never a bypass. The account carries a database flag that excludes it from production authentication and sessions. A small fixed Academy course links to the existing original lesson, with stable course/lesson URLs. A trainer session has explicit start and completion screens; its answered decisions are persisted immediately. The current session position and summary live in the browser and restart on a page reload; saved decisions and lesson completion remain durable.
+Local access now uses a real seeded development account, never a bypass. The account carries a database flag that excludes it from production authentication and sessions. A small fixed Academy course links to the existing original lesson, with stable course/lesson URLs. A trainer session has explicit start and completion screens; its answered decisions are persisted immediately. NLHE session context, up to ten generated questions, feedback and explicit completion are persisted in PostgreSQL. Reload resumes the same question/feedback. Immutable full-range snapshots and the flop opponent snapshot preserve session semantics across library updates.
 
 `scripts/local-db.ts` provides local setup, migrations, idempotent seed and explicit reset. It loads the same development environment files as Next.js and refuses production or `DATABASE_URL`. A process lock prevents the local CLI and web app from opening the same PGlite directory together. Hosted PostgreSQL remains separate.
 
@@ -54,3 +54,9 @@ Web app → node-scoped Strategy API → cache keyed by solution ID/version/node
 - [PGlite persistence and supported filesystems](https://pglite.dev/docs/filesystems)
 
 Accessed 2026-09-06. Versions are locked in `pnpm-lock.yaml`.
+
+## NLHE boundary
+
+`src/domain/holdem.ts` supplies six-seat integer-chip betting, blinds, all-ins, street progression, best-five evaluation, side pots and chip conservation. The browser-safe cards module enumerates 52 cards, 1,326 combos and 169 classes with blockers. `StrategyProvider` is generic with Kuhn defaults retained; `NlheStrategyProvider` implements the same abstraction with NLHE configuration and action types. `scripts/nlhe.ts` publishes hashed original policy parameters, checksums the relevant source, and validates all 386 preset contexts before updating the index. Server decisions use the provider data, never client-supplied frequencies. The trainer samples physical combos weighted by prior reach; it does not sample classes uniformly. See decision 0003 for assumptions and unmeasured accuracy.
+
+Hosted staging uses the same application with managed PostgreSQL and invitation-only signup. Local setup never reads or creates hosted accounts. `/api/live` is a database-free host probe; `/api/health` checks actual database and NLHE provider readiness.

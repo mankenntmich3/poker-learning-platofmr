@@ -1,33 +1,45 @@
-"use client";
-
-import { useRef, useState, type KeyboardEvent } from "react";
-import { ArrowUpRight, ChevronDown, Grid2X2, Info } from "lucide-react";
-import { allHandClasses, combosForClass } from "@/domain/cards";
-import { PageHeader, number } from "./ui";
-
-const classes = allHandClasses();
-const suitGlyphs: Record<string, string> = { s: "♠", h: "♥", d: "♦", c: "♣" };
-const suitNames: Record<string, string> = { s: "Pik", h: "Herz", d: "Karo", c: "Kreuz" };
-function HandCard({ card }: { card: string }) { return <span className={`combo-card suit-${card[1]}`} role="img" aria-label={`${card[0]} ${suitNames[card[1]]}`}>{card[0]}<span aria-hidden="true">{suitGlyphs[card[1]]}</span></span>; }
-
-export function RangeExplorer() {
-  const [selected, setSelected] = useState("AKs");
-  const [filter, setFilter] = useState("all");
-  const [focus, setFocus] = useState(false);
-  const matrixRef = useRef<HTMLDivElement>(null);
-  const combos = combosForClass(selected);
-  const selectedIndex = classes.indexOf(selected);
-  const selectedType = selected.length === 2 ? "Pocket Pair" : selected.endsWith("s") ? "Suited" : "Offsuit";
-  function navigate(event: KeyboardEvent<HTMLButtonElement>, index: number) {
-    let target = index;
-    if (event.key === "ArrowRight") target = Math.min(168, index + 1);
-    else if (event.key === "ArrowLeft") target = Math.max(0, index - 1);
-    else if (event.key === "ArrowDown") target = Math.min(168, index + 13);
-    else if (event.key === "ArrowUp") target = Math.max(0, index - 13);
-    else if (event.key === "Home") target = 0;
-    else if (event.key === "End") target = 168;
-    else return;
-    event.preventDefault(); setSelected(classes[target]); matrixRef.current?.querySelectorAll<HTMLButtonElement>("button")[target]?.focus();
+'use client';
+import { useState } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import Link from 'next/link';
+import { combosForClass } from '@/domain/cards';
+import { SIX_MAX_POSITIONS, type Position } from '@/domain/chips';
+import { configFromSearch, configSearch, DEFAULT_NLHE, possibleVillains, SCENARIO_LABELS, STACK_DEPTHS, spotLabel, validNlheConfig, type NlheConfig, type NlheNode, type NlheScenario } from '@/shared/nlhe';
+import { SessionGate } from './auth-screen';
+import { useResource } from './study-context';
+import { ActionLink, ErrorNotice, LoadingPanel, number, PageHeader } from './ui';
+import { Frequencies, HandMatrix, HoldemCards, RangeProvenance } from './nlhe-ui';
+export function RangeExplorer() { return <SessionGate><RangeContent /></SessionGate>; }
+function RangeContent() {
+  const router = useRouter(); const search = useSearchParams();
+  let config: NlheConfig; let configError = '';
+  try { config = configFromSearch(new URLSearchParams(search.toString())); if (config.scenario === 'flop-srp') throw new Error('Nutze den Postflop-Lernspot.'); }
+  catch (error) { config = DEFAULT_NLHE; configError = error instanceof Error ? error.message : 'Ungültiger Spot'; }
+  const resource = useResource<NlheNode>(`/api/nlhe/range?${configSearch(config)}`, !configError);
+  const [selected, setSelected] = useState('AKs'); const [custom, setCustom] = useState(false); const [inputError, setInputError] = useState('');
+  function choose(change: Partial<NlheConfig>) {
+    // Read the latest URL synchronously: successive controls must not reuse a pending navigation's old props.
+    let current = config;
+    try { current = configFromSearch(new URLSearchParams(window.location.search)); } catch { /* Recover from the displayed invalid URL. */ }
+    const next = { ...current, ...change };
+    setInputError('');
+    if (next.scenario === 'rfi') { next.villain = null; if (next.hero === 'BB') { next.scenario = 'vs-open'; next.villain = 'BTN'; } }
+    else { let opponents = possibleVillains(next); if (!opponents.length) { next.scenario = next.hero === 'UTG' ? 'rfi' : 'vs-open'; opponents = possibleVillains(next); } next.villain = opponents.includes(next.villain!) ? next.villain : opponents.at(-1) || null; }
+    if (!validNlheConfig(next)) { setInputError('Wähle 10 bis 500 BB mit höchstens zwei Nachkommastellen.'); return; }
+    // This page loads strategy through its API; a server-component navigation is unnecessary.
+    window.history.replaceState(null, '', `/ranges?${configSearch(next)}`);
   }
-  return <><PageHeader title="Jede Range beginnt mit einer Hand." description="NLHE / Starthände & Kombinationen" aside={<span className="neutral-chip"><Grid2X2 size={15} aria-hidden="true" />169 Handklassen</span>} /><div className="range-notice"><Info size={18} aria-hidden="true" /><p>Entdecke die Zusammensetzung deiner Starthände. Farben zeigen den <strong>Handtyp</strong> — strategische Empfehlungen sind hier nicht hinterlegt.</p></div><div className={`range-layout${focus ? " range-focus" : ""}`}><section className="range-matrix-panel panel"><div className="range-toolbar"><div className="range-filter"><label htmlFor="handtype">Handtyp</label><select id="handtype" value={filter} onChange={(event) => setFilter(event.target.value)}><option value="all">Alle Hände</option><option value="pair">Pocket Pairs</option><option value="suited">Suited</option><option value="offsuit">Offsuit</option></select></div><button className="text-button" aria-pressed={focus} onClick={() => setFocus(!focus)}><ArrowUpRight size={16} aria-hidden="true" />{focus ? "Standardansicht" : "Fokusansicht"}</button></div><div className="range-matrix-scroll" role="region" aria-label="Starthandmatrix, mit Pfeiltasten navigieren" tabIndex={0}><div className="range-matrix" ref={matrixRef} role="group" aria-label="169 Starthandklassen">{classes.map((hand, index) => { const type = hand.length === 2 ? "pair" : hand.endsWith("s") ? "suited" : "offsuit"; return <button type="button" key={hand} onClick={() => setSelected(hand)} onKeyDown={(event) => navigate(event, index)} tabIndex={index === selectedIndex ? 0 : -1} aria-pressed={hand === selected} aria-label={`${hand}, ${combosForClass(hand).length} Kombinationen`} className={`range-cell ${type}${selected === hand ? " selected" : ""}${filter !== "all" && filter !== type ? " dimmed" : ""}`}>{hand}</button>; })}</div></div><div className="range-legend"><span><i className="pair" />Pocket Pairs</span><span><i className="suited" />Suited</span><span><i className="offsuit" />Offsuit</span></div><p className="matrix-hint">Hand antippen oder mit den Pfeiltasten erkunden.</p></section><aside className="range-inspector panel" aria-live="polite"><div className="section-heading"><span className="subtle-label">Ausgewählte Hand</span><span className={`hand-type ${selectedType.toLowerCase().replace(" ", "-")}`}>{selectedType}</span></div><h2>{selected}</h2><p>{selected.length === 2 ? "Zwei Karten des gleichen Rangs." : selected.endsWith("s") ? "Zwei verschiedene Ränge in derselben Farbe." : "Zwei verschiedene Ränge in unterschiedlichen Farben."}</p><div className="combo-stats"><div><strong>{combos.length}</strong><span>Kombinationen</span></div><div><strong>{number((combos.length / 1326) * 100, 2)} %</strong><span>aller Starthände</span></div></div><h3>Konkrete Kombinationen</h3><div className="combo-grid">{combos.map(([first, second]) => <div className="combo-pair" key={first + second}><HandCard card={first} /><HandCard card={second} /></div>)}</div><div className="inspector-note"><Info size={15} aria-hidden="true" /><p>Ungeblockte Kombinationen aus einem vollständigen 52-Karten-Deck.</p></div></aside></div><details className="solver-details" open><summary><span>So liest du die Matrix</span><ChevronDown size={17} aria-hidden="true" /></summary><div className="matrix-explainer"><div><strong>13 Pocket Pairs</strong><p>Auf der Diagonale: jeweils 6 Kombinationen, zum Beispiel A♠A♥.</p></div><div><strong>78 Suited-Hände</strong><p>Oberhalb der Diagonale: jeweils 4 Kombinationen, zum Beispiel A♠K♠.</p></div><div><strong>78 Offsuit-Hände</strong><p>Unterhalb der Diagonale: jeweils 12 Kombinationen, zum Beispiel A♠K♥.</p></div></div></details></>;
+  const node = resource.data; const hand = node?.classes.find(row => row.handClass === selected);
+  const combos = hand ? combosForClass(hand.handClass, node!.board) : [];
+  return <><PageHeader title="NLHE Preflop-Ranges" description="No-Limit Texas Hold’em · 6-max Cash" />
+    <section className="nlhe-controls panel" aria-label="Preflop-Spot wählen"><label>Effektiver Stack<select aria-label="Effektiver Stack" value={STACK_DEPTHS.some(n => n === config.stackBb) ? config.stackBb : 'custom'} onChange={event => { if (event.target.value === 'custom') setCustom(true); else choose({ stackBb: Number(event.target.value) }); }}>{STACK_DEPTHS.map(stack => <option key={stack} value={stack}>{stack} BB</option>)}<option value="custom">Eigener Stack</option></select></label>
+      <label>Deine Position<select aria-label="Deine Position" value={config.hero} onChange={event => choose({ hero: event.target.value as Position })}>{SIX_MAX_POSITIONS.map(position => <option key={position}>{position}</option>)}</select></label>
+      <label>Vorgeschichte<select aria-label="Vorgeschichte" value={config.scenario} onChange={event => choose({ scenario: event.target.value as NlheScenario })}><option value="rfi" disabled={config.hero === 'BB'}>{SCENARIO_LABELS.rfi}</option><option value="vs-open" disabled={config.hero === 'UTG'}>{SCENARIO_LABELS['vs-open']}</option><option value="vs-3bet" disabled={config.hero === 'BB'}>{SCENARIO_LABELS['vs-3bet']}</option></select></label>
+      {config.scenario !== 'rfi' ? <label>Gegnerposition<select aria-label="Gegnerposition" value={config.villain || ''} onChange={event => choose({ villain: event.target.value as Position })}>{possibleVillains(config).map(position => <option key={position}>{position}</option>)}</select></label> : <div className="nlhe-controls-note">RFI = Raise First In.<br />BB kann einen ungeöffneten Pot nicht mehr eröffnen.</div>}
+      {custom ? <form className="custom-stack" onSubmit={event => { event.preventDefault(); const value = Number(new FormData(event.currentTarget).get('stack')); if (Number.isFinite(value)) choose({ stackBb: value }); }}><label>Eigener Stack in BB<input name="stack" type="number" min="10" max="500" step="0.01" defaultValue={config.stackBb} required /></label><button className="button button-secondary">Stack anwenden</button></form> : null}</section>
+    {configError ? <ErrorNotice message={configError} retry={() => router.replace('/ranges')} /> : inputError ? <ErrorNotice message={inputError} /> : null}
+    {resource.loading ? <LoadingPanel label="Genau diese NLHE-Range wird geladen…" /> : resource.error ? <ErrorNotice message={resource.error} retry={resource.reload} /> : node && hand ? <><RangeProvenance provenance={node.provenance} /><div className="nlhe-context"><h2>{spotLabel(node.config)}</h2><p>{node.context}</p><p>Pot {number(node.potBb, 1)} BB · bereits investiert {number(node.investedBb, 1)} BB · Rake 0</p></div>
+      <div className="nlhe-study-layout"><section aria-label="Range-Matrix"><div className="nlhe-legend" aria-label="Aktionslegende">{node.actions.map(action => <span key={action.id}><i className={`action-dot action-${action.id}`} />{action.label}</span>)}</div><HandMatrix rows={node.classes} selected={selected} onSelect={setSelected} /><p className="matrix-help">169 Handklassen · 1.326 Kombinationen. Mit Pfeiltasten navigieren oder eine Hand antippen. Farben zeigen Mischungen; abgedunkelte Hände erreichen diesen Spot nicht.</p></section>
+      <aside className="nlhe-hand-detail panel" aria-label="Handdetails"><div className="selected-hand-title"><h2>{selected}</h2><span>{combos.length} Combos</span></div>{hand.reach > 0 ? <><Frequencies frequencies={hand.actions} actions={node.actions} />{hand.reach < 1 ? <p>Diese Hand eröffnet in der vorherigen Lernrange zu {number(hand.reach * 100)} %. Die Antwortfrequenzen gelten, wenn sie den Spot erreicht.</p> : null}</> : <p>Diese Hand ist nicht in deiner vorherigen Opening-Range und wird hier nicht trainiert.</p>}<details><summary>Konkrete Kombinationen</summary><div className="nlhe-combo-list">{combos.map(combo => <HoldemCards key={combo.join('')} cards={combo} small />)}</div></details><p className="nlhe-detail-note">Die Frequenzen gelten preflop für jede Kombination dieser Klasse. Sie sind Lernregeln, keine gemessenen GTO-Werte.</p><ActionLink href={`/trainer?${configSearch(node.config)}`}>Diese Range trainieren</ActionLink><p>Der Trainer zieht Hände aus genau diesem Spot. Deine Fortschritte werden gespeichert.</p></aside></div>
+      <section className="nlhe-related"><h2>Verwandte Spots</h2><div>{node.related.map(next => <Link className="button button-secondary" key={configSearch(next)} href={`/ranges?${configSearch(next)}`}>{spotLabel(next)}</Link>)}</div></section></> : null}</>;
 }

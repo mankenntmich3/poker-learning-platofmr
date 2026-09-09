@@ -1,3 +1,18 @@
+# Current owner priorities — 2026-09-08
+
+The latest owner instructions supersede the original long-term text below. The confirmed permanent repository is `mankenntmich3/poker-learning-platofmr`.
+
+1. Keep real local login/signup and development-only demo data immediately usable.
+2. Make No-Limit Texas Hold’em the main product: 6-max Cash preflop ranges and exact-spot trainer, all eleven 10–200 BB presets, extensible stack depths, 169 classes/1,326 combos, mixed frequencies, immutable provenance and persistent progress.
+3. No owned/licensed range data is available. The owner explicitly permits clearly labelled APPROXIMATED learning data; never claim GTO accuracy or EV from it. Keep Kuhn only as infrastructure regression.
+4. After preflop works, one bounded 100 BB BTN-vs-BB SRP flop. No broad solver, billing, admin or analyzer expansion.
+5. Deploy private/staging HTTPS with managed PostgreSQL, preserving local development. Owner approved **free tiers only**, with accounts owned by the owner. No production credentials/data copied.
+
+Implementation scope and validation are in PROJECT_STATUS and decision 0003.
+
+---
+
+# Original long-term specification
 
 Arbeite im privaten GitHub-Repository:
 mankenntmich3/poker-learning-platform
