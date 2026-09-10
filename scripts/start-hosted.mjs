@@ -8,8 +8,9 @@ if (!process.env.DATABASE_URL || !validOrigin || process.env.ALLOW_LOCAL_DB) {
   console.error('Hosted startup requires DATABASE_URL and an HTTPS APP_ORIGIN; ALLOW_LOCAL_DB must be unset.');
   process.exit(1);
 }
-if (process.env.STAGING_MODE === 'true' && (process.env.STAGING_INVITE_CODE?.length ?? 0) < 24) {
-  console.error('Private staging requires a secret STAGING_INVITE_CODE of at least 24 characters.');
+const inviteCodes = [process.env.STAGING_INVITE_CODE, ...(process.env.STAGING_INVITE_CODES?.split(',') ?? [])].filter(code => code !== undefined && code !== '');
+if (process.env.STAGING_MODE === 'true' && (!inviteCodes.length || inviteCodes.some(code => code.length < 24 || code.length > 128 || code.trim() !== code))) {
+  console.error('Private staging requires secret invitation codes of 24–128 characters without surrounding whitespace.');
   process.exit(1);
 }
 const port = process.env.PORT ?? '3000';
