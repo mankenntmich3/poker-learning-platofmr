@@ -16,6 +16,8 @@ The owner additionally requested a stable HTTPS staging address with managed Pos
 
 Private staging supports additional independently revocable signup invitations through secret `STAGING_INVITE_CODES`, preserving the original invitation and existing logins. Invitations are reusable and do not expire automatically; actual codes remain outside the repository.
 
+Invitation rollout verified 2026-09-10: [PR #3](https://github.com/mankenntmich3/poker-learning-platofmr/pull/3), [successful CI](https://github.com/mankenntmich3/poker-learning-platofmr/actions/runs/34458631270), Render live commit `babbb2d`. Both newly issued invitations passed actual HTTPS signup → protected dashboard → logout → login; temporary test accounts were deleted and their sessions rejected afterwards. An invalid invitation returned 403. Locally, typecheck, lint, 69 tests (external PostgreSQL test skipped), production build and all eight browser flows passed. Real invitation values were configured only in the hosting environment, never committed.
+
 This is a usable private study release, not verified GTO or a public commercial service. Render Free sleeps when idle and may take about a minute to wake; free database/compute quotas apply. There is one Academy lesson and one bounded flop. Password-reset email, hosted backup restore validation and paid uptime are not implemented. The next useful milestone is obtaining or computing an independently validated, legally usable NLHE range dataset within a clearly bounded game configuration.
 
 ## Historical acceptance — pre-NLHE local release
