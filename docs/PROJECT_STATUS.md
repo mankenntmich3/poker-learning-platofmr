@@ -1,6 +1,6 @@
 # Project status
 
-Repository: `mankenntmich3/poker-learning-platofmr` (confirmed spelling). Updated 2026-09-09.
+Repository: `mankenntmich3/poker-learning-platofmr` (confirmed spelling). Updated 2026-09-10.
 
 ## CURRENT — NLHE usable locally, private staging online
 
@@ -8,9 +8,13 @@ The owner replaced the Kuhn-facing milestone with No-Limit Texas Hold'em. The us
 
 No owned/licensed ranges were supplied. The owner explicitly authorized original **APPROXIMATED** educational data as the initial fallback. All user-facing ranges expose provenance and immutable version, with solver version and measured accuracy unavailable. There is no GTO or EV claim. Current policy: `nlhe-approx-v1-34a10890a8dd`. Its 386 context checks validate structure and legal actions only. Kuhn remains an internal solver/API regression, absent from primary navigation and training.
 
-Strict typecheck, lint, 67 local tests and the production build passed. All three production Chromium flows and five development Chromium flows passed, including a fresh GitHub-identical checkout with frozen installation, new environment/database, migrations and seed. Full ten-hand completion, a second session, lost-response recovery, exact-spot training, logout/relogin and filesystem restart persistence are verified. Eight automated accessibility scans and nine responsive widths passed. GitHub additionally passed all 68 unit/integration tests against PostgreSQL 16 and both browser suites in [run 34398395517](https://github.com/mankenntmich3/poker-learning-platofmr/actions/runs/34398395517). PR #2 is merged. See [NLHE acceptance](qa/nlhe-acceptance.md). Target-host validation remains open.
+Strict typecheck, lint, 67 local tests and the production build passed. All three production Chromium flows and five development Chromium flows passed, including a fresh GitHub-identical checkout with frozen installation, new environment/database, migrations and seed. Full ten-hand completion, a second session, lost-response recovery, exact-spot training, logout/relogin and filesystem restart persistence are verified. Eight automated accessibility scans and nine responsive widths passed. GitHub additionally passed all 68 unit/integration tests against PostgreSQL 16 and both browser suites in [run 34398395517](https://github.com/mankenntmich3/poker-learning-platofmr/actions/runs/34398395517), repeated successfully for the deployed release in [run 34399476527](https://github.com/mankenntmich3/poker-learning-platofmr/actions/runs/34399476527). PR #2 is merged. See [NLHE acceptance](qa/nlhe-acceptance.md).
 
-The owner additionally requested a stable HTTPS staging address with managed PostgreSQL and authorized **free tiers only**. The application is live at [rangeform-staging.onrender.com](https://rangeform-staging.onrender.com), backed by Neon Free PostgreSQL 18 in Frankfurt and Render Free. HTTPS readiness, actual PostgreSQL access, invitation-only signup, logged-out route protection and rejection of the local demo credentials are verified. Personal hosted account creation and the authenticated hosted learning/relogin check remain open. The local app and development demo remain available independently. See [staging](staging.md) and [NLHE decision](decisions/0003-nlhe-first.md).
+The owner additionally requested a stable HTTPS staging address with managed PostgreSQL and authorized **free tiers only**. The application is live at [rangeform-staging.onrender.com](https://rangeform-staging.onrender.com), backed by Neon Free PostgreSQL 18 in Frankfurt and Render Free. HTTPS readiness, actual PostgreSQL access, invitation-only signup, logged-out route protection and rejection of the local demo credentials are verified. The owner created a personal hosted account. Academy, exact-range preflop training and bounded flop training were verified online, with feedback, completion, reload and unchanged progress after actual logout/login. A saved question and feedback also survived the free host's sleep/wake cycle. The local app and development demo remain available independently. See [staging](staging.md) and [NLHE decision](decisions/0003-nlhe-first.md).
+
+### Current limits and next step
+
+This is a usable private study release, not verified GTO or a public commercial service. Render Free sleeps when idle and may take about a minute to wake; free database/compute quotas apply. There is one Academy lesson and one bounded flop. Password-reset email, hosted backup restore validation and paid uptime are not implemented. The next useful milestone is obtaining or computing an independently validated, legally usable NLHE range dataset within a clearly bounded game configuration.
 
 ## Historical acceptance — pre-NLHE local release
 

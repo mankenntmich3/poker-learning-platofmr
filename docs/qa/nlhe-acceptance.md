@@ -22,6 +22,8 @@ The separate fresh checkout started without dependencies, environment files or d
 
 ## Visual evidence
 
+The live Render/Neon acceptance subsequently passed on 2026-09-10, including owner signup, Academy, exact selected preflop spot, bounded flop, submitted actions, completion, reload, actual logout/login with unchanged progress and recovery after free-tier sleep. See [hosted acceptance](../staging.md#authenticated-hosted-acceptance--2026-09-10). Hosted personal account records and screenshots are intentionally not copied into this repository.
+
 Screenshots contain synthetic test accounts only. The matrix has an inner horizontal scroll area on narrow screens; the page itself does not overflow.
 
 ![NLHE range on mobile](nlhe/ranges-mobile.png)

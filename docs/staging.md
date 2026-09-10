@@ -1,6 +1,6 @@
 # Private staging — Render Free + Neon Free
 
-Status: **online** (2026-09-09). Stable HTTPS: [rangeform-staging.onrender.com](https://rangeform-staging.onrender.com). Render confirmed `Deploy succeeded | Live`; `/api/health` verified the real PostgreSQL database and NLHE artifact. Personal account creation and the final authenticated hosted browser journey are in progress.
+Status: **online and authenticated learning verified** (2026-09-10). Stable HTTPS: [rangeform-staging.onrender.com](https://rangeform-staging.onrender.com). Render confirmed `Deploy succeeded | Live`; `/api/health` verified the real PostgreSQL database and NLHE artifact. The owner created a personal account and completed the final logout/login handoff.
 
 ## Deployed resources
 
@@ -10,6 +10,16 @@ Status: **online** (2026-09-09). Stable HTTPS: [rangeform-staging.onrender.com](
 - Both provider accounts belong to the owner. Database and invitation credentials exist only in the provider configuration, never in this repository.
 
 Verified public HTTPS checks: health `ok`, database `postgresql/ready`, NLHE policy `nlhe-approx-v1-34a10890a8dd`, invitation required, protected progress returns 401 while logged out, uninvited registration returns 403, and development demo login returns 401. The browser redirects a logged-out visitor to `/login?next=%2F`. No hosted demo account is seeded.
+
+## Authenticated hosted acceptance — 2026-09-10
+
+The real hosted browser completed Academy → course → lesson/quiz, then selected a 25 BB SB-vs-BTN open-response range and switched to 40 BB. All 169 cells were available; a suited hand's detail panel showed four combinations and the displayed 75/25 mix. Starting from that range produced a new session with the exact 40 BB context and actual Hold'em hole cards. Submitting an action returned policy feedback; explicit completion survived a full page reload.
+
+The bounded 100 BB BTN-vs-BB flop also opened, generated a hand without board collisions, accepted check and returned check/bet feedback. Its completed session appeared in the dashboard. An existing unfinished session was preserved. These two explicit acceptance sessions remain visible in the owner's progress; they are test activity, not evidence of independently completed study by the owner.
+
+After actual UI logout, the owner logged in again using their private password. The complete dashboard progress summary matched its pre-logout value exactly, and the completed preflop session reopened successfully. A previously saved flop question and feedback also survived Render's observed free-tier sleep/wake cycle on the following day. No browser cookies, personal account identifiers, passwords or session URLs are recorded in Git.
+
+Render's active application revision was verified as `a408c2981bf25b43d08c134b87f0a4f9fac3e1a2`, with a successful automatic deploy `dep-dagrq2mk1f9s73fnaotg` after its first deploy. Later repository checks also passed in [GitHub run 34399476527](https://github.com/mankenntmich3/poker-learning-platofmr/actions/runs/34399476527), documentation/build-recipe revision `e81d499ef77f26b2ca18f56938ec7ed69cdfc80c`; application code is identical. The local development setup remains separate and functional. A hosted backup restore drill, email recovery and always-on availability remain outside this free private milestone.
 
 ## Ownership and limits
 
