@@ -14,6 +14,8 @@ The owner additionally requested a stable HTTPS staging address with managed Pos
 
 ### Current limits and next step
 
+Private staging supports additional independently revocable signup invitations through secret `STAGING_INVITE_CODES`, preserving the original invitation and existing logins. Invitations are reusable and do not expire automatically; actual codes remain outside the repository.
+
 This is a usable private study release, not verified GTO or a public commercial service. Render Free sleeps when idle and may take about a minute to wake; free database/compute quotas apply. There is one Academy lesson and one bounded flop. Password-reset email, hosted backup restore validation and paid uptime are not implemented. The next useful milestone is obtaining or computing an independently validated, legally usable NLHE range dataset within a clearly bounded game configuration.
 
 ## Historical acceptance — pre-NLHE local release
