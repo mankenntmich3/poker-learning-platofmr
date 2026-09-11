@@ -1,0 +1,33 @@
+'use client';
+import { useMemo, useState } from 'react';
+import Link from 'next/link';
+import { AlertTriangle, Check, CircleDot, LockKeyhole } from 'lucide-react';
+import { defaultTournamentContext, positionsFor, TOURNAMENT_STACK_PRESETS, type AnteType, type EvaluationModel, type TablePosition } from '@/domain/strategy-context';
+import { SessionGate } from './auth-screen';
+import { PageHeader } from './ui';
+
+const positionNames: Record<TablePosition, string> = { UTG:'Under the Gun','UTG+1':'Under the Gun +1','UTG+2':'Under the Gun +2',LJ:'Lojack',HJ:'Hijack',CO:'Cutoff',BTN:'Button',SB:'Small Blind',BB:'Big Blind' };
+function positionDescription(position:TablePosition,positions:readonly TablePosition[]){const button=positions.indexOf('BTN'),seat=positions.indexOf(position);if(position==='BTN')return 'Dealer Button · letzte Aktion postflop';if(position==='SB')return 'Small Blind · erste Aktion postflop';if(position==='BB')return 'Big Blind · letzte Aktion preflop';const places=button-seat;return `${places} ${places===1?'Platz':'Plätze'} vor dem Button`;}
+
+export function TournamentStudy(){return <SessionGate><TournamentContent/></SessionGate>;}
+function TournamentContent(){
+  const [players,setPlayers]=useState(8),[stack,setStack]=useState(15),[hero,setHero]=useState<TablePosition>('HJ'),[anteType,setAnteType]=useState<AnteType>('BBA'),[ante,setAnte]=useState(1),[model,setModel]=useState<EvaluationModel>('CHIP_EV');
+  const positions=useMemo(()=>positionsFor(players),[players]);
+  function changePlayers(value:number){const next=positionsFor(value);setPlayers(value);setHero(next.includes(hero)?hero:next[Math.max(0,next.indexOf('HJ'))]!);}
+  const context=defaultTournamentContext(players,stack);context.hero=hero;context.ante={type:anteType,amountBb:anteType==='NONE'?0:ante};
+  return <><PageHeader title="Tournament Study" description="MTT · ChipEV · verifizierte Solver-Daten" />
+    <section className="game-switch panel" aria-label="Spieltyp wählen"><div><strong>Game</strong><span>Tournament</span></div><Link href="/ranges">Cash-Sandbox öffnen</Link></section>
+    <section className="mtt-config panel" aria-label="Tournament-Konfiguration">
+      <label htmlFor="mtt-model">Modell<select id="mtt-model" name="model" value={model} onChange={event=>setModel(event.target.value as EvaluationModel)}><option value="CHIP_EV">ChipEV</option><option value="ICM" disabled>ICM · später</option><option value="PKO" disabled>PKO · später</option><option value="MYSTERY_BOUNTY" disabled>Mystery Bounty · später</option></select></label>
+      <label htmlFor="mtt-players">Spieler<select id="mtt-players" name="players" value={players} onChange={event=>changePlayers(Number(event.target.value))}>{[2,3,4,5,6,7,8,9].map(value=><option value={value} key={value}>{value}-handed</option>)}</select></label>
+      <label htmlFor="mtt-stack">Effektiver Stack<select id="mtt-stack" name="stack" aria-describedby="mtt-stack-help" value={stack} onChange={event=>setStack(Number(event.target.value))}>{TOURNAMENT_STACK_PRESETS.map(value=><option value={value} key={value}>{value} BB</option>)}</select><small id="mtt-stack-help">Kleinster relevanter Stack zwischen den beteiligten Spielern.</small></label>
+      <label htmlFor="mtt-ante-type">Ante<select id="mtt-ante-type" name="anteType" value={anteType} onChange={event=>{const value=event.target.value as AnteType;setAnteType(value);if(value==='NONE')setAnte(0);else if(!ante)setAnte(1);}}><option value="BBA">Big Blind Ante</option><option value="PLAYER_ANTE">Player Ante</option><option value="NONE">Keine Ante</option><option value="CUSTOM">Custom</option></select></label>
+      {anteType!=='NONE'?<label htmlFor="mtt-ante">Ante in BB<input id="mtt-ante" name="ante" type="number" min="0.01" max="10" step="0.01" value={ante} onChange={event=>setAnte(Number(event.target.value))}/></label>:null}
+      <label htmlFor="mtt-hero">Hero-Position<select id="mtt-hero" name="hero" value={hero} onChange={event=>setHero(event.target.value as TablePosition)}>{positions.map(position=><option value={position} key={position}>{position} · {positionNames[position]}</option>)}</select></label>
+      <details className="advanced-config"><summary>Erweiterte Konfiguration</summary><div><span>SB 0,5 BB</span><span>BB 1 BB</span><span>Rake 0</span><span>{anteType==='BBA'?`BBA ${ante} BB`:anteType==='NONE'?'Keine Ante':`${ante} BB je Spieler`}</span></div></details>
+    </section>
+    <div className="mtt-study-grid"><section className="mtt-table-panel panel"><div className="table-copy"><h2>{hero} · {positionNames[hero]}</h2><p>{positionDescription(hero,positions)}</p></div><div className={`seat-table seats-${players}`} role="img" aria-label={`${players}-handed Pokertisch. Hero ${hero}. Button bei BTN, Blinds bei SB und BB.`}><div className="felt"><span>MTT</span><small>ChipEV</small></div>{positions.map((position,index)=><div className={`seat ${position===hero?'hero':''}`} style={{'--seat-index':index,'--seat-count':players} as React.CSSProperties} key={position}><strong>{position}</strong><small>{positionNames[position]}</small>{position==='BTN'?<i className="dealer">D</i>:null}</div>)}</div><div className="action-order"><p><strong>Preflop:</strong> links vom BB zuerst, BB zuletzt.</p><p><strong>Postflop:</strong> links vom Button zuerst, Button zuletzt.</p></div></section>
+      <aside className="solution-gate panel" aria-label="Status der Solver-Solution"><div className="quality-icon"><LockKeyhole aria-hidden="true"/></div><h2>Verified GTO solution currently unavailable.</h2><p>Für diesen exakten Tournament-Kontext ist noch kein Artefakt durch die vollständige Quality Gate Pipeline gegangen.</p><dl><div><dt>Format</dt><dd>Tournament ChipEV</dd></div><div><dt>Kontext</dt><dd>{players}-handed · {stack} BB · {hero}</dd></div><div><dt>Ante</dt><dd>{anteType}{anteType!=='NONE'?` ${ante} BB`:''}</dd></div><div><dt>Status</dt><dd><AlertTriangle size={15} aria-hidden="true"/> Nicht verfügbar</dd></div></dl><p className="gate-note">Rangeform setzt hier keine Cash-Range, andere Stacktiefe oder Approximation als Ersatz ein.</p></aside></div>
+    <section className="coverage-panel panel"><div><h2>Solution Coverage</h2><p>Verfügbarkeit wird immer für den exakten Stack, die Table Size, Ante und Action History geprüft.</p></div><div className="coverage-empty"><CircleDot aria-hidden="true"/><strong>0 verifizierte MTT-Nodes</strong><span>Solver- und Import-Artefakte erscheinen erst nach bestandener Validierung.</span></div><ul><li><Check aria-hidden="true"/>Tournament/Cash strikt getrennt</li><li><Check aria-hidden="true"/>2–9 Positionen zentral definiert</li><li><Check aria-hidden="true"/>BBA und Player Ante im Kontext</li></ul></section>
+  </>;
+}

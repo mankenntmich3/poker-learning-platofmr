@@ -2,6 +2,14 @@
 
 Repository: `mankenntmich3/poker-learning-platofmr` (confirmed spelling). Updated 2026-09-11.
 
+## MTT GTO accuracy v3 — Phase 1 in progress
+
+Branch `feature/mtt-gto-accuracy-v3` establishes Tournament ChipEV as the primary study direction while preserving the deployed Cash experience. The first increment adds a strict `StrategyContext`, correct 2–9 handed position engine, BBA/player/custom ante context, the requested 10–200 BB tournament presets, correct minimum effective-stack calculation and future evaluation-model identities. ICM/PKO/Mystery Bounty are represented but rejected because only ChipEV is implemented.
+
+A versioned verified-solution artifact and quality gate now separate `VERIFIED_SOLVER` / `IMPORTED_VERIFIED` from `APPROXIMATED` / `DEMO` / `INTERPOLATED`. New PostgreSQL tables index solver jobs and immutable artifacts by exact game type, model, players, stack, ante, position, action history, board and betting tree. Validation checks legal normalized combo strategies, card removal, convergence, provenance, immutable checksum and GTO-trainer eligibility. No real NLHE artifact has been declared verified.
+
+The authenticated Tournament page defaults to 8-handed, 15 BB, BBA 1 BB, HJ and visualizes every seat, dealer button and action-order instruction. With current zero verified coverage it explicitly displays `Verified GTO solution currently unavailable.` The existing approximated Cash ranges and trainer remain available but are identified as Sandbox in primary navigation. See [solver/licensing research](solver-research-v3.md).
+
 ## Study Engine v2 — deployed and accepted online
 
 PR #4 from `feature/gto-study-engine-v2` is merged. Configurable sized preflop and heads-up flop/turn/river study is live at [Rangeform](https://rangeform-staging.onrender.com/postflop). Render deployed merge commit `f2fe6288640371c2858908b73562461d68543e3a` successfully on 2026-09-11 at 16:17 Europe/Berlin, using the existing Neon PostgreSQL database and free plans. Local development remains available.
