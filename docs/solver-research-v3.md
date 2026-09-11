@@ -6,7 +6,7 @@ Research date: 2026-09-11. Scope: official product documentation, official terms
 
 Rangeform currently has **no legally obtained, independently validated MTT NLHE solution dataset**. Therefore the standard Tournament Study surface reports `Verified GTO solution currently unavailable.` and exposes no GTO training questions. Existing Rangeform heuristics remain a separately named Cash Sandbox and keep `APPROXIMATED` provenance.
 
-The immediate implementation uses an engine-neutral artifact format and quality gate. A solver is not accepted because it produces plausible frequencies. Publication requires an exact context, complete solver and betting-tree identity, normalized legal combo strategies, immutable checksum, a passed numerical convergence threshold and reproducible validation evidence.
+The immediate implementation uses an engine-neutral artifact format, quality gate and PostgreSQL registry. A solver is not accepted because it produces plausible frequencies. Publication requires an exact context, complete solver and betting-tree identity, normalized legal combo strategies, immutable checksum, a passed numerical convergence threshold and reproducible validation evidence. Failed validation is stored as a failed job and never creates a discoverable strategy artifact.
 
 ## Commercial providers and solvers
 
