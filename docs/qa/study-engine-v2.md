@@ -13,7 +13,7 @@ Date: 2026-09-11. Feature branch: `feature/gto-study-engine-v2`. [PR #4](https:/
 - `pnpm test:dev-access`: five Chromium flows passed. The suite creates/migrates/seeds an isolated development database and checks real signup, demo login, exact-range training, saved postflop session reload/completion, stack selection and mobile keyboard controls.
 - Desktop and mobile screenshots of the new river state were visually reviewed. A CSS import had registered cascade layers before the intended order, leaving the desktop sidebar on mobile; importing the study stylesheet after globals fixed it. Removing text opacity from unreachable matrix cells fixed contrast. Both issues are covered by browser assertions.
 
-Browser screenshots/traces are generated under ignored `test-results` and retained as the GitHub `browser-qa` artifact, rather than committing test account activity.
+The final visual correction shows reach bars for the inactive player's range when it has no action policy at this node, instead of rendering zero-width action segments. Browser screenshots/traces are generated under ignored `test-results` and retained as the GitHub `browser-qa` artifact, rather than committing test account activity.
 
 ## Hosted release gate
 
