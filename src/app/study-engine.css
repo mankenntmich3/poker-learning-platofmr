@@ -1,0 +1,26 @@
+@layer components {
+  .engine-toolbar{display:flex;gap:10px;flex-wrap:wrap;margin:16px 0}
+  .engine-layout{display:grid;grid-template-columns:210px minmax(280px,1fr) minmax(240px,.85fr);gap:16px;align-items:start}
+  .engine-config,.engine-table,.engine-history,.engine-analysis,.engine-library{padding:20px}
+  .engine-config{display:grid;gap:12px}.engine-config h2{font-size:18px}.engine-config p{font-size:12px}
+  .engine-center{display:grid;gap:16px}.engine-table{display:grid;gap:18px;background:linear-gradient(155deg,#1b2936,#151d28 65%)}
+  .engine-ledger{display:flex;gap:10px 18px;flex-wrap:wrap;padding-bottom:14px;border-bottom:1px solid var(--line);font-variant-numeric:tabular-nums}
+  .engine-ledger strong{flex-basis:100%;font-size:20px}.engine-ledger span{color:var(--muted);font-size:12px}
+  .engine-board,.engine-hand{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.engine-hand{padding-top:12px}.engine-hand>span{margin-left:8px;color:var(--muted)}
+  .engine-board button,.engine-hand button{border-radius:8px}.engine-board .nlhe-card,.engine-hand .nlhe-card{width:49px;height:69px;font-size:22px}
+  .engine-picker{border:1px solid var(--line);padding:14px;border-radius:10px;background:var(--ink)}.engine-picker>div{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;margin-top:12px}.engine-picker button{min-height:38px;border:1px solid var(--line);border-radius:5px;background:var(--raised)}.engine-picker button:disabled{opacity:.25;cursor:not-allowed}.engine-red{color:#ffb0b3}
+  .engine-actions{display:flex;flex-wrap:wrap;gap:8px}.engine-actions .button{font-size:12px;padding:9px 11px;min-height:40px}
+  .engine-history>div{display:flex;flex-wrap:wrap;gap:6px;margin:15px 0}.engine-history>div>button{padding:7px 10px;border:1px solid var(--line);border-radius:6px;font-size:12px}.engine-history button[aria-current]{border-color:var(--accent);background:#283653}
+  .engine-history ol,.engine-analysis ul{padding-left:20px}.engine-history li{font-size:12px;color:var(--muted)}.engine-history .text-button{display:block}
+  .engine-tabs{display:flex;flex-wrap:wrap;gap:4px;margin:-5px -5px 20px}.engine-tabs button{padding:8px;font-size:12px;border-radius:5px}.engine-tabs [aria-selected=true]{background:#2c3a54;color:var(--text)}
+  .engine-analysis h2{font-size:18px;margin-bottom:12px}.engine-analysis p,.engine-analysis li{font-size:12px;margin:10px 0;overflow-wrap:anywhere}.engine-analysis .button{margin:12px 0}
+  .engine-frequency{display:flex;justify-content:space-between;gap:12px;border-bottom:1px solid var(--line);padding:5px 0}.engine-frequency strong{white-space:nowrap;color:var(--text)}
+  .engine-source{margin-top:24px;padding-top:14px;border-top:1px solid var(--line);font-size:12px}.engine-source summary{color:var(--warning)}
+  .engine-combos{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.engine-combos button{padding:8px;border:1px solid var(--line);border-radius:6px}
+  .engine-ranges{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin:24px 0}.engine-range h3{margin-bottom:12px}.engine-grid{width:100%;border:1px solid var(--line);border-radius:8px;overflow:hidden}.engine-grid>[role=row]{display:grid;grid-template-columns:repeat(13,minmax(0,1fr));gap:1px}.engine-grid button{position:relative;isolation:isolate;min-height:33px;font-size:10px;border-bottom:1px solid #263243;border-right:1px solid #263243;padding:0}.engine-grid button[aria-selected=true]{outline:2px solid #fff;outline-offset:-2px}.engine-grid button>span:last-child{position:relative;text-shadow:0 1px 3px #000}.engine-mixture{position:absolute;inset:0;display:flex;opacity:.55;z-index:-1}.engine-mixture i{height:100%;display:block}
+  .engine-funnel{border-left:2px solid var(--accent);padding-left:12px;margin:12px 0}.engine-funnel span{font-size:12px}.engine-feedback{padding:14px;background:#243044;border-radius:8px}.engine-library{margin-top:24px}.engine-library .text-button{margin-right:15px}.engine-library details .text-button{display:block}
+}
+@layer responsive {
+  @media(max-width:1250px){.engine-layout{grid-template-columns:190px minmax(0,1fr)}.engine-analysis{grid-column:1/-1}.engine-grid button{font-size:9px;min-height:30px}}
+  @media(max-width:700px){.engine-layout{grid-template-columns:minmax(0,1fr)}.engine-config{grid-template-columns:1fr 1fr;gap:12px}.engine-config h2,.engine-config p{grid-column:1/-1}.engine-ranges{grid-template-columns:1fr}.engine-config,.engine-table,.engine-history,.engine-analysis{padding:16px}.engine-grid button{min-height:30px}.engine-toolbar .button{font-size:12px}}
+}

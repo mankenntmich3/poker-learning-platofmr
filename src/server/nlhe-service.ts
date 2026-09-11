@@ -7,7 +7,7 @@ import { validNlheConfig, SCENARIOS, spotLabel, type NlheConfig, type NlheFeedba
 import type { Database } from './db';
 import { ApiError } from './errors';
 
-export const nlheConfigSchema = z.object({ game: z.literal('nlhe'), format: z.literal('6max-cash'), stackBb: z.number(), hero: z.enum(SIX_MAX_POSITIONS), villain: z.enum(SIX_MAX_POSITIONS).nullable(), scenario: z.enum(SCENARIOS) }).strict().refine(validNlheConfig, 'Ungültiger Stack oder unmögliche Positionsfolge.');
+export const nlheConfigSchema = z.object({ game: z.literal('nlhe'), format: z.literal('6max-cash'), stackBb: z.number(), hero: z.enum(SIX_MAX_POSITIONS), villain: z.enum(SIX_MAX_POSITIONS).nullable(), scenario: z.enum(SCENARIOS), openBb:z.number().optional(), threeBetBb:z.number().optional(), fourBetBb:z.number().optional() }).strict().refine(validNlheConfig, 'Ungültiger Stack oder unmögliche Positionsfolge.');
 export const startNlheSchema = z.object({ config: nlheConfigSchema, solutionVersion: z.string().min(1).max(100), clientId: z.string().uuid() }).strict();
 export const sessionIdSchema = z.string().uuid();
 export const nlheDecisionSchema = z.object({ sessionId: sessionIdSchema, questionId: z.string().uuid(), action: z.enum(['fold', 'call', 'raise', 'check', 'bet']) }).strict();
@@ -117,15 +117,20 @@ export async function answerNlhe(db: Database, userId: string, raw: z.infer<type
 }
 
 export async function nlheProgress(db: Database, userId: string): Promise<NlheProgress> {
-  const [stats, counts, daily, recent, sessions] = await Promise.all([
+  const [stats, counts, daily, recent, sessions, engineStats, engineDaily, engineRecent, engineSessions] = await Promise.all([
     db.query<{ decisions: number; preflop: number; postflop: number }>(`SELECT count(*)::int AS decisions, count(*) FILTER (WHERE s.config->>'scenario' <> 'flop-srp')::int AS preflop,
       count(*) FILTER (WHERE s.config->>'scenario' = 'flop-srp')::int AS postflop FROM nlhe_decisions d JOIN nlhe_questions q ON q.id = d.question_id JOIN nlhe_sessions s ON s.id = q.session_id WHERE d.user_id = $1`, [userId]),
     db.query<{ count: number }>('SELECT count(*)::int AS count FROM nlhe_sessions WHERE user_id = $1 AND completed_at IS NOT NULL', [userId]),
     db.query<{ date: string; decisions: number }>(`SELECT to_char(created_at AT TIME ZONE 'UTC', 'YYYY-MM-DD') AS date, count(*)::int AS decisions FROM nlhe_decisions WHERE user_id = $1 AND created_at >= now() - interval '30 days' GROUP BY date ORDER BY date`, [userId]),
     db.query<{ id: string; config: NlheConfig; cards: Combo; action: string; created_at: string; is_sample: boolean }>('SELECT d.question_id AS id, s.config, s.is_sample, q.cards, d.action, d.created_at FROM nlhe_decisions d JOIN nlhe_questions q ON q.id = d.question_id JOIN nlhe_sessions s ON s.id = q.session_id WHERE d.user_id = $1 ORDER BY d.created_at DESC, d.question_id DESC LIMIT 8', [userId]),
     db.query<{ id: string; config: NlheConfig; answered: number; completed_at: string | null; is_sample: boolean }>(`SELECT s.id, s.config, s.completed_at, s.is_sample, count(d.question_id)::int AS answered FROM nlhe_sessions s LEFT JOIN nlhe_questions q ON q.session_id = s.id LEFT JOIN nlhe_decisions d ON d.question_id = q.id WHERE s.user_id = $1 GROUP BY s.id ORDER BY s.created_at DESC LIMIT 5`, [userId]),
+    db.query<{decisions:number;completed:number}>(`SELECT (SELECT count(*)::int FROM study_engine_decisions WHERE user_id=$1) AS decisions,(SELECT count(*)::int FROM study_engine_sessions WHERE user_id=$1 AND completed_at IS NOT NULL) AS completed`,[userId]),
+    db.query<{date:string;decisions:number}>(`SELECT to_char(created_at AT TIME ZONE 'UTC','YYYY-MM-DD') AS date,count(*)::int AS decisions FROM study_engine_decisions WHERE user_id=$1 AND created_at>=now()-interval '30 days' GROUP BY date`,[userId]),
+    db.query<{id:string;hand_class:string;position:string;street:string;chosen_action:string;created_at:string}>('SELECT id,hand_class,position,street,chosen_action,created_at FROM study_engine_decisions WHERE user_id=$1 ORDER BY created_at DESC LIMIT 8',[userId]),
+    db.query<{id:string;answered:number;completed_at:string|null;root_spot:{config:{hero:string;villain:string;stackBb:number}}}>(`SELECT s.id,s.root_spot,s.completed_at,count(d.id)::int AS answered FROM study_engine_sessions s LEFT JOIN study_engine_questions q ON q.session_id=s.id LEFT JOIN study_engine_decisions d ON d.id=q.id WHERE s.user_id=$1 GROUP BY s.id ORDER BY s.created_at DESC LIMIT 5`,[userId]),
   ]);
-  return { ...stats[0], completedSessions: counts[0].count, daily,
-    recent: recent.map(row => ({ id: row.id, label: `${getHandClass(row.cards)} · ${spotLabel(row.config)}`, detail: `${row.is_sample ? 'Beispielübung · ' : ''}${row.action} · APPROXIMATED`, createdAt: new Date(row.created_at).toISOString() })),
-    sessions: sessions.map(row => ({ id: row.id, label: `${row.is_sample ? 'Beispiel · ' : ''}${spotLabel(row.config)}`, answered: row.answered, complete: row.completed_at !== null })) };
+  const dates=new Map(daily.map(d=>[d.date,d.decisions]));for(const day of engineDaily)dates.set(day.date,(dates.get(day.date)??0)+day.decisions);
+  return { ...stats[0],decisions:stats[0].decisions+engineStats[0].decisions,postflop:stats[0].postflop+engineStats[0].decisions, completedSessions: counts[0].count+engineStats[0].completed, daily:[...dates].sort(([a],[b])=>a.localeCompare(b)).map(([date,decisions])=>({date,decisions})),
+    recent: [...recent.map(row => ({ id: row.id, label: `${getHandClass(row.cards)} · ${spotLabel(row.config)}`, detail: `${row.is_sample ? 'Beispielübung · ' : ''}${row.action} · APPROXIMATED`, createdAt: new Date(row.created_at).toISOString() })),...engineRecent.map(row=>({id:row.id,label:`${row.hand_class} · ${row.position} · ${row.street}`,detail:`${row.chosen_action} · APPROXIMATED`,createdAt:new Date(row.created_at).toISOString()}))].sort((a,b)=>b.createdAt.localeCompare(a.createdAt)).slice(0,8),
+    sessions: [...sessions.map(row => ({ id: row.id, label: `${row.is_sample ? 'Beispiel · ' : ''}${spotLabel(row.config)}`, answered: row.answered, complete: row.completed_at !== null })),...engineSessions.map(s=>({id:s.id,label:`Study · ${s.root_spot.config.stackBb} BB · ${s.root_spot.config.hero} vs ${s.root_spot.config.villain}`,answered:s.answered,complete:s.completed_at!==null,study:true}))] };
 }

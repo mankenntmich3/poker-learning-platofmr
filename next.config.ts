@@ -4,7 +4,7 @@ const config: NextConfig = {
   devIndicators: false,
   experimental: { optimizePackageImports: ['lucide-react'] },
   serverExternalPackages: ['@electric-sql/pglite', 'pg'],
-  outputFileTracingIncludes: { '/**': ['./data/solutions/**/*', './data/nlhe/**/*', './src/strategy/nlhe-policy.ts', './src/domain/holdem.ts', './migrations/**/*'] },
+  outputFileTracingIncludes: { '/**': ['./data/solutions/**/*', './data/nlhe/**/*', './src/strategy/nlhe-policy.ts', './src/domain/holdem.ts', './src/domain/study.ts', './src/domain/analysis.ts', './src/strategy/sizing-approximation.ts', './src/strategy/study-provider.ts', './migrations/**/*'] },
   async headers() {
     return [{ source: '/:path*', headers: [
       { key: 'X-Content-Type-Options', value: 'nosniff' },

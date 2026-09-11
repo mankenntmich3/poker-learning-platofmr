@@ -6,7 +6,8 @@ import { SessionGate } from './auth-screen';
 import { api, useResource } from './study-context';
 import { ActionLink, ErrorNotice, LoadingPanel, number, PageHeader } from './ui';
 import { Frequencies, HoldemCards, RangeProvenance } from './nlhe-ui';
-export function Trainer() { return <SessionGate><TrainerContent /></SessionGate>; }
+import { StudyTrainer } from './study-trainer';
+export function Trainer() { const search=useSearchParams();return <SessionGate>{search.has('study')||search.has('studySession')?<StudyTrainer/>:<TrainerContent />}</SessionGate>; }
 function TrainerContent() {
   const router = useRouter(); const search = useSearchParams(); const sessionId = search.get('session');
   let config = DEFAULT_NLHE; let invalid = '';

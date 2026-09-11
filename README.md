@@ -2,9 +2,9 @@
 
 A No-Limit Texas Hold’em study workspace for **6-max Cash**: choose a preflop spot, study its full 169-hand matrix, train real two-card combinations and retain progress. Permanent private repository: **mankenntmich3/poker-learning-platofmr**.
 
-Current ranges are **APPROXIMATED original educational heuristics**, with coarse 25% mixes. They are **not validated GTO**, licensed ranges, or measured EV values. No range files were supplied by the owner. Kuhn remains an internal solver/API regression only.
+Current ranges are **APPROXIMATED original educational heuristics**, with coarse educational weights and explicit sizing assumptions. They are **not validated GTO**, licensed ranges, or measured EV values. No range files were supplied by the owner. Kuhn remains an internal solver/API regression only.
 
-Preflop supports RFI, responses to one open (fold/call/3-bet), and responses to one 3-bet after opening (fold/call/4-bet), for all legal position pairs. All eleven requested stack presets (10–200 BB) and custom depths from 10–500 BB in 0.01-BB units work. The first bounded flop is 100 BB BTN-vs-BB SRP on A♠ 7♦ 2♣ after BB checks, with check/bet 1.8 BB.
+Preflop supports RFI, responses to one open (fold/call/3-bet), and responses to one 3-bet after opening (fold/call/4-bet), for all legal position pairs. All eleven requested stack presets (10–200 BB) and custom depths from 10–500 BB in 0.01-BB units work. Study Engine v2 adds explicit sizing, heads-up postflop with freely selected cards, legal flop/turn/river histories, range evolution, measured showdown equity and persistent node training. Existing fixed-flop sessions remain readable.
 
 See [strategy scope and provenance](docs/decisions/0003-nlhe-first.md), [current status](docs/PROJECT_STATUS.md) and [private staging setup](docs/staging.md).
 
@@ -30,7 +30,13 @@ Open **[http://localhost:3000](http://localhost:3000)**. The alternative [127.0.
 
 `db:setup` creates `.env.local` from `.env.example` if absent and creates/migrates the local database. `db:migrate` is safe to repeat. `db:seed` creates or recovers the development demo and adds three explicitly labeled sample decisions evaluated against the labelled NLHE learning range; it preserves subsequent progress. `pnpm setup:local` combines setup and seed. No manual environment editing, mail provider, Docker or external database is required for local use.
 
-**Range flow:** log in → Preflop → choose stack/position/history/opponent → tap a matrix cell → **Diese Range trainieren** → start → act → compare frequencies → next hand or finish → return to Dashboard. The trainer keeps the exact selected spot. For the bounded flop, use **Postflop** → **Diesen Flop trainieren**.
+**Range flow:** log in → Preflop → choose stack/position/history/opponent and Open Size → tap a matrix cell → **Diese Range trainieren** → start → act → compare frequencies → next hand or finish → return to Dashboard. The trainer keeps the exact selected spot.
+
+**Study Engine v2 flow:** Preflop → **Mit AKs zum Flop** (or another selected hand) → **Flop frei wählen** → choose three cards → play the first player's action → **Diesen Spot trainieren** when Hero acts → choose an action → inspect saved feedback → **Mit dieser Action fortfahren** → opponent call/check/raise → choose Turn and River when each betting round closes. The link explicitly states the assumed preflop call continuation. Alternatively, **Postflop** opens 30 BB BTN-vs-BB, 2 BB open, K♥ 8♠ 4♣ as an editable starting example.
+
+Use **Trainingssitzung konfigurieren** for 10/25/50/100 decisions. Spot repeats the selected node; Street continues within its street; Full Hand continues until the hand ends, then samples a new hand. Zero-reach continuations restart from a supported hand. Questions, strategy snapshots, answers and completion are saved server-side. Favorites and shared URLs reopen the exact configuration, cards and action history; shared links contain no account data and still require login.
+
+**Analysis:** Strategy, Range Funnel, individual Combos, exact Hand-vs-Hand equity, sampled weighted Hand-vs-Range/Range-vs-Range equity with sample/error reporting, current made-hand/draw/nuts densities and qualified Why explanations. Equity is showdown pot share, never an action EV. Four-bet calling ranges are explicitly unavailable; no NLHE solver or licensed static solution is bundled. Postflop is heads-up with equal effective stacks, no rake/antes or multiway support. Terminal study nodes retain the pot for inspection rather than paying out a game.
 
 **Academy flow:** log in → Dashboard → Academy → **Kurs öffnen** → **Lektion öffnen** → read and answer the quiz → **Am Tisch anwenden** → **Trainingssitzung starten** → choose an action → read feedback → **Sitzung jetzt abschließen** → **Fortschritt ansehen**. A full session ends after ten decisions. Current question, feedback and session completion also survive reload. Log out under Einstellungen, log in again and confirm your saved progress.
 

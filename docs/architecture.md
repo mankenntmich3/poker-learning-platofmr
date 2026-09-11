@@ -1,6 +1,18 @@
 # Architecture
 
-Rangeform is a personal poker learning application with a path to a hosted SaaS. The current user-facing release completes an NLHE preflop learning loop plus one bounded flop. Original APPROXIMATED policies provide the initial study data; they are not equilibrium solutions. The independently computed Kuhn solution remains an internal regression.
+Rangeform is a personal poker learning application with a path to a hosted SaaS. Study Engine v2 extends the existing NLHE preflop loop into configurable heads-up flop/turn/river study. Original APPROXIMATED policies provide the initial study data; they are not equilibrium solutions. The independently computed Kuhn solution remains an internal regression.
+
+## Study Engine v2
+
+`domain/study.ts` deterministically replays a `StudySpot`: six-max positions, two live players, equal effective stacks, explicit open/3-bet/4-bet configuration, two Hero cards and an ordered event log. Money uses integer 1/10,000 BB units. Domain validation owns street closure, legal turn order, minimum raises and all-ins; UI cannot supply a pot or override the active player. Dead blinds from folded seats remain in the pot. Terminal study nodes retain the ledger for inspection.
+
+`ApproximationProvider` and `StaticSolutionProvider` reuse the generic StrategyProvider contract. Approximation multiplies reached combo weights by the selected action's policy and removes dealt cards. Concrete Hero cards filter the opponent view; range-vs-range equity retains both unknown hole-card distributions and rejects collisions during sampling. Source-derived immutable versions cover state, features, sizing and policy rules. Static nodes are owned copies with provenance and legality checks; no static solver dataset is bundled.
+
+`domain/equity.ts` is a showdown evaluator and enumerator/sampler, separate from policy. Hand-vs-hand is exact; weighted range comparisons report seed, sample count and standard error. This does not calculate action EV, future folds or equilibrium. Hand and range features live in `analysis.ts` and `range-analysis.ts`.
+
+`/api/study` recomputes state on the server and preserves existing session/origin/rate protection. Saved spots and feedback belong to the authenticated user. Training snapshots are stored when each question is created; public unanswered questions omit frequencies. Retry identifiers and SQL uniqueness prevent duplicate decisions. Full-hand mode follows supported opponent actions to Hero; street mode restarts at the configured street boundary. Unsupported zero-reach continuations start a new supported hand. Account deletion cascades through the new tables; export includes questions, snapshots, decisions and saved spots.
+
+Migrations 006/007 are additive and run through the existing PostgreSQL/PGlite migration mechanism. No hosting provider, secrets, commercial dependency or paid compute is added. Source tracing in Next includes the files used for immutable strategy identities. Details and limits: [decision 0004](decisions/0004-study-engine-v2.md).
 
 ## Boundaries
 

@@ -1,4 +1,8 @@
-# Current owner priorities — 2026-09-08
+# Current owner priorities — Study Engine v2, 2026-09-11
+
+The full current request is [STUDY_ENGINE_V2_SPEC.md](STUDY_ENGINE_V2_SPEC.md). It supersedes the one-fixed-flop restriction below: evolve the existing usable product into configurable six-max NLHE ChipEV study with heads-up postflop, freely selected cards, legal street histories, range evolution and exact-node training. Keep local access, hosted PostgreSQL, user data and strict provenance. No new paid services, fabricated GTO/EV, multiway, ICM, PLO or real-money functionality. Work on `feature/gto-study-engine-v2` and deliver a PR against main. Implementation and acceptance are tracked in PROJECT_STATUS and decision 0004.
+
+# Previous owner priorities — 2026-09-08
 
 The latest owner instructions supersede the original long-term text below. The confirmed permanent repository is `mankenntmich3/poker-learning-platofmr`.
 
