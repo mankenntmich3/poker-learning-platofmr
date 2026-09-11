@@ -26,7 +26,10 @@ describe('verified solution registry',()=>{
   it('publishes only passed artifacts and retrieves only the exact context',async()=>{
     const artifact=fixture(),result=await publishVerifiedSolution(db,artifact);
     expect(result).toMatchObject({status:'VERIFIED',quality:'HIGH',errors:[]});
-    expect((await findExactVerifiedSolution(db,artifact.context,artifact.bettingTree.id))?.id).toBe(artifact.id);
+    const published=await findExactVerifiedSolution(db,artifact.context,artifact.bettingTree.id);
+    expect(published).toMatchObject({id:artifact.id,status:'VERIFIED'});
+    const {checksum,...publishedFields}=published!;
+    expect(checksum).toBe(solutionChecksum(publishedFields));
     expect(await findExactVerifiedSolution(db,defaultTournamentContext(9),artifact.bettingTree.id)).toBeNull();
     expect(await solutionCoverage(db)).toEqual([expect.objectContaining({players:8,stackBb:15,anteType:'BBA',heroPosition:'HJ',verified:1})]);
   });

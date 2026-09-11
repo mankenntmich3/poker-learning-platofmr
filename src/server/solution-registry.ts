@@ -1,7 +1,7 @@
 import { createHash, randomUUID } from 'node:crypto';
 import type { Database, SqlRow } from './db';
 import { effectiveStackBb, positionsFor, type StrategyContext } from '@/domain/strategy-context';
-import { validateVerifiedSolution, type QualityLabel, type VerifiedSolutionArtifact } from '@/solver/verified-solution';
+import { solutionChecksum, validateVerifiedSolution, type QualityLabel, type VerifiedSolutionArtifact } from '@/solver/verified-solution';
 
 export interface SolutionCoverageRow extends SqlRow { players:number; stackBb:number; anteType:string; heroPosition:string; verified:number; pending:number; failed:number }
 export interface SolverJobInput { context:StrategyContext; bettingTreeId:string; priority:1|2|3 }
@@ -29,12 +29,15 @@ export async function publishVerifiedSolution(db:Database,artifact:VerifiedSolut
     return validation;
   }
   const positions=positionsFor(artifact.context.players),active=positions.filter(position=>!artifact.context.actionHistory.some(action=>action.actor===position&&action.type==='FOLD'));
-  const stack=effectiveStackBb(artifact.context.stacks,active),published={...artifact,status:'VERIFIED' as const};
+  const stack=effectiveStackBb(artifact.context.stacks,active);
+  const verifiedFields={...artifact,status:'VERIFIED' as const};
+  delete (verifiedFields as Partial<VerifiedSolutionArtifact>).checksum;
+  const published:VerifiedSolutionArtifact={...verifiedFields,checksum:solutionChecksum(verifiedFields)};
   await db.query(`INSERT INTO verified_solution_artifacts (id,context_key,game,game_type,evaluation_model,players,stack_bb,ante_type,hero_position,action_history,board,betting_tree_id,source_type,status,quality_label,convergence_metric,convergence_value,convergence_threshold,exploitability_bb_per_hand,checksum,artifact,generated_at,published_at)
     VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10::jsonb,$11::jsonb,$12,$13,'VERIFIED',$14,$15,$16,$17,$18,$19,$20::jsonb,$21,now())
-    ON CONFLICT (id) DO NOTHING`,[artifact.id,contextKey,artifact.context.game,artifact.context.gameType,artifact.context.evaluationModel,artifact.context.players,stack,artifact.context.ante.type,artifact.context.hero,JSON.stringify(artifact.context.actionHistory),JSON.stringify(artifact.context.board),artifact.bettingTree.id,artifact.sourceType,validation.quality,artifact.convergence.metric,artifact.convergence.value,artifact.convergence.threshold,artifact.exploitabilityBbPerHand??null,artifact.checksum,JSON.stringify(published),artifact.generatedAt]);
+    ON CONFLICT (id) DO NOTHING`,[artifact.id,contextKey,artifact.context.game,artifact.context.gameType,artifact.context.evaluationModel,artifact.context.players,stack,artifact.context.ante.type,artifact.context.hero,JSON.stringify(artifact.context.actionHistory),JSON.stringify(artifact.context.board),artifact.bettingTree.id,artifact.sourceType,validation.quality,artifact.convergence.metric,artifact.convergence.value,artifact.convergence.threshold,artifact.exploitabilityBbPerHand??null,published.checksum,JSON.stringify(published),artifact.generatedAt]);
   const rows=await db.query<{checksum:string}>('SELECT checksum FROM verified_solution_artifacts WHERE id=$1',[artifact.id]);
-  if(rows[0]?.checksum!==artifact.checksum)throw new Error('Immutable solution id already contains different data.');
+  if(rows[0]?.checksum!==published.checksum)throw new Error('Immutable solution id already contains different data.');
   return validation;
 }
 
