@@ -1,6 +1,6 @@
 # Study Engine v2 — owner request and architecture
 
-Status: implementation and acceptance in progress. Branch `feature/gto-study-engine-v2`.
+Status: implemented and locally accepted; PostgreSQL CI passed. Staging rollout pending. Branch `feature/gto-study-engine-v2`, PR #4.
 
 The owner's current brief supersedes the one-flop milestone: configurable 6-max NLHE ChipEV with heads-up postflop, explicit open/3-bet/4-bet sizes, concrete cards, street histories, range evolution, measured equity and persisted exact-node training. No ICM, bounty, PLO, multiway solver or real-money features. The full brief is in `docs/STUDY_ENGINE_V2_SPEC.md`.
 
@@ -39,4 +39,4 @@ Keep Rangeform's existing Manrope typography, slate background `#0e141c`, surfac
 
 ## Acceptance tracking
 
-Do not treat this decision as completed QA. New domain and server tests currently cover accounting, card blocking, exact equity, evaluator cross-check, reach evolution and persistence. End-to-end browser acceptance, full session modes, regression checks and the final PR are still in progress.
+Acceptance evidence is recorded in [Study Engine v2 QA](../qa/study-engine-v2.md). Typecheck, lint, 83 local tests, build, four production browser flows and five development browser flows passed. GitHub run 34585564632 passed all gates with PostgreSQL 16. The browser flow includes preflop sizing, free flop selection, flop bet/call, turn/river, real equity, saved feedback, favorite and logout/relogin. Full-hand sampling and ten-question persistence are integration-tested. Strategy accuracy remains unmeasured; passing software tests does not make the learning policy GTO. Staging rollout is tracked separately.

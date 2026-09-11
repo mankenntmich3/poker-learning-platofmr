@@ -56,6 +56,11 @@ test('static solution adapter owns data and rejects unsupported accuracy/EV clai
 test('random-board and full-hand sessions advance without duplicate cards or fake EV',async()=>{
   let session=await startStudyTraining(db,user.id,{spot:root,options:{mode:'full-hand',boardFilter:'ace-high',limit:10},clientId:randomUUID()});
   expect(session.question!.spot.events.some(e=>e.kind==='deal'&&e.cards.some(c=>c[0]==='A'))).toBe(true);
-  session=await answerStudyTraining(db,user.id,session.id,session.question!.id,'check');
-  expect(session.question!.feedback!.evLoss).toBeNull();session=await advanceStudyTraining(db,user.id,session.id,false);expect(session.question!.ordinal).toBe(2);
+  for(let i=1;i<=10;i++){
+    expect(session.question!.ordinal).toBe(i);
+    const actions=session.question!.actions,action=actions.find(a=>a.id==='check')??actions.find(a=>a.id==='call')??actions[0];
+    session=await answerStudyTraining(db,user.id,session.id,session.question!.id,action.id);
+    expect(session.question!.feedback!.evLoss).toBeNull();session=await advanceStudyTraining(db,user.id,session.id,false);
+  }
+  expect(session.complete).toBe(true);expect(session.answered).toBe(10);
 });

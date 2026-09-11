@@ -10,7 +10,7 @@ Implemented: replayable integer-chip study state; legal bet/raise/call/check/fol
 
 Strategy is explicitly APPROXIMATED with content-derived versions. There are no NLHE GTO solutions or action EVs. Four-bet calling ranges are unavailable. HU equal effective stacks, 6-max ChipEV, rake/antes zero; no multiway, ICM or real-money settlement. Existing Academy, auth, preflop sessions and development seed remain intact. Additive migrations `006_study_engine.sql` and `007_study_sessions.sql` preserve existing data.
 
-Current local evidence: 83 tests passed, one external-PostgreSQL test skipped locally; lint and production build passed; five development browser flows passed. Final production browser acceptance and GitHub PostgreSQL CI are still being completed. See [architecture decision](decisions/0004-study-engine-v2.md) and [owner brief](STUDY_ENGINE_V2_SPEC.md).
+Local acceptance: typecheck, lint, 83 tests (one external-PostgreSQL check skipped locally), production build, all four production browser flows and five development browser flows passed. [GitHub PostgreSQL CI](https://github.com/mankenntmich3/poker-learning-platofmr/actions/runs/34585564632) also passed every gate on `b420b5b`, including frozen fresh-checkout installation and both browser suites. [PR #4](https://github.com/mankenntmich3/poker-learning-platofmr/pull/4) contains the implementation. Staging deployment verification remains pending. See [QA evidence](qa/study-engine-v2.md), [architecture decision](decisions/0004-study-engine-v2.md) and [owner brief](STUDY_ENGINE_V2_SPEC.md).
 
 ## Previous deployed release — NLHE usable locally, private staging online
 
