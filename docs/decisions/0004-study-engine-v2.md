@@ -1,6 +1,6 @@
 # Study Engine v2 — owner request and architecture
 
-Status: implemented and locally accepted; PostgreSQL CI passed. Staging rollout pending. Branch `feature/gto-study-engine-v2`, PR #4.
+Status: implemented, locally and online accepted, PostgreSQL CI passed. PR #4 from `feature/gto-study-engine-v2` is merged and commit `f2fe6288640371c2858908b73562461d68543e3a` is live on existing Render/Neon staging. See [release evidence](../qa/study-engine-v2.md).
 
 The owner's current brief supersedes the one-flop milestone: configurable 6-max NLHE ChipEV with heads-up postflop, explicit open/3-bet/4-bet sizes, concrete cards, street histories, range evolution, measured equity and persisted exact-node training. No ICM, bounty, PLO, multiway solver or real-money features. The full brief is in `docs/STUDY_ENGINE_V2_SPEC.md`.
 

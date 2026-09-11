@@ -2,15 +2,15 @@
 
 Repository: `mankenntmich3/poker-learning-platofmr` (confirmed spelling). Updated 2026-09-11.
 
-## Study Engine v2 — feature branch, release verification in progress
+## Study Engine v2 — deployed and accepted online
 
-Branch `feature/gto-study-engine-v2` now contains configurable sized preflop and heads-up flop/turn/river study. The prior online release described below remains the staging baseline until the feature is merged and its deployment is verified.
+PR #4 from `feature/gto-study-engine-v2` is merged. Configurable sized preflop and heads-up flop/turn/river study is live at [Rangeform](https://rangeform-staging.onrender.com/postflop). Render deployed merge commit `f2fe6288640371c2858908b73562461d68543e3a` successfully on 2026-09-11 at 16:17 Europe/Berlin, using the existing Neon PostgreSQL database and free plans. Local development remains available.
 
 Implemented: replayable integer-chip study state; legal bet/raise/call/check/fold/all-in sequences; freely selected Hero and board cards with card removal; preflop-to-flop continuation; two 169-class matrices and physical combos; action-conditioned range funnels; exact hand-vs-hand and sampled weighted range equity; made-hand/draw/nuts densities; qualified Why explanations; saved favorites/history/share links; persisted exact-node questions with 10/25/50/100 decisions and spot/street/full-hand modes; dashboard metrics derived from actual answers; account export/deletion covering new study data.
 
 Strategy is explicitly APPROXIMATED with content-derived versions. There are no NLHE GTO solutions or action EVs. Four-bet calling ranges are unavailable. HU equal effective stacks, 6-max ChipEV, rake/antes zero; no multiway, ICM or real-money settlement. Existing Academy, auth, preflop sessions and development seed remain intact. Additive migrations `006_study_engine.sql` and `007_study_sessions.sql` preserve existing data.
 
-Local acceptance: typecheck, lint, 83 tests (one external-PostgreSQL check skipped locally), production build, all four production browser flows and five development browser flows passed. [GitHub PostgreSQL CI](https://github.com/mankenntmich3/poker-learning-platofmr/actions/runs/34585564632) also passed every gate on `b420b5b`, including frozen fresh-checkout installation and both browser suites. [PR #4](https://github.com/mankenntmich3/poker-learning-platofmr/pull/4) contains the implementation. Staging deployment verification remains pending. See [QA evidence](qa/study-engine-v2.md), [architecture decision](decisions/0004-study-engine-v2.md) and [owner brief](STUDY_ENGINE_V2_SPEC.md).
+Local acceptance: typecheck, lint, 83 tests (one external-PostgreSQL check skipped locally), production build, all four production browser flows and five development browser flows passed. [Final-head PostgreSQL CI](https://github.com/mankenntmich3/poker-learning-platofmr/actions/runs/34608143988) passed every gate on `f73ab4c`, whose application tree matches the deployed merge, including frozen fresh-checkout installation and both browser suites. Online HTTPS acceptance verified signup, protected dashboard, sized ranges, flop/turn/river, equity, ten completed full-hand decisions, a saved inline decision, favorite, logout/login retention and full account export. The temporary test account was deleted successfully. See [QA evidence](qa/study-engine-v2.md), [merged PR #4](https://github.com/mankenntmich3/poker-learning-platofmr/pull/4), [architecture decision](decisions/0004-study-engine-v2.md) and [owner brief](STUDY_ENGINE_V2_SPEC.md).
 
 ## Previous deployed release — NLHE usable locally, private staging online
 
@@ -28,7 +28,7 @@ Private staging supports additional independently revocable signup invitations t
 
 Invitation rollout verified 2026-09-10: [PR #3](https://github.com/mankenntmich3/poker-learning-platofmr/pull/3), [successful CI](https://github.com/mankenntmich3/poker-learning-platofmr/actions/runs/34458631270), Render live commit `babbb2d`. Both newly issued invitations passed actual HTTPS signup → protected dashboard → logout → login; temporary test accounts were deleted and their sessions rejected afterwards. An invalid invitation returned 403. Locally, typecheck, lint, 69 tests (external PostgreSQL test skipped), production build and all eight browser flows passed. Real invitation values were configured only in the hosting environment, never committed.
 
-This is a usable private study release, not verified GTO or a public commercial service. Render Free sleeps when idle and may take about a minute to wake; free database/compute quotas apply. There is one Academy lesson and one bounded flop. Password-reset email, hosted backup restore validation and paid uptime are not implemented. The next useful milestone is obtaining or computing an independently validated, legally usable NLHE range dataset within a clearly bounded game configuration.
+This is a usable private study release, not verified GTO or a public commercial service. Render Free sleeps when idle and may take about a minute to wake; free database/compute quotas apply. There is one Academy lesson; the former bounded flop is superseded by configurable heads-up study through the river. Password-reset email, hosted backup restore validation and paid uptime are not implemented. The next useful milestone is obtaining or computing an independently validated, legally usable NLHE range dataset within a clearly bounded game configuration.
 
 ## Historical acceptance — pre-NLHE local release
 
