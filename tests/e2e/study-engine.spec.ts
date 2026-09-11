@@ -11,7 +11,9 @@ test('30 BB sized range → free cards → flop bet/call → turn/river → save
   await page.getByLabel('Modus',{exact:true}).selectOption('advanced');await page.getByLabel('Open Size',{exact:true}).selectOption('2.5');await expect(page.locator('.nlhe-context')).toContainText('Open 2.5 BB');
   const b=await(await page.request.get('/api/nlhe/range?stack=30&hero=BTN&scenario=rfi&open=2.5')).json();expect(a.id).not.toBe(b.id);expect(a.classes).not.toEqual(b.classes);
   await page.getByLabel('Open Size',{exact:true}).selectOption('2');await page.getByRole('link',{name:'30 BB · BB vs BTN · vs Open',exact:true}).click();await expect(page.locator('.nlhe-context')).toContainText('BTN eröffnet auf 2 BB');
-  await page.goto('/postflop');await expect(page.getByRole('gridcell')).toHaveCount(338);await expect(page.getByTestId('study-pot')).toContainText('4,500 BB');
+  await page.goto('/ranges?stack=30&hero=BTN&scenario=rfi&open=2');await page.getByRole('link',{name:'Mit AKs zum Flop',exact:true}).click();
+  await page.getByRole('button',{name:'Flop frei wählen',exact:true}).click();await page.getByRole('button',{name:'K♥',exact:true}).click();await page.getByRole('button',{name:'8♠',exact:true}).click();await page.getByRole('button',{name:'4♣',exact:true}).click();
+  await expect(page.getByRole('gridcell')).toHaveCount(338);await expect(page.getByTestId('study-pot')).toContainText('4,500 BB');
   await page.getByRole('button',{name:'Herokarte 1: A♠',exact:true}).click();await expect(page.getByRole('button',{name:'K♥',exact:true})).toBeDisabled();await page.getByRole('button',{name:'A♠',exact:true}).click();
   await page.getByRole('button',{name:'Flopkarte 3: 4♣',exact:true}).click();await page.getByRole('button',{name:'2♣',exact:true}).click();await page.getByRole('button',{name:'Flopkarte 3: 2♣',exact:true}).click();await page.getByRole('button',{name:'4♣',exact:true}).click();
   await page.getByRole('button',{name:'Check',exact:true}).click();await expect(page.getByRole('heading',{name:'BTN ist am Zug',exact:true})).toBeVisible();
@@ -27,5 +29,6 @@ test('30 BB sized range → free cards → flop bet/call → turn/river → save
   expect((await new AxeBuilder({page}).withTags(['wcag2a','wcag2aa','wcag21aa']).analyze()).violations.map(v=>({id:v.id,nodes:v.nodes.map(n=>n.target)}))).toEqual([]);
   await page.setViewportSize({width:390,height:844});expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBe(true);await page.screenshot({path:info.outputPath('study-engine-mobile.png'),fullPage:true});
   await page.goto('/settings');await page.getByRole('button',{name:'Abmelden',exact:true}).click();await page.getByLabel('E-Mail-Adresse',{exact:true}).fill(email);await page.getByLabel('Passwort',{exact:true}).fill(password);await page.getByRole('button',{name:'Anmelden',exact:true}).last().click();
+  await expect(page).not.toHaveURL(/\/login/);
   await page.goto(permalink);await expect(page.getByRole('heading',{name:'river',exact:true})).toBeVisible();await expect(page.locator('.engine-library')).toContainText('★');expect((await(await page.request.get('/api/study/progress')).json()).total[0].decisions).toBe(1);expect(errors).toEqual([]);
 });

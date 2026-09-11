@@ -16,7 +16,7 @@ export class NlhePolicyProvider implements StrategyProvider<NlheConfig, Combo, N
     const range = buildNlheRange(state, this.artifact.policy, nlheProvenance(this.artifact));
     validateNlheRange(range); const result=applyStudySizing(range, state);
     if(state.openBb!==undefined && state.scenario!=='flop-srp')result.provenance.solutionVersion=`${range.provenance.solutionVersion}:${await studyVersion()}`;
-    return result;
+    validateNlheRange(result);return result;
   }
   async getNode(state: NlheConfig): Promise<NlheNode> {
     const range = await this.getRangeStrategy(state);

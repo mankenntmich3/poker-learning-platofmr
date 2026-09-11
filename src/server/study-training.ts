@@ -47,7 +47,18 @@ async function freshQuestion(root:StudySpot,options:Options):Promise<StudySpot>{
 async function ensureQuestion(db:Database,session:TrainingSession){
   const previous=await questions(db,session.id);if(session.completed_at||previous.length>=session.options.limit||previous.at(-1)&&!previous.at(-1)!.feedback)return;
   let spot:StudySpot|undefined;
-  if(session.options.mode==='full-hand'&&previous.length){const last=previous.at(-1)!;const chosen=last.snapshot.actions.find(a=>a.id===last.feedback?.chosenAction);if(chosen){const state=replayStudy(last.spot);const next=await toHero({...last.spot,events:[...last.spot.events,{kind:'action',actor:state.activePlayer!,action:chosen.action}]});if(!replayStudy(next).complete)spot=next;}}
+  if(session.options.mode!=='spot'&&previous.length){
+    const last=previous.at(-1)!,chosen=last.snapshot.actions.find(a=>a.id===last.feedback?.chosenAction);
+    // An action with zero policy reach has no supported continuation. Keep its feedback,
+    // then start a fresh hand instead of inventing an off-policy answer.
+    if(chosen&&Number(last.feedback?.chosenFrequency)>0){
+      try{
+        const state=replayStudy(last.spot),next=await toHero({...last.spot,events:[...last.spot.events,{kind:'action',actor:state.activePlayer!,action:chosen.action}]});
+        const nextState=replayStudy(next);
+        if(!nextState.complete&&(session.options.mode==='full-hand'||nextState.street===state.street)){const node=await studyNode(next);if(node.hero.some(c=>c.cards.join('')===createCombo(...next.heroHand).join('')&&c.reach>0))spot=next;}
+      }catch(error){if(!(error instanceof ApiError&&error.code==='EMPTY_TRAINING_RANGE'))throw error;}
+    }
+  }
   if(!spot)spot=await freshQuestion(session.root_spot,session.options);
   const state=replayStudy(spot);if(state.activePlayer!==spot.config.hero)throw new ApiError(422,'Wähle im Explorer einen Node, an dem Hero am Zug ist.','HERO_NODE_REQUIRED');
   const node=await studyNode(spot),combo=node.hero.find(c=>c.cards.join('')===createCombo(...spot.heroHand).join(''))!;

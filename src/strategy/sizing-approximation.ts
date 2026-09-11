@@ -12,13 +12,14 @@ export function applyStudySizing(range: NlheRange, config: NlheConfig): NlheRang
   const blind=(p:string|null)=>p==='BB'?1:p==='SB'?0.5:0;
   const baseline=opener==='SB'?3:2.5;
   const sensitivity=Math.max(0.5,Math.min(1.3,baseline/open));
+  const allowed=range.actions.filter(a=>a.id!=='raise'||config.scenario!=='vs-3bet'||three<config.stackBb);
+  if(config.scenario==='vs-3bet'&&three<config.stackBb&&!allowed.some(a=>a.id==='raise'))allowed.push({id:'raise',label:'Raise',toBb:four,allIn:four===config.stackBb});
   const adjust=(actions:NlheRange['classes'][number]['actions'])=>{
     const continuation=actions.filter(a=>a.action!=='fold').reduce((n,a)=>n+a.frequency,0);
     const target=Math.min(1,Math.round(continuation*sensitivity*4)/4);
-    const allowed=range.actions.filter(a=>a.id!=='raise'||config.scenario!=='vs-3bet'||three<config.stackBb);
     return allowed.map(a=>({action:a.id,frequency:a.id==='fold'?1-target:continuation?target*(actions.find(x=>x.action===a.id)?.frequency??0)/continuation:0,ev:null}));
   };
-  const result=structuredClone(range);result.config={...config};
+  const result=structuredClone(range);result.config={...config};result.actions=structuredClone(allowed);
   if(config.scenario==='rfi')result.actions.find(a=>a.id==='raise')!.toBb=open;
   else {
     result.investedBb=config.scenario==='vs-open'?blind(config.hero):open;
@@ -30,8 +31,9 @@ export function applyStudySizing(range: NlheRange, config: NlheConfig): NlheRang
   result.actions=result.actions.filter(a=>a.id!=='raise'||config.scenario!=='vs-3bet'||three<config.stackBb).map(a=>({...a,allIn:a.toBb===config.stackBb,label:a.id==='fold'?'Fold':a.id==='call'?`Call ${result.toCallBb} BB`:`${a.toBb===config.stackBb?'All-in':'Raise auf'} ${a.toBb} BB`}));
   // When a 3-bet consumes the stack, all continuation is call (a raise cannot exist).
   const corrected=(actions:NlheRange['classes'][number]['actions'])=>{const rows=adjust(actions);if(!result.actions.some(a=>a.id==='raise')){const missing=1-rows.reduce((n,a)=>n+a.frequency,0);const call=rows.find(a=>a.action==='call');if(call)call.frequency+=missing;}return rows;};
-  result.classes=result.classes.map(row=>({...row,actions:corrected(row.actions)}));
-  result.combos=result.combos.map(row=>({...row,actions:corrected(row.actions)}));
+  const reach=(value:number)=>config.scenario==='vs-3bet'?Math.min(1,Math.round(value*sensitivity*4)/4):value;
+  result.classes=result.classes.map(row=>({...row,reach:reach(row.reach),actions:corrected(row.actions)}));
+  result.combos=result.combos.map(row=>({...row,reach:reach(row.reach),actions:corrected(row.actions)}));
   result.id+=`:open${open}:3bet${three}:4bet${four}`;
   result.context=`${config.scenario==='rfi'?'Alle folden zu dir.':`${opener} eröffnet auf ${open} BB.`} Open ${open} BB; 3-Bet ${three} BB; 4-Bet ${four} BB. Recommended Study Size: Lernannahme, keine Solver-Empfehlung.`;
   result.provenance.solutionVersion+='-sizing-v2';

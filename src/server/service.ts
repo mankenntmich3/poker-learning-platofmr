@@ -181,7 +181,7 @@ export async function exportAccount(db: Database, user: StudyUser): Promise<Reco
     db.query('SELECT node_id,spot,label,favorite,last_seen FROM study_saved_spots WHERE user_id=$1 ORDER BY last_seen',[user.id]),
     db.query('SELECT id,node_id,spot,chosen_action,feedback,created_at FROM study_engine_decisions WHERE user_id=$1 ORDER BY created_at',[user.id]),
     db.query('SELECT id,root_spot,options,created_at,completed_at FROM study_engine_sessions WHERE user_id=$1 ORDER BY created_at',[user.id]),
-    db.query('SELECT q.id,q.session_id,q.ordinal,q.spot,q.snapshot,q.created_at FROM study_engine_questions q JOIN study_engine_sessions s ON s.id=q.session_id WHERE s.user_id=$1 ORDER BY q.created_at',[user.id]),
+    db.query('SELECT q.id,q.session_id,q.ordinal,q.spot,q.snapshot FROM study_engine_questions q JOIN study_engine_sessions s ON s.id=q.session_id WHERE s.user_id=$1 ORDER BY s.created_at,q.ordinal',[user.id]),
   ]);
   return { schemaVersion: 3, exportedAt: new Date().toISOString(), user, lessonCompletions: lessons, trainingDecisions: decisions, nlheSessions, nlheDecisions, studySpots, studyDecisions, studySessions, studyQuestions };
 }

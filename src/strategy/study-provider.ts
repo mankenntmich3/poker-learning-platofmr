@@ -57,7 +57,7 @@ export class ApproximationProvider implements StudyStrategyProvider {
     const funnel=[{label:'Preflop',hero:sum(hero),villain:sum(villain)}];
     for(const event of spot.events){
       if(event.kind==='action'){
-        const action=studyActions(state).find(a=>JSON.stringify(a.action)===JSON.stringify(event.action));
+        const action=studyActions(state).find(a=>a.action.type===event.action.type&&(!('toBb' in a.action)||'toBb' in event.action&&a.action.toBb===event.action.toBb));
         const update=(rows:StudyCombo[])=>rows.map(c=>({...c,reach:c.reach*(action?approximateActions(state,c.cards).find(a=>a.action===action.id)?.frequency??0:0)}));
         if(!action)throw new Error('This bet size is not supported by the current solution set.');
         if(event.actor===config.hero)hero=update(hero);else villain=update(villain);
