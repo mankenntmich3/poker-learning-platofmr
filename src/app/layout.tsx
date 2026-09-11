@@ -4,6 +4,7 @@ import "./globals.css";
 import "./trainer-mobile.css";
 import "./development-access.css";
 import "./nlhe.css";
+import "./study-engine.css";
 import { AppShell } from "@/components/app-shell";
 import { StudyProvider } from "@/components/study-context";
 import { DEVELOPMENT_DEMO, developmentAccessEnabled } from "@/server/development";

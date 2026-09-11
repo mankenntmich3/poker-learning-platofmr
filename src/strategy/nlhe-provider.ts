@@ -3,6 +3,8 @@ import path from 'node:path';
 import { createCombo, type Combo } from '@/domain/cards';
 import { algorithmChecksum, nlheProvenance, validateNlheArtifact, type NlheArtifact } from '@/solver/nlhe-artifact';
 import { buildNlheRange, validateNlheRange } from './nlhe-policy';
+import { applyStudySizing } from './sizing-approximation';
+import { studyVersion } from './study-version';
 import type { StrategyProvider } from './types';
 import { validNlheConfig, type NlheConfig, type NlheNode, type NlheRange, type NlheComboStrategy, type NlheFrequency } from '@/shared/nlhe';
 
@@ -12,7 +14,9 @@ export class NlhePolicyProvider implements StrategyProvider<NlheConfig, Combo, N
   async hasSolution(state: NlheConfig) { return validNlheConfig(state); }
   async getRangeStrategy(state: NlheConfig): Promise<NlheRange> {
     const range = buildNlheRange(state, this.artifact.policy, nlheProvenance(this.artifact));
-    validateNlheRange(range); return range;
+    validateNlheRange(range); const result=applyStudySizing(range, state);
+    if(state.openBb!==undefined && state.scenario!=='flop-srp')result.provenance.solutionVersion=`${range.provenance.solutionVersion}:${await studyVersion()}`;
+    return result;
   }
   async getNode(state: NlheConfig): Promise<NlheNode> {
     const range = await this.getRangeStrategy(state);

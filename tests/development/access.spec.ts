@@ -18,32 +18,26 @@ test('personal development signup returns to the exact selected NLHE range on th
   await expect(page.locator('main')).not.toContainText('Kuhn');
 });
 
-test('bounded BTN-vs-BB flop offers card removal, check/bet feedback and retained progress', async ({ page }, info) => {
+test('dynamic postflop starts a persistent exact-node training session', async ({ page }, info) => {
   await demoLogin(page); const baseline = await (await page.request.get('/api/nlhe/progress')).json();
-  await page.goto('/postflop'); await expect(page.getByRole('gridcell')).toHaveCount(169);
-  await expect(page.getByRole('img', { name: 'A♠ 7♦ 2♣', exact: true })).toBeVisible();
-  await page.getByLabel('Deine konkrete Hand', { exact: true }).selectOption('1');
-  await expect(page.locator('.nlhe-villain-range')).toContainText('Combos');
-  await page.getByRole('link', { name: 'Diesen Flop trainieren' }).click();
-  await page.getByRole('button', { name: 'Trainingssitzung starten' }).click();
-  await expect(page.getByRole('heading', { name: 'NLHE Flop-Trainer' })).toBeVisible();
-  const savedUrl = page.url(); const id = new URL(savedUrl).searchParams.get('session');
-  const state = await (await page.request.get(`/api/nlhe/session?id=${id}`)).json();
-  expect(state.spot.config).toMatchObject({ stackBb: 100, hero: 'BTN', villain: 'BB', scenario: 'flop-srp' });
-  expect(state.question.cards.some((card: string) => state.spot.board.includes(card))).toBe(false);
-  expect(state.question.villainRange.length).toBeGreaterThan(10);
+  await page.goto('/postflop'); await expect(page.getByRole('gridcell')).toHaveCount(338);
   await page.getByRole('button', { name: 'Check', exact: true }).click();
-  await expect(page.getByRole('heading', { name: 'Dein Range-Vergleich' })).toBeVisible();
-  await expect(page.locator('.nlhe-frequencies')).toContainText('Bet 1,8 BB');
-  expect((await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21aa']).analyze()).violations.map(v => ({ id: v.id, nodes: v.nodes.map(n => n.target) }))).toEqual([]);
-  await page.locator('body').click({ position: { x: 1, y: 1 } });
+  await expect(page.getByRole('heading', { name: 'BTN ist am Zug', exact: true })).toBeVisible();
+  await page.getByRole('button', { name: 'Diesen Spot trainieren', exact: true }).click();
+  await page.getByRole('link', { name: 'Trainingssitzung konfigurieren', exact: true }).click();
+  await page.getByRole('button', { name: 'Study-Training starten', exact: true }).click();
+  await expect(page.getByRole('heading', { name: 'NLHE Study-Trainer', exact: true })).toBeVisible();
+  await page.getByRole('button', { name: 'Check', exact: true }).click();
+  await expect(page.getByRole('heading', { name: 'Dein Strategievergleich', exact: true })).toBeVisible();
+  await page.reload(); await expect(page.getByRole('heading', { name: 'Dein Strategievergleich', exact: true })).toBeVisible();
+  expect((await new AxeBuilder({ page }).withTags(['wcag2a','wcag2aa','wcag21aa']).analyze()).violations.map(v=>v.id)).toEqual([]);
   await page.screenshot({ path: info.outputPath('nlhe-postflop-feedback.png'), fullPage: true });
-  await page.getByRole('button', { name: 'Sitzung jetzt abschließen' }).click();
-  await expect(page.getByRole('heading', { name: 'Training abgeschlossen.' })).toBeVisible();
-  await page.reload(); await expect(page.getByRole('heading', { name: 'Training abgeschlossen.' })).toBeVisible();
-  const progress = await (await page.request.get('/api/nlhe/progress')).json();
-  expect(progress.postflop).toBe(baseline.postflop + 1);
+  await page.getByRole('button', { name: 'Sitzung jetzt abschließen', exact: true }).click();
+  await expect(page.getByRole('heading', { name: 'Study-Training abgeschlossen', exact: true })).toBeVisible();
+  await page.reload(); await expect(page.getByRole('heading', { name: 'Study-Training abgeschlossen', exact: true })).toBeVisible();
+  const progress = await (await page.request.get('/api/nlhe/progress')).json(); expect(progress.postflop).toBe(baseline.postflop + 1);
 });
+
 test('demo explores mixed NLHE ranges, switches stack, trains exact spot and retains progress after relogin', async ({ page }, info) => {
   await demoLogin(page); const baseline = await (await page.request.get('/api/nlhe/progress')).json();
   await page.getByRole('link', { name: 'Preflop entdecken' }).click();

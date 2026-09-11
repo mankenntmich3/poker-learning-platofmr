@@ -3,6 +3,8 @@ import { useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { combosForClass } from '@/domain/cards';
+import { studySizes } from '@/domain/study';
+import { PreflopSizing } from './preflop-sizing';
 import { SIX_MAX_POSITIONS, type Position } from '@/domain/chips';
 import { configFromSearch, configSearch, DEFAULT_NLHE, possibleVillains, SCENARIO_LABELS, STACK_DEPTHS, spotLabel, validNlheConfig, type NlheConfig, type NlheNode, type NlheScenario } from '@/shared/nlhe';
 import { SessionGate } from './auth-screen';
@@ -22,6 +24,7 @@ function RangeContent() {
     let current = config;
     try { current = configFromSearch(new URLSearchParams(window.location.search)); } catch { /* Recover from the displayed invalid URL. */ }
     const next = { ...current, ...change };
+    if (change.stackBb !== undefined || change.hero !== undefined || change.scenario !== undefined) { next.openBb=studySizes(next.stackBb,next.scenario==='vs-open'?next.villain??'BTN':next.hero).recommended; delete next.threeBetBb; delete next.fourBetBb; }
     setInputError('');
     if (next.scenario === 'rfi') { next.villain = null; if (next.hero === 'BB') { next.scenario = 'vs-open'; next.villain = 'BTN'; } }
     else { let opponents = possibleVillains(next); if (!opponents.length) { next.scenario = next.hero === 'UTG' ? 'rfi' : 'vs-open'; opponents = possibleVillains(next); } next.villain = opponents.includes(next.villain!) ? next.villain : opponents.at(-1) || null; }
@@ -37,6 +40,7 @@ function RangeContent() {
       <label>Vorgeschichte<select aria-label="Vorgeschichte" value={config.scenario} onChange={event => choose({ scenario: event.target.value as NlheScenario })}><option value="rfi" disabled={config.hero === 'BB'}>{SCENARIO_LABELS.rfi}</option><option value="vs-open" disabled={config.hero === 'UTG'}>{SCENARIO_LABELS['vs-open']}</option><option value="vs-3bet" disabled={config.hero === 'BB'}>{SCENARIO_LABELS['vs-3bet']}</option></select></label>
       {config.scenario !== 'rfi' ? <label>Gegnerposition<select aria-label="Gegnerposition" value={config.villain || ''} onChange={event => choose({ villain: event.target.value as Position })}>{possibleVillains(config).map(position => <option key={position}>{position}</option>)}</select></label> : <div className="nlhe-controls-note">RFI = Raise First In.<br />BB kann einen ungeöffneten Pot nicht mehr eröffnen.</div>}
       {custom ? <form className="custom-stack" onSubmit={event => { event.preventDefault(); const value = Number(new FormData(event.currentTarget).get('stack')); if (Number.isFinite(value)) choose({ stackBb: value }); }}><label>Eigener Stack in BB<input name="stack" type="number" min="10" max="500" step="0.01" defaultValue={config.stackBb} required /></label><button className="button button-secondary">Stack anwenden</button></form> : null}</section>
+    <PreflopSizing config={config} onChange={choose}/>
     {configError ? <ErrorNotice message={configError} retry={() => router.replace('/ranges')} /> : inputError ? <ErrorNotice message={inputError} /> : null}
     {resource.loading ? <LoadingPanel label="Genau diese NLHE-Range wird geladen…" /> : resource.error ? <ErrorNotice message={resource.error} retry={resource.reload} /> : node && hand ? <><RangeProvenance provenance={node.provenance} /><div className="nlhe-context"><h2>{spotLabel(node.config)}</h2><p>{node.context}</p><p>Pot {number(node.potBb, 1)} BB · bereits investiert {number(node.investedBb, 1)} BB · Rake 0</p></div>
       <div className="nlhe-study-layout"><section aria-label="Range-Matrix"><div className="nlhe-legend" aria-label="Aktionslegende">{node.actions.map(action => <span key={action.id}><i className={`action-dot action-${action.id}`} />{action.label}</span>)}</div><HandMatrix rows={node.classes} selected={selected} onSelect={setSelected} /><p className="matrix-help">169 Handklassen · 1.326 Kombinationen. Mit Pfeiltasten navigieren oder eine Hand antippen. Farben zeigen Mischungen; abgedunkelte Hände erreichen diesen Spot nicht.</p></section>

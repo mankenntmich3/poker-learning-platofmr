@@ -84,7 +84,7 @@ test('learn, train, persist, inspect and return on desktop and mobile', async ({
         await expect(page.getByRole('button', { name: 'Fold', exact: true })).toBeVisible();
       }
       if (route === '/ranges') await expect(page.getByRole('gridcell', { name: /^AKs:/ })).toBeVisible();
-      if (route === '/postflop') await expect(page.getByRole('gridcell')).toHaveCount(169);
+      if (route === '/postflop') await expect(page.getByRole('gridcell')).toHaveCount(338);
       await noOverflow(page);
       if (width === 390 || width === 1440) {
         const label = route === '/' ? 'dashboard' : route.slice(1);

@@ -1,2 +1,4 @@
 import { Postflop } from '@/components/postflop';
-export default function Page() { return <Postflop />; }
+import { Suspense } from 'react';
+import { LoadingPanel } from '@/components/ui';
+export default function Page() { return <Suspense fallback={<LoadingPanel/>}><Postflop /></Suspense>; }
