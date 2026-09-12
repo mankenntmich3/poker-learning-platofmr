@@ -112,3 +112,27 @@ controls and Tournament navigation were corrected.
 
 Final command/CI results are recorded in PROJECT_STATUS.md. No staging deployment
 or V3-wide acceptance is implied by a passing bounded-river test.
+
+
+### Final executed gates
+
+Application commit **8432ab8eec1851597f7fa448414cf56eb1df1a10** passed
+[Quality gates run 34717017097](https://github.com/mankenntmich3/poker-learning-platofmr/actions/runs/34717017097),
+job 103615981313. Fresh Linux checkout and pinned dependency install regenerated
+the LP profile and independently certified it. Typecheck, lint, 95 unit tests,
+42 integration tests on PostgreSQL 16, production build, six production browser
+flows and five development browser flows all passed without skipped tests.
+
+The prior CI run exposed a test navigation race: the browser navigated away
+before the asynchronous logout response and its deliberate /login redirect.
+The test now waits for completed logout and a visible login form before opening
+the protected route. The corrected real PostgreSQL logout/relogin flow passed.
+Local full suite: 134 passed, with the three dedicated external PostgreSQL cases
+skipped locally and exercised successfully in CI. Desktop/mobile browser images
+were inspected; matrix and trainer accessibility checks passed.
+
+The published verification report includes its source-artifact checksum and
+calibration policy identity. UI accuracy uses the measured report plus numeric
+reserve, rather than a fixed displayed bound. Future verifier-version changes
+are rejected unless they match the calibrated server policy. Draft PR #5 is
+not merged; staging is unchanged.

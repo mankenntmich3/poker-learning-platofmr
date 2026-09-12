@@ -41,8 +41,11 @@ Local validation: `pnpm typecheck`, `pnpm lint`, `pnpm test` and `pnpm build`
 passed. Tests: 134 passed; 3 dedicated external-PostgreSQL checks skipped locally.
 All 6 production Playwright flows and all 5 development-access flows passed.
 The real LP was regenerated and independently verified again outside the bundled
-artifact. CI additionally rebuilds the solver result from a fresh Linux checkout
-and runs the hosted-database checks against PostgreSQL 16; its result is pending.
+artifact. [CI on application commit 8432ab8](https://github.com/mankenntmich3/poker-learning-platofmr/actions/runs/34717017097)
+passed every gate: fresh Linux checkout, dependency installation, actual solver
+regeneration and independent verification, typecheck/lint, **95 unit + 42 integration
+tests against PostgreSQL 16**, production build, **6 production + 5 development
+browser flows**. The final documentation follow-up changes no application code.
 No merge or new staging deployment has occurred; the existing staging app remains
 on its previous accepted version.
 
