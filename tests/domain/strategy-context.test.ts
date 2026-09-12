@@ -22,6 +22,6 @@ describe('MTT strategy context', () => {
 
   it('rejects format mixing and future evaluation models', () => {
     expect(() => validateStrategyContext({ ...defaultTournamentContext(), gameType: 'CASH' })).toThrow(/Cash/);
-    expect(() => validateStrategyContext({ ...defaultTournamentContext(), evaluationModel: 'ICM' })).toThrow(/Only ChipEV/);
+    expect(() => validateStrategyContext({ ...defaultTournamentContext(), evaluationModel: 'ICM' })).toThrow(/disagree/);
   });
 });

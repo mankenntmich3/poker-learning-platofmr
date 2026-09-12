@@ -42,25 +42,16 @@ Upstream sources:
 - [`b-inary/postflop-solver` Cargo metadata](https://github.com/b-inary/postflop-solver/blob/main/Cargo.toml)
 - [`bupticybee/TexasSolver`](https://github.com/bupticybee/TexasSolver)
 
-## Quality gate now implemented
+## Correction after the 2026-09-12 trust review
 
-The new `VerifiedSolutionArtifact` separates `VERIFIED_SOLVER` and `IMPORTED_VERIFIED` from `APPROXIMATED`, `DEMO` and future `INTERPOLATED` data. The gate verifies:
+The earlier Phase-1 implementation checked generator-reported convergence and even used the artifact's threshold for quality labels. It also accepted incomplete combo lists. That was structural plausibility checking, not independent mathematical verification. Those acceptance paths and quality labels have been removed. No real NLHE solution had been published.
 
-- exact NLHE game type, evaluation model, handedness, positions, blinds, antes, stacks, action history and board;
-- declared legal actions equal the immutable betting tree;
-- every physical combo is unblocked, unique, in range and has exactly one normalized frequency for every declared action;
-- finite EVs where present, complete solver identity, algorithm, iteration count, runtime and abstraction details;
-- a passed numerical threshold, optional non-negative exploitability, timestamp, licence/source and content checksum;
-- standard GTO training eligibility only after status `VERIFIED` and source `VERIFIED_SOLVER` or `IMPORTED_VERIFIED`.
+Current structural checks validate runtime schemas, full physical combo coverage including zero reach, legal public replay, complete multiway stacks, canonical context and tree identity, normalized frequencies and immutable provenance. They return STRUCTURALLY_VALID only. Generator EVs/reach/full-profile claims still need an independently built game to be checked mathematically.
 
-Quality labels derive from the artifact's declared and documented convergence threshold: at most 25% of threshold is `VERY_HIGH`, at most 60% is `HIGH`, and a passing result above that is `EXPERIMENTAL`. This is a relative convergence label, not a claim that different games or metrics are directly comparable.
+The server-owned rangeform-verification-v2 policy approves no NLHE model, accuracy threshold or dataset license yet. Publication explicitly fails, stores the reason and makes no strategy available. Imported data has the identical mathematical and provenance requirements. Historical uncertified VERIFIED flags are quarantined without deleting their artifacts.
 
-## Remaining verification before the first real MTT node
+An original independent reference evaluator now enumerates information-set-consistent best responses for bounded finite perfect-recall games. Analytic two-player and multiway tests establish its limited numerical behavior. It has no audited NLHE adapter and is not evidence of NLHE accuracy. NashConv is computed as the sum of each player's unilateral improvement; the HU zero-sum /2 exploitability convention is not applied to multiway results. Work exceeding exact enumeration limits is rejected.
 
-1. Select and pin an eligible solver commit or obtain written commercial data rights.
-2. Audit the exact multiplayer preflop game, card/action abstraction, BBA accounting and best-response implementation.
-3. Define a conservative NashConv/exploitability threshold in BB/hand for that model and document compute hardware.
-4. Reproduce a deterministic sample, compare independent implementations or references under identical assumptions, and preserve deviations.
-5. Only then publish multiple 6/8/9-handed, 10–50 BB MTT ChipEV nodes to the standard trainer.
+Before approving a model, Rangeform must independently build and audit its game/payoffs and information sets, verify the complete joint strategy plus node projection/EV/reach, measure BR/NashConv, calibrate server-side accuracy and numerical error bounds, verify source/license/parameter identity, and bind the report to all immutable hashes. See [trust review](qa/mtt-trust-review.md) for findings, tests and limitations.
 
-Until those steps pass, zero verified coverage is the correct product result. A missing solution is preferable to a fabricated one.
+Current 6/8/9-handed, BBA, 10–100 BB verified coverage: **zero**. The next work is still a real eligible multiplayer NLHE generator and independently validated game/verification adapter; no architecture or fixture is counted as a solved node.

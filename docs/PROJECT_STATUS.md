@@ -1,14 +1,16 @@
 # Project status
 
-Repository: `mankenntmich3/poker-learning-platofmr` (confirmed spelling). Updated 2026-09-11.
+Repository: `mankenntmich3/poker-learning-platofmr` (confirmed spelling). Updated 2026-09-12.
 
-## MTT GTO accuracy v3 — Phase 1 in progress
+## MTT GTO accuracy v3 — trust review corrected; product milestone incomplete
 
-Branch `feature/mtt-gto-accuracy-v3` establishes Tournament ChipEV as the primary study direction while preserving the deployed Cash experience. The first increment adds a strict `StrategyContext`, correct 2–9 handed position engine, BBA/player/custom ante context, the requested 10–200 BB tournament presets, correct minimum effective-stack calculation and future evaluation-model identities. ICM/PKO/Mystery Bounty are represented but rejected because only ChipEV is implemented.
+Continuing the existing feature/mtt-gto-accuracy-v3 branch and draft PR #5. The original Phase-1 validation checked generator metadata, not independent mathematical correctness. Its earlier VERIFIED acceptance was unsafe. No real NLHE solution had been published. The correction replaces it with strict structural checks plus a server-owned fail-closed publication boundary. All NLHE publication and standard GTO eligibility are disabled until an independently audited model verifier, calibrated server accuracy policy and approved dataset/license evidence are integrated.
 
-A versioned verified-solution artifact and quality gate now separate `VERIFIED_SOLVER` / `IMPORTED_VERIFIED` from `APPROXIMATED` / `DEMO` / `INTERPOLATED`. New PostgreSQL tables index solver jobs and immutable artifacts by exact game type, model, players, stack, ante, position, action history, board and betting tree. The server registry creates exact-context job keys, records failed validation without publishing data, publishes immutable passing artifacts and performs exact-only lookup and coverage aggregation. Validation checks legal normalized combo strategies, card removal, convergence, provenance, immutable checksum and GTO-trainer eligibility. No real NLHE artifact has been declared verified.
+Implemented now: complete physical-combo coverage including zero reach and blockers; canonical versioned context/tree keys; full multiway stack vectors; integer-chip public replay with explicit board events, forced contributions, payer-specific antes, short all-ins and reopening; correct HU BTN/SB roles; structured future ICM/PKO/Mystery state and Cash rake identity. The separate bounded exact information-set BR evaluator computes real NashConv on analytic finite test games. It is not an NLHE verifier, and its test values never count as MTT solutions. Migration 009 quarantines legacy uncertified rows while preserving evidence. Lookups do not trust status flags or supplied reports.
 
-The authenticated Tournament page defaults to 8-handed, 15 BB, BBA 1 BB, HJ and visualizes every seat, dealer button and action-order instruction. With current zero verified coverage it explicitly displays `Verified GTO solution currently unavailable.` The existing approximated Cash ranges and trainer remain available but are identified as Sandbox in primary navigation. See [solver/licensing research](solver-research-v3.md).
+The public Tournament page still shows zero verified coverage. Existing Cash Sandbox access remains usable. No actual MTT generator, calibrated MTT threshold, verified matrix, Frequency Recall, Mastery or Spaced Repetition has been delivered. No verified preflop/postflop NLHE data exists for any requested stack/table size. The branch has not been merged or deployed.
+
+See the [mathematical trust audit and validation record](qa/mtt-trust-review.md), [all 66 requirements](MTT_V3_REQUIREMENTS.md), [complete owner prompt](MTT_GTO_V3_SPEC.md) and [solver/licensing research](solver-research-v3.md).
 
 ## Study Engine v2 — deployed and accepted online
 

@@ -46,3 +46,10 @@ export function potFractionBet(pot: number, fraction: number, stack: number): nu
   if (!Number.isFinite(fraction) || fraction < 0) throw new Error('Invalid bet fraction');
   return Math.min(stack, Math.round(pot * fraction));
 }
+
+export const CHIP_UNITS_PER_BB = 10_000;
+export function bbToUnits(value: number): number {
+  const units = Math.round(value * CHIP_UNITS_PER_BB);
+  if (!Number.isFinite(value) || value < 0 || units > 1e12 || Math.abs(units - value * CHIP_UNITS_PER_BB) > 1e-7) throw new Error('BB amount must use exact 0.0001 BB chip units.');
+  return units;
+}

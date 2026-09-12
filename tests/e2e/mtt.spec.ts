@@ -3,6 +3,9 @@ import AxeBuilder from '@axe-core/playwright';
 import { randomUUID } from 'node:crypto';
 
 test('Tournament ChipEV is the primary verified-only study mode', async ({ page }) => {
+  const browserErrors:string[]=[];
+  page.on('pageerror',error=>browserErrors.push(error.message));
+  page.on('console',message=>{if(message.type()==='error')browserErrors.push(message.text());});
   const email=`mtt-${randomUUID()}@example.test`,password=`Study-${randomUUID()}`;
   await page.goto('/');
   await page.getByRole('button',{name:'Konto erstellen',exact:true}).click();
@@ -20,6 +23,11 @@ test('Tournament ChipEV is the primary verified-only study mode', async ({ page 
   await expect(page.getByRole('img',{name:/9-handed Pokertisch/})).toBeVisible();
   await page.locator('#mtt-stack').selectOption('20');
   await expect(page.getByText('9-handed · 20 BB · HJ')).toBeVisible();
+  await page.locator('#mtt-players').selectOption('2');
+  await expect(page.getByRole('img',{name:/Button und Small Blind bei BTN/})).toBeVisible();
+  await expect(page.getByText('BTN / SB',{exact:true})).toBeVisible();
+  await expect(page.getByText('Button und Small Blind · zuerst preflop, zuletzt postflop')).toBeVisible();
   const violations=await new AxeBuilder({page}).analyze();
   expect(violations.violations).toEqual([]);
+  expect(browserErrors).toEqual([]);
 });

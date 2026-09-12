@@ -1,30 +1,66 @@
 import { describe, expect, it } from 'vitest';
-import { defaultTournamentContext, positionsFor } from '@/domain/strategy-context';
-import { mayTrainAsGto, solutionChecksum, validateVerifiedSolution, type VerifiedSolutionArtifact } from '@/solver/verified-solution';
+import { parameterChecksum, validateSolutionStructure } from '@/solver/verified-solution';
+import { allCombos } from '@/domain/cards';
+import { defaultTournamentContext } from '@/domain/strategy-context';
+import { mayTrainAsGto, verifyForPublication } from '@/server/verify-solution';
+import { resign, untrustedSolution } from '../fixtures/untrusted-solution';
 
-function artifact(): VerifiedSolutionArtifact {
-  const context = defaultTournamentContext();
-  const actions = [{ id: 'fold', type: 'FOLD' as const }, { id: 'raise-2', type: 'RAISE' as const, toBb: 2 }, { id: 'jam', type: 'JAM' as const }];
-  const unsigned: Omit<VerifiedSolutionArtifact, 'checksum'> = { schemaVersion: 1, id: 'mtt-8h-15-hj-rfi-test', sourceType: 'VERIFIED_SOLVER', status: 'PENDING_VALIDATION', context,
-    positions: [...positionsFor(8)], actions, strategies: [{ combo: ['As', 'Qd'], reach: 1, actions: [{ actionId: 'fold', frequency: 0 }, { actionId: 'raise-2', frequency: 0.72, evBb: 0.4 }, { actionId: 'jam', frequency: 0.28, evBb: 0.39 }] }],
-    solver: { name: 'Test oracle', version: '1.0.0', algorithm: 'DCFR' }, bettingTree: { id: 'rfi-2x-jam-v1', description: 'Fixture tree', allowedActions: actions },
-    convergence: { metric: 'NASH_CONV', value: 0.004, threshold: 0.01, unit: 'BB_PER_HAND', passed: true }, exploitabilityBbPerHand: 0.002,
-    iterations: 1_000_000, runtimeMs: 1000, abstraction: { card: 'none', action: 'declared tree', chance: 'exact' }, generatedAt: '2026-09-11T00:00:00.000Z', license: 'Test-only fixture', source: 'Independent test oracle' };
-  return { ...unsigned, checksum: solutionChecksum(unsigned) };
-}
-
-describe('verified solution quality gate', () => {
-  it('accepts a normalized, converged and checksummed pending artifact', () => expect(validateVerifiedSolution(artifact())).toEqual({ status: 'VERIFIED', errors: [], quality: 'HIGH' }));
-  it('fails convergence, checksum and frequency tampering', () => {
-    const changed = artifact(); changed.convergence.passed = false; changed.strategies[0]!.actions[1]!.frequency = 0.5;
-    const result = validateVerifiedSolution(changed);
-    expect(result.status).toBe('FAILED_VALIDATION'); expect(result.errors).toEqual(expect.arrayContaining(['Convergence threshold not met.', 'Every combo must contain one normalized frequency per action.', 'Checksum mismatch.']));
+describe('independent publication trust boundary',()=>{
+  it('distinguishes complete structure from mathematical verification',()=>{
+    const a=untrustedSolution();
+    expect(validateSolutionStructure(a).status).toBe('STRUCTURALLY_VALID');
+    expect(verifyForPublication(a)).toMatchObject({status:'FAILED_VALIDATION',quality:null,policyVersion:'rangeform-verification-v2'});
+    expect(mayTrainAsGto(a)).toBe(false);
   });
-  it('never permits approximate, demo, interpolated or unvalidated nodes in GTO training', () => {
-    expect(mayTrainAsGto('VERIFIED_SOLVER', 'VERIFIED')).toBe(true);
-    expect(mayTrainAsGto('IMPORTED_VERIFIED', 'VERIFIED')).toBe(true);
-    for (const source of ['APPROXIMATED', 'DEMO', 'INTERPOLATED'] as const) expect(mayTrainAsGto(source, 'VERIFIED')).toBe(false);
-    expect(mayTrainAsGto('VERIFIED_SOLVER', 'PENDING_VALIDATION')).toBe(false);
-    expect(mayTrainAsGto('VERIFIED_SOLVER', 'FAILED_VALIDATION')).toBe(false);
+  it('ignores self-reported zero exploitability, loose thresholds and a forged VERIFIED flag',()=>{
+    const a=untrustedSolution();a.status='VERIFIED';a.exploitabilityBbPerHand=0;a.convergence.threshold=1e12;
+    expect(mayTrainAsGto(resign(a))).toBe(false);
+    expect(verifyForPublication({...a,verificationReport:{nashConv:0,passed:true}}).status).toBe('FAILED_VALIDATION');
+  });
+  it('requires all 1326 preflop combos, including zero-reach hands',()=>{
+    const a=untrustedSolution();a.strategies[0].reach=0;
+    expect(validateSolutionStructure(resign(a)).status).toBe('STRUCTURALLY_VALID');
+    a.strategies.pop();
+    expect(validateSolutionStructure(resign(a)).errors.join(' ')).toContain('Incomplete expected physical-combo coverage');
+    a.strategies=[];
+    expect(validateSolutionStructure(resign(a)).status).toBe('FAILED_VALIDATION');
+  });
+  it('detects reversed duplicate combos, invalid frequencies and stale checksums',()=>{
+    const a=untrustedSolution();a.strategies[1].combo=[...a.strategies[0].combo].reverse() as [string,string];
+    expect(validateSolutionStructure(resign(a)).errors).toContain('Duplicate physical combo.');
+    a.strategies[2].actions[0].frequency=.5;
+    const result=validateSolutionStructure(a);
+    expect(result.errors).toContain('Every combo must contain one normalized frequency per action.');
+    expect(result.errors).toContain('Checksum mismatch.');
+  });
+  it('rejects illegal node actions and incomplete public replay',()=>{
+    const a=untrustedSolution();a.actions[1]={id:'raise-2',type:'RAISE',toBb:1.1};a.bettingTree.allowedActions=a.actions;
+    expect(validateSolutionStructure(resign(a)).errors.join(' ')).toContain('Illegal raise');
+    a.context.actionHistory=[];
+    expect(validateSolutionStructure(resign(a)).errors.join(' ')).toContain('Hero must be the actor');
+  });
+  it('requires imports to carry immutable source, parameters and server-approved license evidence',()=>{
+    const a=untrustedSolution();a.sourceType='IMPORTED_VERIFIED';a.provenance.origin='LICENSED_IMPORT';
+    expect(validateSolutionStructure(resign(a)).status).toBe('STRUCTURALLY_VALID');
+    expect(verifyForPublication(a).errors.join(' ')).toContain('No server-approved license/provenance');
+    a.provenance.parametersSha256='0'.repeat(64);
+    expect(validateSolutionStructure(resign(a)).errors).toContain('Provenance parameter identity mismatch.');
+  });
+  it('derives postflop coverage from the replayed board and known dead cards',()=>{
+    const a=untrustedSolution(),c=defaultTournamentContext(2);
+    c.hero='BB';c.actionHistory=[{actor:'BTN',type:'LIMP'},{actor:'BB',type:'CHECK'},{type:'DEAL',cards:['As','7d','2c']}];
+    c.board=['As','7d','2c'];c.deadCards=['Kh'];
+    a.context=c;a.positions=['BTN','BB'];a.actions=[{id:'check',type:'CHECK'},{id:'bet',type:'RAISE',toBb:1}];a.bettingTree.allowedActions=a.actions;
+    a.fullProfile={flop:{check:1,bet:0}};
+    a.provenance.parametersSha256=parameterChecksum(c,a.modelId,a.bettingTree.definitionSha256);
+    a.strategies=allCombos([...c.board,...c.deadCards]).map(combo=>({combo:[...combo],reach:1,actions:[{actionId:'check',frequency:1},{actionId:'bet',frequency:0}]}));
+    expect(a.strategies).toHaveLength(1128);
+    expect(validateSolutionStructure(resign(a)).status).toBe('STRUCTURALLY_VALID');
+    a.strategies[0].combo=['As','Ks'];
+    expect(validateSolutionStructure(resign(a)).errors).toContain('Blocked or invalid combo.');
+  });
+  it.each([null,{},[],{schemaVersion:1},{schemaVersion:2,context:{players:99}}])('fails closed for malformed runtime data: %j',input=>{
+    expect(()=>verifyForPublication(input)).not.toThrow();
+    expect(mayTrainAsGto(input)).toBe(false);
   });
 });
