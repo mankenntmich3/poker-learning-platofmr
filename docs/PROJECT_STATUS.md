@@ -12,6 +12,8 @@ The public Tournament page still shows zero verified coverage. Existing Cash San
 
 See the [mathematical trust audit and validation record](qa/mtt-trust-review.md), [all 66 requirements](MTT_V3_REQUIREMENTS.md), [complete owner prompt](MTT_GTO_V3_SPEC.md) and [solver/licensing research](solver-research-v3.md).
 
+Validation: local typecheck/lint/build passed, 125 tests passed with two external PostgreSQL tests skipped locally, and both five-flow browser suites passed. [CI on application commit 31b1686](https://github.com/mankenntmich3/poker-learning-platofmr/actions/runs/34662867410) passed all gates against PostgreSQL 16: 90 unit tests, 37 integration tests and both browser suites. The verified MTT acceptance flow remains unavailable; these checks do not satisfy the V3 definition of done.
+
 ## Study Engine v2 — deployed and accepted online
 
 PR #4 from `feature/gto-study-engine-v2` is merged. Configurable sized preflop and heads-up flop/turn/river study is live at [Rangeform](https://rangeform-staging.onrender.com/postflop). Render deployed merge commit `f2fe6288640371c2858908b73562461d68543e3a` successfully on 2026-09-11 at 16:17 Europe/Berlin, using the existing Neon PostgreSQL database and free plans. Local development remains available.

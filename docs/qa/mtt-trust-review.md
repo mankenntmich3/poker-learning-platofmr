@@ -51,3 +51,7 @@ Verified MTT coverage remains **0** for every 6/8/9-handed stack in 10–100 BB.
 - Dedicated external PostgreSQL publication-boundary test added to CI; its result must be recorded separately, not inferred from PGlite.
 
 Warnings observed: existing Vite config loader and NO_COLOR/FORCE_COLOR notices. No new build, type or lint errors.
+
+## PostgreSQL CI evidence
+
+[GitHub Actions run 34662867410](https://github.com/mankenntmich3/poker-learning-platofmr/actions/runs/34662867410) passed on application commit `31b168651042c52a7adfdc2d181952831029727e`: frozen fresh-checkout installation, typecheck, lint, 90 unit tests, 37 integration tests (including both external PostgreSQL tests), production build, 5 production browser tests and 5 development browser tests. PostgreSQL version: 16. The MTT browser flow reports no console/page errors and passes axe. This evidence verifies the trust-boundary correction and existing application, not the unavailable solver-backed V3 acceptance flow.

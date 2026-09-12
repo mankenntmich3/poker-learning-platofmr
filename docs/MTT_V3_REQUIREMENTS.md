@@ -66,10 +66,9 @@ Date: 2026-09-12. Source: [complete V3 owner prompt](MTT_GTO_V3_SPEC.md). This c
 | 60 | Implementationsreihenfolge | Teilweise | Phase 1 korrigiert; Phasen 2–6 nicht vollständig. |
 | 61 | Nicht bei einem Plan stoppen | Teilweise | Konkrete Domain-/Verifier-/Persistenzänderungen; noch keine echten MTT-Nodes. |
 | 62 | GitHub | Implementiert | Bestehender Feature-Branch und Draft-PR #5 fortgeführt. |
-| 63 | Quality | Teilweise | Lokale Checks und Browserflows geprüft; endgültige PostgreSQL-CI separat nachzuweisen. |
+| 63 | Quality | Teilweise | Lokale und PostgreSQL-CI-Gates bestanden; vollständige V3-/Staging-Abnahme mangels Features offen. |
 | 64 | Abschlussbericht | Implementiert | Alle 66 Anforderungen mit offenem Status; keine Gesamtabnahme behauptet. |
 | 65 | Definition of Done | Nicht implementiert | Mehrere verifizierte MTT-Stacks und Positionen fehlen. |
 | 66 | Ultimatives Produktziel | Nicht implementiert | Reproduzierbares MTT-GTO-Studium mit adaptivem Training noch nicht nutzbar. |
 
 Verified MTT coverage: **0** at every requested 6/8/9-handed, BBA, 10–100 BB context. Solver used for MTT: **none**. Licensed dataset: **none**. Independent evaluator: original bounded finite-game BR reference, no approved NLHE adapter. NLHE accuracy thresholds: **not yet calibrated or approved**, never selected by the artifact. Standard GTO publication remains disabled. See [trust review and QA](qa/mtt-trust-review.md) for actual mathematics, persistence behavior and limitations.
-
