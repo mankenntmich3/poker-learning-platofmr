@@ -2,17 +2,55 @@
 
 Repository: `mankenntmich3/poker-learning-platofmr` (confirmed spelling). Updated 2026-09-12.
 
-## MTT GTO accuracy v3 — trust review corrected; product milestone incomplete
+## MTT GTO accuracy v3 — one working verified river subgame; V3 remains incomplete
 
-Continuing the existing feature/mtt-gto-accuracy-v3 branch and draft PR #5. The original Phase-1 validation checked generator metadata, not independent mathematical correctness. Its earlier VERIFIED acceptance was unsafe. No real NLHE solution had been published. The correction replaces it with strict structural checks plus a server-owned fail-closed publication boundary. All NLHE publication and standard GTO eligibility are disabled until an independently audited model verifier, calibrated server accuracy policy and approved dataset/license evidence are integrated.
+Continuing `feature/mtt-gto-accuracy-v3` and draft PR #5. The new `/mtt/river`
+flow actually executes a solver, independently verifies the strategy, publishes
+an immutable artifact to the database, exact-loads it through StrategyProvider,
+displays a segmented matrix, starts real NLHE training, and saves action/recall
+feedback and review progress. Existing application work is preserved.
 
-Implemented now: complete physical-combo coverage including zero reach and blockers; canonical versioned context/tree keys; full multiway stack vectors; integer-chip public replay with explicit board events, forced contributions, payer-specific antes, short all-ins and reopening; correct HU BTN/SB roles; structured future ICM/PKO/Mystery state and Cash rake identity. The separate bounded exact information-set BR evaluator computes real NashConv on analytic finite test games. It is not an NLHE verifier, and its test values never count as MTT solutions. Migration 009 quarantines legacy uncertified rows while preserving evidence. Lookups do not trust status flags or supplied reports.
+**Scope:** one conditional river root with 8-handed/15-BB/BBA ancestry, BTN vs BB,
+a fixed five-card board, explicit eight-combo input distributions for each live
+player, and Check / Bet 2.75 BB / Jam followed by Fold/Call. The input distributions
+are study assumptions, not GTO-solved preflop ranges. This is not unrestricted
+NLHE or proof of the earlier streets. **Verified MTT preflop coverage stays 0**
+for all requested 6/8/9-handed stacks, positions and scenarios.
 
-The public Tournament page still shows zero verified coverage. Existing Cash Sandbox access remains usable. No actual MTT generator, calibrated MTT threshold, verified matrix, Frequency Recall, Mastery or Spaced Repetition has been delivered. No verified preflop/postflop NLHE data exists for any requested stack/table size. The branch has not been merged or deployed.
+Actual production solution: SciPy 1.16.2 / HiGHS 1.8.0 security LPs. Independent
+TypeScript reconstruction checks every profile policy, all 56 compatible deals,
+all 1081 unblocked combo rows (only 8 supported), reach and action EVs. A second
+full-tree best-response implementation and exhaustive smaller NLHE case cross-check
+the mathematics. Measured NashConv is approximately 1.78e-15 BB/hand (roundoff).
+Server policy adds a conservative 1e-9 BB numerical allowance; no artifact-chosen
+threshold is trusted. Model/source/license approval is restricted to this exact
+conditional game. Imported data and every unsupported model remain unavailable.
 
-See the [mathematical trust audit and validation record](qa/mtt-trust-review.md), [all 66 requirements](MTT_V3_REQUIREMENTS.md), [complete owner prompt](MTT_GTO_V3_SPEC.md) and [solver/licensing research](solver-research-v3.md).
+Matrix: proportional segments, compact/detailed percentages, action/mixed/reach/EV
+views and physical combo details. Training: actual hole cards at BTN, seats/stacks,
+button, board/pot, legal actions, mixed-aware feedback and independently checked
+EV regret. Frequency Recall, basic per-combo/per-mode Mastery and adaptive due
+dates persist. Smart/weakness/due/mixed selection works within this sole solved
+range. Broad MTT preflop modes, multi-action preflop solutions, full strategic
+mastery weighting and broad postflop coverage are still open.
 
-Validation: local typecheck/lint/build passed, 125 tests passed with two external PostgreSQL tests skipped locally, and both five-flow browser suites passed. [CI on application commit 31b1686](https://github.com/mankenntmich3/poker-learning-platofmr/actions/runs/34662867410) passed all gates against PostgreSQL 16: 90 unit tests, 37 integration tests and both browser suites. The verified MTT acceptance flow remains unavailable; these checks do not satisfy the V3 definition of done.
+The browser test verifies protected-route login, matrix, actual action and recall,
+mobile accessibility, logout/login and retained progress. The new route's login
+return whitelist and mobile card/control sizing were fixed during verification.
+Local validation: `pnpm typecheck`, `pnpm lint`, `pnpm test` and `pnpm build`
+passed. Tests: 134 passed; 3 dedicated external-PostgreSQL checks skipped locally.
+All 6 production Playwright flows and all 5 development-access flows passed.
+The real LP was regenerated and independently verified again outside the bundled
+artifact. CI additionally rebuilds the solver result from a fresh Linux checkout
+and runs the hosted-database checks against PostgreSQL 16; its result is pending.
+No merge or new staging deployment has occurred; the existing staging app remains
+on its previous accepted version.
+
+Evidence: [executed river QA and exact boundaries](qa/verified-river.md),
+[calibration](qa/river-calibration.json), [DCFR diagnostics](qa/river-dcfr-crosscheck.json),
+[all 66 requirements](MTT_V3_REQUIREMENTS.md), [original V3 prompt](MTT_GTO_V3_SPEC.md)
+and [solver research](solver-research-v3.md). The earlier fail-closed trust review
+is preserved as historical evidence; policy v3-river1 is the only new approval.
 
 ## Study Engine v2 — deployed and accepted online
 

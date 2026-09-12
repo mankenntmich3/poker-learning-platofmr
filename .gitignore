@@ -14,3 +14,5 @@ Thumbs.db
 .tools/
 output/
 tmp/
+__pycache__/
+*.pyc

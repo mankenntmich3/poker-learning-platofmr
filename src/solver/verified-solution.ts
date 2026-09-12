@@ -82,7 +82,8 @@ export function validateSolutionStructure(input:unknown, frequencyTolerance = 1e
       if (!expected.has(key)) errors.push('Blocked or invalid combo.');
       if (seen.has(key)) errors.push('Duplicate physical combo.');
       seen.add(key);
-      if (row.actions.length!==actionIds.length || new Set(row.actions.map(x=>x.actionId)).size!==actionIds.length || row.actions.some(x=>!actionIds.includes(x.actionId)) || Math.abs(row.actions.reduce((sum,x)=>sum+x.frequency,0)-1)>frequencyTolerance) errors.push('Every combo must contain one normalized frequency per action.');
+      const sum=row.actions.reduce((sum,x)=>sum+x.frequency,0);
+      if (row.actions.length!==actionIds.length || new Set(row.actions.map(x=>x.actionId)).size!==actionIds.length || row.actions.some(x=>!actionIds.includes(x.actionId)) || (Math.abs(sum-1)>frequencyTolerance && !(row.reach===0 && sum===0 && row.actions.every(x=>x.evBb===undefined)))) errors.push('Every supported combo must contain one normalized frequency per action; unsupported rows may explicitly omit strategy.');
     }
     if (seen.size!==expected.size || [...expected].some(key=>!seen.has(key))) errors.push('Incomplete expected physical-combo coverage, including zero-reach combos.');
     if (!Object.keys(a.fullProfile).length) errors.push('Full joint strategy profile is required.');

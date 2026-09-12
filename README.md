@@ -12,6 +12,12 @@ See [strategy scope and provenance](docs/decisions/0003-nlhe-first.md), [current
 
 ## LOCAL DEVELOPMENT — QUICK START
 
+**V3 branch:** after setup, open [the verified River study](http://localhost:3000/mtt/river)
+or Tournament → **Verifizierten River studieren**. One real NLHE fixed-range river
+subgame provides a segmented matrix, action EVs, action/recall training and saved
+progress. This is **not** MTT preflop coverage; those nodes remain unavailable.
+See [precise boundaries and accuracy evidence](docs/qa/verified-river.md).
+
 Requirements: Node.js 24, Git and pnpm 10.28.2. If pnpm is missing, install it once with `npm install --global pnpm@10.28.2`. Authenticate Git with your GitHub account to clone this private repository.
 
 ```sh
@@ -23,6 +29,9 @@ pnpm db:migrate
 pnpm db:seed
 pnpm dev
 ```
+
+For this ongoing milestone, select `git switch feature/mtt-gto-accuracy-v3` after
+cloning and before installing. The branch remains draft; staging is not updated.
 
 Open **[http://localhost:3000](http://localhost:3000)**. The alternative [127.0.0.1:3000](http://127.0.0.1:3000) also works; each hostname keeps its own browser session. In an existing checkout, start with `pnpm install --frozen-lockfile` and the database commands above.
 
@@ -36,7 +45,7 @@ Open **[http://localhost:3000](http://localhost:3000)**. The alternative [127.0.
 
 Use **Trainingssitzung konfigurieren** for 10/25/50/100 decisions. Spot repeats the selected node; Street continues within its street; Full Hand continues until the hand ends, then samples a new hand. Zero-reach continuations restart from a supported hand. Questions, strategy snapshots, answers and completion are saved server-side. Favorites and shared URLs reopen the exact configuration, cards and action history; shared links contain no account data and still require login.
 
-**Analysis:** Strategy, Range Funnel, individual Combos, exact Hand-vs-Hand equity, sampled weighted Hand-vs-Range/Range-vs-Range equity with sample/error reporting, current made-hand/draw/nuts densities and qualified Why explanations. Equity is showdown pot share, never an action EV. Four-bet calling ranges are explicitly unavailable; no NLHE solver or licensed static solution is bundled. Postflop is heads-up with equal effective stacks, no rake/antes or multiway support. Terminal study nodes retain the pot for inspection rather than paying out a game.
+**Analysis:** Strategy, Range Funnel, individual Combos, exact Hand-vs-Hand equity, sampled weighted Hand-vs-Range/Range-vs-Range equity with sample/error reporting, current made-hand/draw/nuts densities and qualified Why explanations. Equity is showdown pot share, never an action EV. Four-bet calling ranges are explicitly unavailable; the Cash Sandbox has no solver solution. The separate V3 river page bundles the precisely scoped verified solution described below. Postflop is heads-up with equal effective stacks, no rake/antes or multiway support. Terminal study nodes retain the pot for inspection rather than paying out a game.
 
 **Academy flow:** log in → Dashboard → Academy → **Kurs öffnen** → **Lektion öffnen** → read and answer the quiz → **Am Tisch anwenden** → **Trainingssitzung starten** → choose an action → read feedback → **Sitzung jetzt abschließen** → **Fortschritt ansehen**. A full session ends after ten decisions. Current question, feedback and session completion also survive reload. Log out under Einstellungen, log in again and confirm your saved progress.
 
@@ -137,3 +146,26 @@ docs            Product specification, decisions and project memory
 Start future sessions with [project status](docs/PROJECT_STATUS.md), [architecture](docs/architecture.md), and the [complete product specification](docs/PRODUCT_SPEC.md). The specification describes the long-term product; the status file distinguishes implemented work from future scope.
 
 This is a personal study release, not a public commercial launch. Broad NLHE solving, hand imports, leak analysis, AI coaching, subscription billing and distributed GPU workers are later milestones. There is no real-money functionality.
+
+
+## Recompute the actual NLHE solution (optional)
+
+Normal app use needs no Python. For solver execution, install Python 3.12 and
+create an environment with `python -m venv .tools/solver-venv`.
+Activate it with `.tools\solver-venv\Scripts\Activate.ps1` in PowerShell or
+`source .tools/solver-venv/bin/activate` on macOS/Linux, then:
+
+```sh
+python -m pip install -r scripts/solver-requirements.txt
+pnpm solve:nlhe output/regenerated-river.json
+pnpm exec tsx scripts/verify-nlhe.ts output/regenerated-river.json
+```
+
+`PYTHON_EXECUTABLE` can select another interpreter. The first command executes
+HiGHS; the second independently reconstructs best responses, checks every combo
+EV/reach and compares a separate full-tree evaluator. A new immutable run ID is
+created without overwriting the shipped artifact. Unreviewed models cannot be
+published. `pnpm solve:nlhe:dcfr 20000 output/dcfr.json` runs the separate pinned
+DCFR engine for diagnostics; its output is not approved by publication policy.
+The app independently validates the shipped artifact before publishing and on
+exact lookup, on both local PGlite and hosted PostgreSQL.

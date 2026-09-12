@@ -1,0 +1,57 @@
+{
+  "version": 1,
+  "model": "nlhe-river-polarized-bba-v1",
+  "artifactChecksum": "6a3d7caa7386e63377c307423425edd8d4272ff2dc0b7e0a663791b02b7fc761",
+  "independentRiver": {
+    "method": "EXACT_CONDITIONAL_RIVER_BEST_RESPONSE",
+    "verifierVersion": "rangeform-river-br-v1",
+    "profileValues": [
+      1.223469387755101,
+      -1.223469387755101
+    ],
+    "bestResponseValues": [
+      1.2234693877551028,
+      -1.223469387755102
+    ],
+    "improvements": [
+      1.7763568394002505e-15,
+      0
+    ],
+    "nashConv": 1.7763568394002505e-15,
+    "exploitability": 8.881784197001252e-16,
+    "utilityUnit": "BB_PER_HAND",
+    "compatibleDeals": 56,
+    "informationSets": 24,
+    "scope": "FIXED_RANGE_RIVER_SUBGAME_ONLY",
+    "numericalAllowanceBb": 1e-9
+  },
+  "genericTree": {
+    "method": "COUNTERFACTUAL_INFORMATION_SET_BEST_RESPONSE",
+    "verifierVersion": "rangeform-exact-br-v1",
+    "profileValues": [
+      1.223469387755101,
+      -1.223469387755101
+    ],
+    "bestResponseValues": [
+      1.2234693877551017,
+      -1.2234693877551022
+    ],
+    "improvements": [
+      6.661338147750939e-16,
+      0
+    ],
+    "nashConv": 6.661338147750939e-16,
+    "exploitability": 3.3306690738754696e-16,
+    "nodes": 449,
+    "evaluatedPolicies": 2,
+    "utilityUnit": "BB_PER_HAND"
+  },
+  "policy": {
+    "acceptNashConvUpperBb": 1e-7,
+    "veryHighUpperBb": 1e-8,
+    "numericalAllowanceBb": 1e-9
+  },
+  "bounds": "56 exact deals; 24 information sets; max |utility| 14.75 BB; fewer than 10000 scalar arithmetic operations. 1e-9 BB allowance exceeds standard gamma_n roundoff bounds on these bounded sums. No claim of exact real arithmetic.",
+  "tests": "tests/solver/river-verification.test.ts; full-tree BR; exhaustive subset; exploitable profiles; all 1081 evaluator orderings; tamper rejection.",
+  "scope": "Only fixed-range river subgame; input ranges and preceding history are not GTO-certified."
+}

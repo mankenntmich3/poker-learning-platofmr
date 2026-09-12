@@ -29,10 +29,21 @@ export async function publishVerifiedSolution(db:Database,input:unknown) {
   if(parsed.success) {
     try { contextKey=exactContextKey(parsed.data.context,parsed.data.bettingTree.definitionSha256); } catch { /* record failure without trusting malformed identity */ }
   }
+  if(validation.status==='VERIFIED' && parsed.success && validation.report) {
+    const a=parsed.data,c=canonicalStrategyContext(a.context);
+    await db.query(`WITH published AS (
+      INSERT INTO verified_solution_artifacts
+      (id,context_key,game,game_type,evaluation_model,players,stack_bb,ante_type,hero_position,action_history,board,betting_tree_id,source_type,status,quality_label,convergence_metric,convergence_value,convergence_threshold,exploitability_bb_per_hand,checksum,artifact,generated_at,published_at,verification_policy,verification_report,stack_vector)
+      VALUES ($1,$2,'NLHE',$3,$4,$5,$6,$7,$8,$9::jsonb,$10::jsonb,$11,$12,'VERIFIED',$13,'NASH_CONV',$14,$15,$16,$17,$18::jsonb,$19,now(),$20,$21::jsonb,$22::jsonb)
+      ON CONFLICT (checksum) DO UPDATE SET status='VERIFIED',quality_label=EXCLUDED.quality_label,verification_policy=EXCLUDED.verification_policy,verification_report=EXCLUDED.verification_report,published_at=now()
+      RETURNING id
+    ) INSERT INTO solver_jobs (id,context_key,config,priority,status,completed_at)
+      SELECT $23,$2,$24::jsonb,1,'VERIFIED',now() FROM published`,
+    [a.id,contextKey,c.gameType,c.evaluationModel,c.players,Math.min(...c.stacks.map(s=>s.stackBb)),c.ante.type,c.hero,JSON.stringify(c.actionHistory),JSON.stringify(c.board),a.bettingTree.definitionSha256,a.sourceType,validation.quality,validation.report.nashConv,VERIFICATION_POLICY.modelAccuracyLimits[a.modelId].nashConvMaxBbPerHand,validation.report.exploitability,a.checksum,JSON.stringify(a),a.generatedAt,validation.policyVersion,JSON.stringify(validation.report),JSON.stringify(c.stacks),randomUUID(),JSON.stringify({artifactId:a.id,checksum:a.checksum})]);
+    return validation;
+  }
   await db.query("INSERT INTO solver_jobs (id,context_key,config,priority,status,error,completed_at) VALUES ($1,$2,$3::jsonb,1,'FAILED_VALIDATION',$4,now())",
     [randomUUID(),contextKey,JSON.stringify({artifactId:parsed.success?parsed.data.id:null,policyVersion:validation.policyVersion}),validation.errors.join(' | ')]);
-  // No artifact write is possible until an audited NLHE verifier and an atomic
-  // certificate-bound publisher are implemented. Failure is explicit and durable.
   return validation;
 }
 export async function findExactVerifiedSolution(db:Database,context:StrategyContext,bettingTreeId:string):Promise<VerifiedSolutionArtifact|null> {
@@ -40,10 +51,10 @@ export async function findExactVerifiedSolution(db:Database,context:StrategyCont
     "SELECT artifact FROM verified_solution_artifacts WHERE context_key=$1 AND betting_tree_id=$2 AND status='VERIFIED' AND verification_policy=$3 AND verification_report IS NOT NULL ORDER BY published_at DESC",
     [exactContextKey(context,bettingTreeId),bettingTreeId,VERIFICATION_POLICY.version]);
   // A status flag or manually inserted report is not a certificate.
-  for(const row of rows) if(verifyForPublication(row.artifact).status==='VERIFIED') return row.artifact;
+  for(const row of rows) if(verifyForPublication(row.artifact).status==='VERIFIED' && exactContextKey(row.artifact.context,row.artifact.bettingTree.definitionSha256)===exactContextKey(context,bettingTreeId)) return row.artifact;
   return null;
 }
 export async function solutionCoverage(db:Database):Promise<SolutionCoverageRow[]> {
-  // No certified NLHE model exists. Legacy records count as pending/failed only.
-  return db.query<SolutionCoverageRow>("SELECT players,stack_bb::float8 AS \"stackBb\",ante_type AS \"anteType\",hero_position AS \"heroPosition\",0::int AS verified,count(*) FILTER (WHERE status='PENDING_VALIDATION')::int AS pending,count(*) FILTER (WHERE status='FAILED_VALIDATION')::int AS failed FROM verified_solution_artifacts WHERE game='NLHE' AND game_type='TOURNAMENT' AND evaluation_model='CHIP_EV' GROUP BY players,stack_bb,ante_type,hero_position ORDER BY players,stack_bb,hero_position");
+  // PRE-FLOP coverage only. Conditional river data cannot inflate it.
+  return db.query<SolutionCoverageRow>("SELECT players,stack_bb::float8 AS \"stackBb\",ante_type AS \"anteType\",hero_position AS \"heroPosition\",0::int AS verified,count(*) FILTER (WHERE status='PENDING_VALIDATION')::int AS pending,count(*) FILTER (WHERE status='FAILED_VALIDATION')::int AS failed FROM verified_solution_artifacts WHERE game='NLHE' AND game_type='TOURNAMENT' AND evaluation_model='CHIP_EV' AND jsonb_array_length(board)=0 GROUP BY players,stack_bb,ante_type,hero_position ORDER BY players,stack_bb,hero_position");
 }

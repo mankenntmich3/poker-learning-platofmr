@@ -79,4 +79,33 @@ Public NLHE context/replay lives in domain/strategy-context.ts and domain/tourna
 
 solver/verified-solution.ts performs structural validation and cannot grant VERIFIED. verification/exact-best-response.ts independently evaluates bounded finite games, with no solver traversal or payoff imports. server/verification-policy.ts owns versioned approval policy. server/verify-solution.ts is the publication trust boundary: it currently rejects all NLHE because no audited adapter, calibrated model policy or licensed dataset exists. No artifact metadata or serialized status flag can authorize training.
 
-Migration 009 preserves and quarantines historical uncertified artifacts. A future success path must atomically store an immutable independent report with the exact strategy/context/model/tree/policy identities; the Phase-1 metadata-only publisher has been removed. Generic finite-game mathematical tests are never loaded as NLHE artifacts. See qa/mtt-trust-review.md.
+Migration 009 preserves and quarantines historical uncertified artifacts. The conditional river path below now atomically stores an independent report with exact strategy/context/model/tree/policy identities; the Phase-1 metadata-only publisher remains removed. Generic finite-game mathematical tests are never loaded as NLHE artifacts. See qa/mtt-trust-review.md.
+
+
+## Independently verified conditional river path
+
+`domain/river-definition.ts` fixes the public context, weighted conditional root
+ranges and tree identity. Context v2 binds normalized physical range distributions
+for every live seat. These are study inputs, not solved ancestry.
+
+`solver/river-model.ts` creates a complete physical-deal tree and generator
+projection with the direct seven-card evaluator. `scripts/solve-river-lp.py`
+executes pinned SciPy/HiGHS security LPs; `scripts/solve-river.py` separately
+integrates the pinned MIT DCFR reference. `verification/river-best-response.ts`
+does not consume generator payoffs: it reconstructs commitments, enumerates
+five-card evaluations, calculates complete information-set best responses and
+recomputes every combo EV/reach. The generic verifier also has a bounded
+counterfactual dynamic algorithm cross-checked with exhaustive pure policies.
+
+Policy v3-river1 permits only this context/model/source/license with calibrated
+bounds and a numerical allowance. `solution-registry.ts` atomically persists an
+approved artifact/report/job and independently rechecks exact lookups.
+`VerifiedStrategyProvider` implements the existing generic provider contract with
+NLHE types. No preflop fallback or imported approval exists.
+
+Migration 010 stores user-owned version-bound training questions, responses and
+feedback. `server/verified-training.ts` samples only solved support, grades EV
+regret or recall distance, and derives mastery/review dates from saved history.
+User deletion cascades; exports include the new data. `/mtt/river` keeps verifier
+and solver dependencies out of client bundles with type-only contracts and
+authenticated APIs. See [executed evidence](qa/verified-river.md).

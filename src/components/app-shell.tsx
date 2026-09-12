@@ -17,8 +17,8 @@ const navigation = [
 export function AppShell({ children }: { children: ReactNode }) {
   const pathname = usePathname();
   const { user } = useSession();
-  const activePath = pathname.startsWith("/academy/") ? "/academy" : pathname;
-  const page = navigation.find((item) => item.href === activePath)?.label ?? (pathname === "/settings" ? "Einstellungen" : "Dein Konto");
+  const activePath = pathname.startsWith("/academy/") ? "/academy" : pathname.startsWith('/mtt/') ? '/mtt' : pathname;
+  const page = pathname==='/mtt/river'?'Verifizierter River':navigation.find((item) => item.href === activePath)?.label ?? (pathname === "/settings" ? "Einstellungen" : "Dein Konto");
   return <div className="app-shell">
     <a className="skip-link" href="#main-content">Zum Inhalt</a>
     <aside className="sidebar">

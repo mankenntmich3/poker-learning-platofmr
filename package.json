@@ -25,7 +25,9 @@
     "test:integration": "vitest run tests/server",
     "test:e2e": "playwright test",
     "test:dev-access": "playwright test --config playwright.dev.config.ts",
-    "solve": "tsx scripts/solve.ts"
+    "solve": "tsx scripts/solve.ts",
+    "solve:nlhe": "tsx scripts/solve-nlhe.ts lp",
+    "solve:nlhe:dcfr": "tsx scripts/solve-nlhe.ts"
   },
   "dependencies": {
     "@next/env": "^16.3.4",

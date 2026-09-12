@@ -10,14 +10,17 @@ export type GameNode =
 export interface FiniteGame { players: number; root: GameNode; utilityUnit: 'BB_PER_HAND' }
 export type BehavioralProfile = Record<string, Record<string, number>>;
 export interface BestResponseReport {
-  method: 'EXHAUSTIVE_INFORMATION_SET_BEST_RESPONSE'; verifierVersion: 'rangeform-exact-br-v1';
+  method: 'EXHAUSTIVE_INFORMATION_SET_BEST_RESPONSE'|'COUNTERFACTUAL_INFORMATION_SET_BEST_RESPONSE'; verifierVersion: 'rangeform-exact-br-v1';
   profileValues: number[]; bestResponseValues: number[]; improvements: number[];
   nashConv: number; exploitability: number | null; nodes: number; evaluatedPolicies: number;
   utilityUnit: 'BB_PER_HAND';
 }
 const LIMITS = Object.freeze({ nodes: 50_000, depth: 128, policies: 4096, work: 5_000_000, tolerance: 1e-10 });
 
-export function measureBestResponses(game: FiniteGame, profile: BehavioralProfile): BestResponseReport {
+export function measureCounterfactualBestResponses(game:FiniteGame,profile:BehavioralProfile):BestResponseReport {
+  return measureBestResponses(game,profile,'counterfactual');
+}
+export function measureBestResponses(game: FiniteGame, profile: BehavioralProfile, method:'exhaustive'|'counterfactual'='exhaustive'): BestResponseReport {
   if (!Number.isInteger(game.players) || game.players < 2 || game.players > 9 || game.utilityUnit !== 'BB_PER_HAND') throw new Error('Unsupported finite-game identity.');
   const infos = new Map<string,{player:number;actions:string[];recall:string}>();
   const seen = new Set<GameNode>();
@@ -55,8 +58,10 @@ export function measureBestResponses(game: FiniteGame, profile: BehavioralProfil
   audit(game.root,Array.from({length:game.players},()=>[]),0);
   if (Object.keys(profile).length!==infos.size) throw new Error('Full profile contains extraneous information sets.');
   const policyCounts=Array.from({length:game.players},(_,player)=>[...infos.values()].filter(i=>i.player===player).reduce((n,i)=>n*i.actions.length,1));
-  if (policyCounts.some(n=>n>LIMITS.policies) || (1+policyCounts.reduce((a,b)=>a+b,0))*nodes>LIMITS.work) throw new Error('Exact verifier resource limit exceeded.');
+  if (method==='exhaustive' && (policyCounts.some(n=>n>LIMITS.policies) || (1+policyCounts.reduce((a,b)=>a+b,0))*nodes>LIMITS.work)) throw new Error('Exact verifier resource limit exceeded.');
+  let work=0;
   function value(node:GameNode, deviator:number, pure:Map<string,string>):number[] {
+    if(method==='counterfactual' && ++work>LIMITS.work) throw new Error('Exact verifier resource limit exceeded.');
     if (node.kind==='terminal') return node.payoff;
     const result=Array(game.players).fill(0) as number[];
     const edges=node.kind==='chance' ? node.branches : node.actions.map(a=>({
@@ -73,6 +78,30 @@ export function measureBestResponses(game: FiniteGame, profile: BehavioralProfil
   let evaluatedPolicies=0;
   for (let p=0;p<game.players;p++) {
     const choices=[...infos.entries()].filter(([,i])=>i.player===p), pure=new Map<string,string>();
+    if(method==='counterfactual') {
+      const occurrences=new Map<string,{node:Extract<GameNode,{kind:'decision'}>;reach:number}[]>();
+      function collect(node:GameNode,reach:number) {
+        if(node.kind==='terminal')return;
+        if(node.kind==='chance'){node.branches.forEach(b=>collect(b.child,reach*b.probability));return;}
+        if(node.player===p) {
+          const list=occurrences.get(node.informationSet)??[];list.push({node,reach});occurrences.set(node.informationSet,list);
+        }
+        node.actions.forEach(a=>collect(a.child,reach*(node.player===p?1:profile[node.informationSet][a.id])));
+      }
+      collect(game.root,1);
+      // Perfect recall makes own-decision ancestry a DAG. Descendant choices
+      // are fixed before their ancestors; hidden states share ONE action.
+      choices.sort((a,b)=>(JSON.parse(b[1].recall) as string[]).length-(JSON.parse(a[1].recall) as string[]).length);
+      for(const [key,info] of choices) {
+        let best=-Infinity,selected=info.actions[0];
+        for(const action of info.actions) {
+          const ev=occurrences.get(key)!.reduce((s,o)=>s+o.reach*value(o.node.actions.find(a=>a.id===action)!.child,p,pure)[p],0);
+          if(ev>best){best=ev;selected=action;}
+        }
+        pure.set(key,selected);
+      }
+      evaluatedPolicies++;bestResponseValues.push(value(game.root,p,pure)[p]);continue;
+    }
     let best=-Infinity;
     function enumerate(index:number) {
       if (index===choices.length) { evaluatedPolicies++; best=Math.max(best,value(game.root,p,pure)[p]); return; }
@@ -86,7 +115,7 @@ export function measureBestResponses(game: FiniteGame, profile: BehavioralProfil
     return Math.max(0,v-profileValues[p]);
   });
   const nashConv=improvements.reduce((a,b)=>a+b,0);
-  return {method:'EXHAUSTIVE_INFORMATION_SET_BEST_RESPONSE',verifierVersion:'rangeform-exact-br-v1',
+  return {method:method==='exhaustive'?'EXHAUSTIVE_INFORMATION_SET_BEST_RESPONSE':'COUNTERFACTUAL_INFORMATION_SET_BEST_RESPONSE',verifierVersion:'rangeform-exact-br-v1',
     profileValues,bestResponseValues,improvements,nashConv,
     exploitability:game.players===2 && zeroSum ? nashConv/2 : null,
     nodes,evaluatedPolicies,utilityUnit:'BB_PER_HAND'};

@@ -55,3 +55,42 @@ An original independent reference evaluator now enumerates information-set-consi
 Before approving a model, Rangeform must independently build and audit its game/payoffs and information sets, verify the complete joint strategy plus node projection/EV/reach, measure BR/NashConv, calibrate server-side accuracy and numerical error bounds, verify source/license/parameter identity, and bind the report to all immutable hashes. See [trust review](qa/mtt-trust-review.md) for findings, tests and limitations.
 
 Current 6/8/9-handed, BBA, 10–100 BB verified coverage: **zero**. The next work is still a real eligible multiplayer NLHE generator and independently validated game/verification adapter; no architecture or fixture is counted as a solved node.
+
+
+## Executed follow-up: conditional river model (2026-09-12)
+
+The v2/no-adapter statements above describe the earlier trust review. This follow-up
+implements a genuine executable bounded NLHE path, not a general MTT solver.
+
+- Pinned and inspected `amaster97/poker_solver` at
+  `f78f1b2bc338dd8cbb5226ecb8398bbdb3635676`. Actual `HUNLConfig` uses two players,
+  symmetric starting stacks and a symmetric ante; it is not 8/9-handed BBA.
+  Its chart interpolation and preflop claims are not imported as verified data.
+  The unchanged MIT DCFR engine is vendored and executed against an original
+  full-combo conditional river game, with a policy-freezing adapter. Recorded
+  2k/20k/200k runs are diagnostic, not approved strategies.
+- For the exact one-round game, original sequence-form security LPs are executed
+  by SciPy 1.16.2 (BSD-3-Clause), bundled HiGHS 1.8.0 (MIT). The release source
+  tag identifies `dd9a357d5945921310346226088ea8ab5c5356cc`. Both license texts,
+  interpreter requirements and adapter hashes are retained. Runtime version is
+  in the artifact. This solves both players' security policies without sampling.
+- The LP output is accepted only after a separate TypeScript reconstruction,
+  full-information-set best responses, combo projection checks and a calibrated
+  server-owned numeric bound. A separate generic evaluator checks the entire
+  game and an exhaustive oracle checks a smaller NLHE instance. The longer DCFR
+  run's game-value error lies within its independently measured BR interval.
+
+Sources: [SciPy linear programming](https://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.linprog.html),
+[HiGHS](https://highs.dev/),
+[pinned SciPy source](https://github.com/scipy/scipy/tree/dd9a357d5945921310346226088ea8ab5c5356cc),
+[pinned poker engine](https://github.com/amaster97/poker_solver/tree/f78f1b2bc338dd8cbb5226ecb8398bbdb3635676).
+
+See [executed QA](qa/verified-river.md) for exact priors, public history, utility
+convention, independent measurements and limits. One river root is trainable;
+6/8/9-handed preflop BBA 10–100 BB coverage is still zero. Neither HUNL charts nor
+a generic LP can simply substitute for the much larger multiway imperfect-
+information game. That work still needs a complete preflop/chance/continuation
+model and full-profile best responses, including card removal and side pots;
+NashConv must sum unilateral improvements without applying the two-player /2
+convention. Current context/replay/queue supports preserving those parameters,
+but an executable approved multiplayer solver is not delivered in this run.

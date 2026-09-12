@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { assertUniqueCards, type Card } from './cards';
+import { assertUniqueCards, createCombo, type Card } from './cards';
 import { replayPublicHistory } from './tournament-state';
 
 export type GameType = 'TOURNAMENT' | 'CASH';
@@ -57,6 +57,13 @@ export const strategyContextSchema = z.object({
   postingOrder: z.enum(['BLINDS_FIRST', 'ANTES_FIRST']), ante, rake,
   stacks: z.array(stack).min(2).max(9), hero: position,
   actionHistory: z.array(event).max(1000), board: z.array(card).max(5), deadCards: z.array(card).max(34),
+  conditioning: z.object({
+    version: z.literal(1), type: z.literal('FIXED_RANGE_SUBGAME'),
+    meaning: z.literal('STUDY_INPUT_NOT_SOLVED_ANCESTRY'),
+    ranges: z.array(z.object({position, combos: z.array(z.object({
+      cards: z.tuple([card, card]), weight: z.number().finite().positive().max(1),
+    }).strict()).min(1).max(1326)}).strict()).min(2).max(9),
+  }).strict().optional(),
 }).strict();
 export type StrategyContext = z.infer<typeof strategyContextSchema>;
 export type PublicAction = z.infer<typeof action>;
@@ -110,6 +117,18 @@ export function canonicalStrategyContext(input: unknown): StrategyContext {
     }
   }
   const state = replayPublicHistory(c);
+  if (c.conditioning) {
+    const ranges=c.conditioning.ranges, live=state.seats.filter(s=>!s.folded).map(s=>s.position);
+    if (ranges.length!==live.length || new Set(ranges.map(r=>r.position)).size!==live.length || ranges.some(r=>!live.includes(r.position))) throw new Error('Conditional ranges must cover every live player once.');
+    for(const r of ranges) {
+      r.combos=r.combos.map(entry=>{assertUniqueCards([...entry.cards,...c.board,...c.deadCards]);return {...entry,cards:[...createCombo(...entry.cards)]};});
+      if(new Set(r.combos.map(e=>e.cards.join(''))).size!==r.combos.length) throw new Error('Duplicate conditional range combo.');
+      const total=r.combos.reduce((s,e)=>s+e.weight,0);
+      if(Math.abs(total-1)>1e-12)throw new Error('Conditional prior weights must sum to one.');
+      r.combos.sort((a,b)=>a.cards.join('')<b.cards.join('')?-1:a.cards.join('')>b.cards.join('')?1:0);
+    }
+    ranges.sort((a,b)=>seats.indexOf(a.position)-seats.indexOf(b.position));
+  }
   if (state.actor !== c.hero) throw new Error('Hero must be the actor reached by the complete public history.');
   return c;
 }

@@ -16,6 +16,7 @@ function TournamentContent(){
   const positions=useMemo(()=>positionsFor(players),[players]);
   function changePlayers(value:number){const next=positionsFor(value);setPlayers(value);setHero(next.includes(hero)?hero:next[Math.max(0,next.indexOf('HJ'))]!);}
   return <><PageHeader title="Tournament Study" description="MTT · ChipEV · verifizierte Solver-Daten" />
+    <section className="panel verified-entry"><div><h2>Ein echter River-Spot ist jetzt gelöst</h2><p>BTN vs BB · 8-handed BBA-Ancestry · feste Eingangs-Ranges. Unabhängig geprüfte Strategie, Action-EVs und gespeichertes Training. Preflop bleibt separat nicht verfügbar.</p></div><Link className="button-primary" href="/mtt/river">Verifizierten River studieren</Link></section>
     <section className="game-switch panel" aria-label="Spieltyp wählen"><div><strong>Game</strong><span>Tournament</span></div><Link href="/ranges">Cash-Sandbox öffnen</Link></section>
     <section className="mtt-config panel" aria-label="Tournament-Konfiguration">
       <label htmlFor="mtt-model">Modell<select id="mtt-model" name="model" value={model} onChange={event=>setModel(event.target.value as EvaluationModel)}><option value="CHIP_EV">ChipEV</option><option value="ICM" disabled>ICM · später</option><option value="PKO" disabled>PKO · später</option><option value="MYSTERY_BOUNTY" disabled>Mystery Bounty · später</option></select></label>

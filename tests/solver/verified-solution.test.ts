@@ -9,7 +9,7 @@ describe('independent publication trust boundary',()=>{
   it('distinguishes complete structure from mathematical verification',()=>{
     const a=untrustedSolution();
     expect(validateSolutionStructure(a).status).toBe('STRUCTURALLY_VALID');
-    expect(verifyForPublication(a)).toMatchObject({status:'FAILED_VALIDATION',quality:null,policyVersion:'rangeform-verification-v2'});
+    expect(verifyForPublication(a)).toMatchObject({status:'FAILED_VALIDATION',quality:null,policyVersion:'rangeform-verification-v3-river1'});
     expect(mayTrainAsGto(a)).toBe(false);
   });
   it('ignores self-reported zero exploitability, loose thresholds and a forged VERIFIED flag',()=>{
@@ -30,7 +30,7 @@ describe('independent publication trust boundary',()=>{
     expect(validateSolutionStructure(resign(a)).errors).toContain('Duplicate physical combo.');
     a.strategies[2].actions[0].frequency=.5;
     const result=validateSolutionStructure(a);
-    expect(result.errors).toContain('Every combo must contain one normalized frequency per action.');
+    expect(result.errors).toContain('Every supported combo must contain one normalized frequency per action; unsupported rows may explicitly omit strategy.');
     expect(result.errors).toContain('Checksum mismatch.');
   });
   it('rejects illegal node actions and incomplete public replay',()=>{
