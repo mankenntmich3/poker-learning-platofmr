@@ -56,6 +56,7 @@ export function verifyRiverProfile(profile:BehavioralProfile) {
   }
   const brHero=[...hValues.values()].reduce((s,v)=>s+Math.max(...v),0);
   const brVillain=checkDefender+[...vValues.values()].reduce((s,v)=>s+Math.max(...v),0);
+  if(brHero<baseline-1e-9 || brVillain<-baseline-1e-9)throw new Error('Best response below profile value; verification failed.');
   const improvements=[Math.max(0,brHero-baseline),Math.max(0,brVillain+baseline)];
   const nashConv=improvements[0]+improvements[1];
   const strategies:ComboSolution[]=allCombos([...context.board,...context.deadCards]).map(combo=>{

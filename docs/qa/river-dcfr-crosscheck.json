@@ -12,6 +12,29 @@
         "version": "f78f1b2bc338dd8cbb5226ecb8398bbdb3635676",
         "algorithm": "DCFR",
         "buildSha256": "2596e4865f539226e9c89bd439b85945d665ff475d0296b6ccd4c232b50f796f"
+      },
+      "independentReport": {
+        "method": "EXACT_CONDITIONAL_RIVER_BEST_RESPONSE",
+        "verifierVersion": "rangeform-river-br-v1",
+        "profileValues": [
+          1.2232658602727264,
+          -1.2232658602727264
+        ],
+        "bestResponseValues": [
+          1.2520503680345993,
+          -1.212604223884759
+        ],
+        "improvements": [
+          0.028784507761872913,
+          0.010661636387967466
+        ],
+        "nashConv": 0.03944614414984038,
+        "exploitability": 0.01972307207492019,
+        "utilityUnit": "BB_PER_HAND",
+        "compatibleDeals": 56,
+        "informationSets": 24,
+        "scope": "FIXED_RANGE_RIVER_SUBGAME_ONLY",
+        "numericalAllowanceBb": 1e-9
       }
     },
     {
@@ -25,6 +48,29 @@
         "version": "f78f1b2bc338dd8cbb5226ecb8398bbdb3635676",
         "algorithm": "DCFR",
         "buildSha256": "2596e4865f539226e9c89bd439b85945d665ff475d0296b6ccd4c232b50f796f"
+      },
+      "independentReport": {
+        "method": "EXACT_CONDITIONAL_RIVER_BEST_RESPONSE",
+        "verifierVersion": "rangeform-river-br-v1",
+        "profileValues": [
+          1.2197780078892448,
+          -1.2197780078892448
+        ],
+        "bestResponseValues": [
+          1.2240683251208877,
+          -1.2182290055162346
+        ],
+        "improvements": [
+          0.0042903172316428595,
+          0.0015490023730102553
+        ],
+        "nashConv": 0.005839319604653115,
+        "exploitability": 0.0029196598023265574,
+        "utilityUnit": "BB_PER_HAND",
+        "compatibleDeals": 56,
+        "informationSets": 24,
+        "scope": "FIXED_RANGE_RIVER_SUBGAME_ONLY",
+        "numericalAllowanceBb": 1e-9
       }
     },
     {
@@ -38,7 +84,31 @@
         "version": "f78f1b2bc338dd8cbb5226ecb8398bbdb3635676",
         "algorithm": "DCFR",
         "buildSha256": "2596e4865f539226e9c89bd439b85945d665ff475d0296b6ccd4c232b50f796f"
+      },
+      "independentReport": {
+        "method": "EXACT_CONDITIONAL_RIVER_BEST_RESPONSE",
+        "verifierVersion": "rangeform-river-br-v1",
+        "profileValues": [
+          1.222313373935876,
+          -1.222313373935876
+        ],
+        "bestResponseValues": [
+          1.22382530407099,
+          -1.2219799646922855
+        ],
+        "improvements": [
+          0.0015119301351140813,
+          0.00033340924359048785
+        ],
+        "nashConv": 0.001845339378704569,
+        "exploitability": 0.0009226696893522845,
+        "utilityUnit": "BB_PER_HAND",
+        "compatibleDeals": 56,
+        "informationSets": 24,
+        "scope": "FIXED_RANGE_RIVER_SUBGAME_ONLY",
+        "numericalAllowanceBb": 1e-9
       }
     }
-  ]
+  ],
+  "lineEndings": "Diagnostic engine file hashes were measured on the original Windows checkout. Vendored source is now canonical LF; same code, normalized bytes, new LF hashes in river-definition.ts."
 }

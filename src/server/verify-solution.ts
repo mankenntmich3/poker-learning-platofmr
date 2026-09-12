@@ -38,6 +38,7 @@ export function verifyForPublication(input:unknown):VerificationResult {
         }
       }
       const limit=VERIFICATION_POLICY.modelAccuracyLimits[a.modelId];
+      if(measured.report.verifierVersion!==limit.verifierVersion)throw new Error('Verifier version does not match calibrated policy.');
       const upper=measured.report.nashConv+measured.report.numericalAllowanceBb;
       if(upper>limit.nashConvMaxBbPerHand) throw new Error('Independently measured NashConv exceeds server policy.');
       return {status:'VERIFIED',errors:[],quality:upper<=limit.veryHighMaxBbPerHand?'VERY_HIGH':'HIGH',policyVersion:VERIFICATION_POLICY.version,

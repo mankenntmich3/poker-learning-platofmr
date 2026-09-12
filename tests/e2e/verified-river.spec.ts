@@ -42,6 +42,10 @@ test('real solver → verified database → matrix → NLHE action/recall → pe
   await page.getByRole('button',{name:'Mein Fortschritt',exact:true}).click();
   await expect(page.getByText(/2 gespeicherte Entscheidungen/)).toBeVisible();
   await page.goto('/settings');await page.getByRole('button',{name:'Abmelden',exact:true}).click();
+  // A click does not await the logout request/router transition. Navigating
+  // immediately can race the deliberate redirect to /login and lose `next`.
+  await expect(page).toHaveURL(/\/login$/);
+  await expect(page.locator('input[name="email"]')).toBeVisible();
   await page.goto('/mtt/river');await expect(page).toHaveURL(/login/);
   await page.locator('input[name="email"]').fill(email);await page.locator('input[name="password"]').fill(password);
   await page.getByRole('button',{name:'Anmelden',exact:true}).last().click();
