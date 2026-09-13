@@ -6,6 +6,11 @@ an implemented and tested behavior, not broad solver coverage. Every current
 verified strategy/EV/recall/SRS result is restricted to the documented conditional
 river and HU push/fold subgames. No architectural interface is counted as a solved MTT node.
 
+The subsequent [full-prior run](qa/full-prior-preflop.md) really trained HU/3/6
+multi-action and reduced trees, but all independent full-game verification
+attempts exhausted resources. They add **zero approved nodes**. The [54-section
+follow-up audit](PREFLOP_FULL_RANGE_REQUIREMENTS.md) records each remaining gap.
+
 Evidence abbreviations refer to [executed QA](qa/verified-river.md),
 [mathematical calibration](qa/river-calibration.json), `tests/solver/river-verification.test.ts`,
 `tests/server/verified-training.test.ts`, `tests/server/verification-postgres.test.ts`
@@ -31,9 +36,9 @@ and `tests/e2e/verified-river.spec.ts`. Full gate results are in PROJECT_STATUS.
 | 16. Player Count / Handedness | PARTIAL | 2–9 Sitze und Exact-Context-Identität | Positions-/Kontexttests | Gelöste Ranges je Table Size |
 | 17. Positionen | DONE | Zentrale korrekte 2–9 Positionen einschließlich HU-BTN/SB | Positions-/HU-Tests | — |
 | 18. Visuelle Positionsausbildung | DONE | Hero, Button, Positionserklärung und Reihenfolge im MTT-Tisch | MTT-Browserflow | — |
-| 19. Multi-Action-Preflop | PARTIAL | Action-Domain kann Fold/Limp/Raise/Jam; realer River hat drei Actions | Replay und River-E2E | Gelöste Multi-Action-Preflop-Nodes |
+| 19. Multi-Action-Preflop | PARTIAL | Voller physischer HU/3/6-Kartenraum mit Limp/Open/3bet/4bet/Jam tatsächlich trainiert | full-prior-preflop.md, neue Solvertests | Unabhängig zertifizierte Preflop-Nodes fehlen |
 | 20. 15 BB ist nicht automatisch Jam | PARTIAL | Keine pauschale Stack→Shove-Regel | Replay-/Kontextprüfung | Limp-/Small-Raise-Frequenzen |
-| 21. Preflop Betting Tree | PARTIAL | Legale Preflop-History vollständig replaybar | Public-Engine-Tests | Vollständiger Preflop-Solverbaum |
+| 21. Preflop Betting Tree | PARTIAL | Parametrisierter Baum mit echten späteren Entscheidungen ausgeführt | Multi-Action-/Terminaltests | Vollständige Chance-/BR-Verifikation überschreitet Budget |
 | 22. MTT Preflop Solution Coverage | OPEN | 0 vollständige 6/8/9-handed MTT-Preflop-Nodes | Coverage/Exact-Lookup | 6/8/9-handed BBA 10–100 BB |
 | 23. Range Matrix Redesign | PARTIAL | Gemeinsame 13×13-Matrix für River und HU-Teilspiele | Matrix-E2E/Screenshots | Vollständige Preflop-Daten fehlen |
 | 24. Action Color System | PARTIAL | Eigenständige Fold/Check/Bet/Jam-Farben und Legende | Browser/Axe | Alle Preflop-Actions/Fold-Farbsystem |
@@ -51,7 +56,7 @@ and `tests/e2e/verified-river.spec.ts`. Full gate results are in PROJECT_STATUS.
 | 36. Smart Training | PARTIAL | Smart gewichtet niedrige Mastery und Fälligkeit | Service-Implementierung | Strategische Wichtigkeit und volle Priorisierung |
 | 37. Postflop Solver Data | PARTIAL | Ein echter River-Solver-Node; Cash-Sandbox bleibt explizit separat | Mathematik/Browser | Breite Flop/Turn/River-Daten |
 | 38. Postflop Betting Trees | PARTIAL | Gelöster River Check/50%-Bet/Jam/Fold/Call-Baum | Tree-/Payout-/BR-Tests | Weitere Größen/Raises/Straßen |
-| 39. Solver Compute Budget | PARTIAL | CLI-Compute außerhalb Web-Requests; budgetierter lokaler HU-Worker ausgeführt | Ausgeführte Solverläufe | Hosted Worker und Solver-Peak-RSS-Messung |
+| 39. Solver Compute Budget | PARTIAL | Solver-/Verifier-Limits, gemessene Laufzeit/Heap/Nodes/Infosets, persistierte Abbrüche, P1–P4 | Sechs reale Läufe + DB-Tests | Automatisierter Hosted Worker, vollständiger Prozess-Peak-RSS |
 | 40. On-Demand Solving | PARTIAL | CLI-Neuberechnung tatsächlich ausführbar | solve:nlhe + verify-nlhe | On-demand Web-Jobs weiterer Kontexte |
 | 41. Solution Database | PARTIAL | Atomare zertifizierte Publikation und Exact Lookup | PGlite/PG-Integration | Breites Archiv und Modelle |
 | 42. AI Coach | OPEN | Keine AI-Coach-Anbindung | Kein Feature behauptet | Solvergestützter Coach |
@@ -84,6 +89,10 @@ and `tests/e2e/verified-river.spec.ts`. Full gate results are in PROJECT_STATUS.
 [calibration](qa/preflop-calibration.json), `preflop-verification.test.ts`,
 `verified-preflop.test.ts`, `verified-preflop.spec.ts`. HU DoD remains incomplete:
 only fixed 26-combo inputs and Fold/Jam, no limp/small raises or full prior.
+
+That restriction describes **verified coverage**, not the new diagnostic solver:
+full-prior multi-action generation now runs, but its output is not independently
+certified, displayed or trained. All six experiments remain COMPUTE_LIMIT.
 
 **Coverage:** 18 conditional HU push/fold roots (nine stacks × NONE/BBA), plus 1 conditional NLHE river root, 8 supported Hero combos, 56 compatible
 physical deals; **0 MTT preflop nodes** at requested 6/8/9-handed BBA 10–100 BB.

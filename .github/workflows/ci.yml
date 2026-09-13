@@ -51,6 +51,8 @@ jobs:
       - run: python scripts/preflop_equity.py generate output/preflop-generator-equity.json
       - run: pnpm solve:preflop 15 1 output/regenerated-preflop.json
       - run: pnpm verify:nlhe output/regenerated-preflop.json
+      # Actual full-prior multi-action execution; diagnostics cannot publish.
+      - run: pnpm solve:preflop:attempt 2 15 1 output/preflop-smoke.json
       - run: pnpm typecheck
       - run: pnpm lint
       - run: pnpm test:unit

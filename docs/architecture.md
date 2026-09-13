@@ -127,3 +127,24 @@ artifact-checksum-scoped persistence. The same matrix/recall/mastery UI and shar
 publication rechecks the profile against approved evidence. The bounded local
 CLI worker persists real execution states and metrics. No full HU, multi-action,
 3-handed or 6-handed solution is inferred from this conditional path.
+
+
+## Full-prior preflop experiments (2026-09-13)
+
+`domain/preflop-tree.ts` supplies actual parameterized legal transitions;
+`domain/tournament-payoff.ts` pays terminal chips with separate dead ante/live
+wager layers. `solver/multistreet-preflop.ts` uses physical without-replacement
+deals and genuine later-street play. `solver/external-sampling.ts` executes
+bounded regret updates and importance-weighted average sampling. None of those
+classes can grant VERIFIED. Information keys preserve own cards and all public
+observations without revealing future runouts or opponents.
+
+`verification/multistreet-preflop.ts` separately reconstructs complete chance,
+uses the best-five evaluator and independent settlement, and only then delegates
+to the existing independent counterfactual BR. Current full-game attempts exhaust
+resources, so return no accuracy report. The diagnostic output schema is separate
+from approved solution artifacts; the current publication policy is unchanged.
+Migration 011 adds failure statuses and priority P4 to existing solver jobs. The
+development recorder stores compact failure evidence and cannot publish a
+strategy. Full profiles stay in ignored offline output. No new API, matrix or
+trainer data source is enabled. See [executed evidence](qa/full-prior-preflop.md).

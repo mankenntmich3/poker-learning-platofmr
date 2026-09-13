@@ -2,7 +2,31 @@
 
 Repository: `mankenntmich3/poker-learning-platofmr` (confirmed spelling). Updated 2026-09-13.
 
-## Current run — conditional HU preflop works; complete HU requirement remains open
+## Current run — full-prior multi-action computation attempted, not verified
+
+2026-09-13, existing branch and draft PR #5. **The new full-HU Definition of Done
+is NOT met.** Original external-sampling MCCFR now actually traverses full-prior
+52-card HU/3/6-player trees, including limp, parallel small opens, 3/4-bets, jam
+and real bounded flop/turn/river continuation. Independent best-five payout and
+full-chance verification attempts execute, but hit budget before complete BR.
+No reported convergence, default policy or failed partial result is published.
+
+HU 15/BBA: 16034 completed iterations, 1234001 visited nodes, all 1326 root
+combos averaged, 500000 infoset cap reached. 3-handed 15/BBA and 6-handed 20/BBA
+also genuinely trained, as did smaller full-prior push/fold fallbacks for all
+three table sizes. **No new NashConv certificate, full-range matrix, action EVs
+or trainable verified preflop node resulted.** This is execution progress, not
+a completed usable-product milestone.
+
+Migration 011 and the development recorder persist COMPUTE_LIMIT/NON_CONVERGED
+diagnostics with priorities P1–P4. Six actual local jobs recorded; no experiment
+profile enters verified artifacts or training. Existing river, 18 conditional
+HU solutions, shared premium table/matrix and retained progress remain intact.
+No staging deployment or merge. Details, measurements, limits and next steps:
+[executed QA](qa/full-prior-preflop.md), [all 54 follow-up sections](PREFLOP_FULL_RANGE_REQUIREMENTS.md),
+[original 66-point audit](MTT_V3_REQUIREMENTS.md).
+
+## Previous run — conditional HU preflop works; complete HU requirement remains open
 
 Updated 2026-09-13 on the existing branch and draft PR #5. **The requested complete
 HU preflop game is NOT done.** Eighteen independently verified conditional HU

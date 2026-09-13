@@ -7,7 +7,7 @@ import { verifyForPublication } from './verify-solution';
 import { VERIFICATION_POLICY } from './verification-policy';
 
 export interface SolutionCoverageRow extends SqlRow { players:number; stackBb:number; anteType:string; heroPosition:string; modelId:string; scope:string; verified:number; pending:number; failed:number }
-export interface SolverJobInput { context:StrategyContext; bettingTreeId:string; priority:1|2|3 }
+export interface SolverJobInput { context:StrategyContext; bettingTreeId:string; priority:1|2|3|4 }
 /** Betting-tree identifiers are content hashes, never mutable display names. */
 export function exactContextKey(context:unknown,bettingTreeId:string):string {
   if (!/^[a-f0-9]{64}$/.test(bettingTreeId)) throw new Error('Exact lookup requires the betting-tree definition SHA-256.');
@@ -17,7 +17,7 @@ export function exactContextKey(context:unknown,bettingTreeId:string):string {
 }
 export async function queueSolverJob(db:Database,input:SolverJobInput):Promise<string> {
   validateStrategyContext(input.context);
-  if (![1,2,3].includes(input.priority)) throw new Error('Invalid job priority.');
+  if (![1,2,3,4].includes(input.priority)) throw new Error('Invalid job priority.');
   const context=canonicalStrategyContext(input.context), id=randomUUID();
   await db.query("INSERT INTO solver_jobs (id,context_key,config,priority,status) VALUES ($1,$2,$3::jsonb,$4,'QUEUED')",
     [id,exactContextKey(context,input.bettingTreeId),JSON.stringify({...input,context}),input.priority]);

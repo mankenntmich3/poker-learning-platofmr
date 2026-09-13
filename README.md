@@ -157,6 +157,13 @@ This is a personal study release, not a public commercial launch. Broad NLHE sol
 
 ## Recompute the actual NLHE solution (optional)
 
+The new full-prior preflop experiment is **not verified or trainable**. It really
+runs multiple preflop actions with later-street decisions, then independently
+attempts verification. Start a bounded local diagnostic with
+`pnpm solve:preflop:attempt 2 15 60 output/hu15.json`.
+See [commands, actual failed limits and unchanged approval boundary](docs/qa/full-prior-preflop.md).
+Existing verified conditional artifacts and normal local development remain intact.
+
 Normal app use needs no Python. For solver execution, install Python 3.12 and
 create an environment with `python -m venv .tools/solver-venv`.
 Activate it with `.tools\solver-venv\Scripts\Activate.ps1` in PowerShell or

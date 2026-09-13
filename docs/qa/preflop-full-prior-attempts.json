@@ -1,0 +1,920 @@
+{
+  "date": "2026-09-13",
+  "purpose": "Executed diagnostics, NOT approved strategy data",
+  "publishable": false,
+  "runs": [
+    {
+      "schemaVersion": "PREFLOP_EXPERIMENT_1",
+      "publishable": false,
+      "context": {
+        "schemaVersion": 2,
+        "rulesVersion": "rangeform-nlhe-public-v1",
+        "game": "NLHE",
+        "gameType": "TOURNAMENT",
+        "evaluationModel": "CHIP_EV",
+        "evaluation": {
+          "model": "CHIP_EV"
+        },
+        "players": 2,
+        "blinds": {
+          "sbBb": 0.5,
+          "bbBb": 1
+        },
+        "postingOrder": "BLINDS_FIRST",
+        "ante": {
+          "type": "BBA",
+          "amountBb": 1
+        },
+        "rake": {
+          "type": "NONE"
+        },
+        "stacks": [
+          {
+            "position": "BTN",
+            "stackBb": 15
+          },
+          {
+            "position": "BB",
+            "stackBb": 15
+          }
+        ],
+        "hero": "BTN",
+        "actionHistory": [],
+        "board": [],
+        "deadCards": []
+      },
+      "tree": {
+        "version": 1,
+        "id": "rangeform-preflop-multistreet-v1",
+        "preflop": {
+          "limp": true,
+          "raises": [
+            [
+              {
+                "kind": "TO_BB",
+                "value": 2
+              },
+              {
+                "kind": "TO_BB",
+                "value": 2.2
+              }
+            ],
+            [
+              {
+                "kind": "TO_BB",
+                "value": 5
+              },
+              {
+                "kind": "TO_BB",
+                "value": 6
+              }
+            ],
+            [
+              {
+                "kind": "TO_BB",
+                "value": 10
+              }
+            ]
+          ]
+        },
+        "postflop": {
+          "raises": [
+            [
+              {
+                "kind": "POT_AFTER_CALL",
+                "value": 0.5
+              }
+            ]
+          ]
+        },
+        "jam": true,
+        "continuation": "PLAY_TO_TERMINAL",
+        "cardAbstraction": "NONE",
+        "splitPot": "FRACTIONAL_CHIP_EV"
+      },
+      "prior": "UNIFORM_PHYSICAL_WITHOUT_REPLACEMENT",
+      "contextSha256": "42f6d57292eecca33b05ef88f70fb21b9f2c2fb08ec74fd382511f1ce5032d88",
+      "treeSha256": "8d492385f793f08c366a7195e3064f067e77c7b261b6df5c4ce7eaf6fcae1651",
+      "sourceSha256": "fe802b70dde7d33663c152f852cf4b440b0991fa12b1a2fa1d4a9207de624a98",
+      "sourceFiles": [
+        "src/domain/cards.ts",
+        "src/domain/canonical.ts",
+        "src/domain/chips.ts",
+        "src/domain/positions.ts",
+        "src/domain/strategy-context.ts",
+        "src/domain/preflop-tree.ts",
+        "src/domain/tournament-state.ts",
+        "src/domain/tournament-payoff.ts",
+        "src/domain/equity.ts",
+        "src/solver/external-sampling.ts",
+        "src/solver/multistreet-preflop.ts"
+      ],
+      "verifierSha256": "58a643e5d3af835a8c8a301eb2a95e2ed9038c70d4f9bf96ea523ffc55fc55bd",
+      "verifierFiles": [
+        "src/domain/holdem.ts",
+        "src/verification/exact-best-response.ts",
+        "src/verification/multistreet-preflop.ts"
+      ],
+      "license": "ORIGINAL_RANGEFORM_CODE_PRIVATE_REPOSITORY",
+      "baseCommit": "ae77cb53dcc63c789129e393e8458aa6c88ab1c3",
+      "hardware": {
+        "cpu": "AMD Ryzen 7 9800X3D 8-Core Processor           ",
+        "logicalCpus": 16,
+        "memoryBytes": 33455112192,
+        "node": "v24.19.0"
+      },
+      "limits": {
+        "iterations": 1000000,
+        "runtimeMs": 60000,
+        "nodes": 20000000,
+        "infosets": 500000,
+        "heapBytes": 805306368
+      },
+      "status": "COMPUTE_LIMIT",
+      "reason": "INFOSET_BUDGET",
+      "iterations": 16034,
+      "completedRegretTraversals": 32068,
+      "nodes": 1234001,
+      "infosets": 500000,
+      "runtimeMs": 27624.6339,
+      "peakHeapBytes": 440891760,
+      "algorithm": "EXTERNAL_SAMPLING_MCCFR_IMPORTANCE_AVERAGING_V1",
+      "seed": 20260913,
+      "defaultPolicy": "UNIFORM_UNVISITED_INFORMATION_SETS",
+      "nashConv": null,
+      "exploitability": null,
+      "expectedRootCombos": 1326,
+      "visitedRootCombos": 1326,
+      "averagedRootCombos": 1326,
+      "verification": {
+        "status": "COMPUTE_LIMIT",
+        "reason": "EXACT_TREE_NODE_BUDGET",
+        "nodes": 20001,
+        "terminalPayoffs": 10715,
+        "dealsStarted": 9,
+        "totalChanceDeals": "55627620048000",
+        "visitedCandidateInfosets": 38,
+        "uniformDefaultInfosets": 4678,
+        "runtimeMs": 486.5253999999986,
+        "report": null
+      },
+      "rangeScope": "FULL_PRIOR_UNVERIFIED",
+      "treeScope": "PARTIAL_TREE",
+      "reportSha256": "00185e7ca073045f1f9317ea6845fd8af9ae3c68ef9dd979f4ad157481aff0a0"
+    },
+    {
+      "schemaVersion": "PREFLOP_EXPERIMENT_1",
+      "publishable": false,
+      "context": {
+        "schemaVersion": 2,
+        "rulesVersion": "rangeform-nlhe-public-v1",
+        "game": "NLHE",
+        "gameType": "TOURNAMENT",
+        "evaluationModel": "CHIP_EV",
+        "evaluation": {
+          "model": "CHIP_EV"
+        },
+        "players": 3,
+        "blinds": {
+          "sbBb": 0.5,
+          "bbBb": 1
+        },
+        "postingOrder": "BLINDS_FIRST",
+        "ante": {
+          "type": "BBA",
+          "amountBb": 1
+        },
+        "rake": {
+          "type": "NONE"
+        },
+        "stacks": [
+          {
+            "position": "BTN",
+            "stackBb": 15
+          },
+          {
+            "position": "SB",
+            "stackBb": 15
+          },
+          {
+            "position": "BB",
+            "stackBb": 15
+          }
+        ],
+        "hero": "BTN",
+        "actionHistory": [],
+        "board": [],
+        "deadCards": []
+      },
+      "tree": {
+        "version": 1,
+        "id": "rangeform-preflop-multistreet-v1",
+        "preflop": {
+          "limp": true,
+          "raises": [
+            [
+              {
+                "kind": "TO_BB",
+                "value": 2
+              },
+              {
+                "kind": "TO_BB",
+                "value": 2.2
+              }
+            ],
+            [
+              {
+                "kind": "TO_BB",
+                "value": 5
+              },
+              {
+                "kind": "TO_BB",
+                "value": 6
+              }
+            ],
+            [
+              {
+                "kind": "TO_BB",
+                "value": 10
+              }
+            ]
+          ]
+        },
+        "postflop": {
+          "raises": [
+            [
+              {
+                "kind": "POT_AFTER_CALL",
+                "value": 0.5
+              }
+            ]
+          ]
+        },
+        "jam": true,
+        "continuation": "PLAY_TO_TERMINAL",
+        "cardAbstraction": "NONE",
+        "splitPot": "FRACTIONAL_CHIP_EV"
+      },
+      "prior": "UNIFORM_PHYSICAL_WITHOUT_REPLACEMENT",
+      "contextSha256": "d32e4bf1846dcbba9e0f5a8d3abb301de6b713b07e513f92c63eeb6646f6f35c",
+      "treeSha256": "8d492385f793f08c366a7195e3064f067e77c7b261b6df5c4ce7eaf6fcae1651",
+      "sourceSha256": "fe802b70dde7d33663c152f852cf4b440b0991fa12b1a2fa1d4a9207de624a98",
+      "sourceFiles": [
+        "src/domain/cards.ts",
+        "src/domain/canonical.ts",
+        "src/domain/chips.ts",
+        "src/domain/positions.ts",
+        "src/domain/strategy-context.ts",
+        "src/domain/preflop-tree.ts",
+        "src/domain/tournament-state.ts",
+        "src/domain/tournament-payoff.ts",
+        "src/domain/equity.ts",
+        "src/solver/external-sampling.ts",
+        "src/solver/multistreet-preflop.ts"
+      ],
+      "verifierSha256": "58a643e5d3af835a8c8a301eb2a95e2ed9038c70d4f9bf96ea523ffc55fc55bd",
+      "verifierFiles": [
+        "src/domain/holdem.ts",
+        "src/verification/exact-best-response.ts",
+        "src/verification/multistreet-preflop.ts"
+      ],
+      "license": "ORIGINAL_RANGEFORM_CODE_PRIVATE_REPOSITORY",
+      "baseCommit": "ae77cb53dcc63c789129e393e8458aa6c88ab1c3",
+      "hardware": {
+        "cpu": "AMD Ryzen 7 9800X3D 8-Core Processor           ",
+        "logicalCpus": 16,
+        "memoryBytes": 33455112192,
+        "node": "v24.19.0"
+      },
+      "limits": {
+        "iterations": 1000000,
+        "runtimeMs": 60000,
+        "nodes": 20000000,
+        "infosets": 500000,
+        "heapBytes": 805306368
+      },
+      "status": "COMPUTE_LIMIT",
+      "reason": "INFOSET_BUDGET",
+      "iterations": 7371,
+      "completedRegretTraversals": 22115,
+      "nodes": 990481,
+      "infosets": 500000,
+      "runtimeMs": 29164.8946,
+      "peakHeapBytes": 439037896,
+      "algorithm": "EXTERNAL_SAMPLING_MCCFR_IMPORTANCE_AVERAGING_V1",
+      "seed": 20260913,
+      "defaultPolicy": "UNIFORM_UNVISITED_INFORMATION_SETS",
+      "nashConv": null,
+      "exploitability": null,
+      "expectedRootCombos": 1326,
+      "visitedRootCombos": 1326,
+      "averagedRootCombos": 1319,
+      "verification": {
+        "status": "COMPUTE_LIMIT",
+        "reason": "EXACT_TREE_NODE_BUDGET",
+        "nodes": 20001,
+        "terminalPayoffs": 10464,
+        "dealsStarted": 1,
+        "totalChanceDeals": "50231740903344000",
+        "visitedCandidateInfosets": 37,
+        "uniformDefaultInfosets": 8380,
+        "runtimeMs": 758.3824999999997,
+        "report": null
+      },
+      "rangeScope": "FULL_PRIOR_UNVERIFIED",
+      "treeScope": "PARTIAL_TREE",
+      "reportSha256": "8f367be1e4e3b98b45cabd4ef0d3e40267ebaa88bb2bca92c9d5e6661da86cf6"
+    },
+    {
+      "schemaVersion": "PREFLOP_EXPERIMENT_1",
+      "publishable": false,
+      "context": {
+        "schemaVersion": 2,
+        "rulesVersion": "rangeform-nlhe-public-v1",
+        "game": "NLHE",
+        "gameType": "TOURNAMENT",
+        "evaluationModel": "CHIP_EV",
+        "evaluation": {
+          "model": "CHIP_EV"
+        },
+        "players": 6,
+        "blinds": {
+          "sbBb": 0.5,
+          "bbBb": 1
+        },
+        "postingOrder": "BLINDS_FIRST",
+        "ante": {
+          "type": "BBA",
+          "amountBb": 1
+        },
+        "rake": {
+          "type": "NONE"
+        },
+        "stacks": [
+          {
+            "position": "UTG",
+            "stackBb": 20
+          },
+          {
+            "position": "HJ",
+            "stackBb": 20
+          },
+          {
+            "position": "CO",
+            "stackBb": 20
+          },
+          {
+            "position": "BTN",
+            "stackBb": 20
+          },
+          {
+            "position": "SB",
+            "stackBb": 20
+          },
+          {
+            "position": "BB",
+            "stackBb": 20
+          }
+        ],
+        "hero": "UTG",
+        "actionHistory": [],
+        "board": [],
+        "deadCards": []
+      },
+      "tree": {
+        "version": 1,
+        "id": "rangeform-preflop-multistreet-v1",
+        "preflop": {
+          "limp": true,
+          "raises": [
+            [
+              {
+                "kind": "TO_BB",
+                "value": 2
+              },
+              {
+                "kind": "TO_BB",
+                "value": 2.2
+              }
+            ],
+            [
+              {
+                "kind": "TO_BB",
+                "value": 5
+              },
+              {
+                "kind": "TO_BB",
+                "value": 6
+              }
+            ],
+            [
+              {
+                "kind": "TO_BB",
+                "value": 10
+              }
+            ]
+          ]
+        },
+        "postflop": {
+          "raises": [
+            [
+              {
+                "kind": "POT_AFTER_CALL",
+                "value": 0.5
+              }
+            ]
+          ]
+        },
+        "jam": true,
+        "continuation": "PLAY_TO_TERMINAL",
+        "cardAbstraction": "NONE",
+        "splitPot": "FRACTIONAL_CHIP_EV"
+      },
+      "prior": "UNIFORM_PHYSICAL_WITHOUT_REPLACEMENT",
+      "contextSha256": "d8719d6c1173a881524916d62ad5b1015f724ed9bf40262b945c14f0a9b630aa",
+      "treeSha256": "8d492385f793f08c366a7195e3064f067e77c7b261b6df5c4ce7eaf6fcae1651",
+      "sourceSha256": "fe802b70dde7d33663c152f852cf4b440b0991fa12b1a2fa1d4a9207de624a98",
+      "sourceFiles": [
+        "src/domain/cards.ts",
+        "src/domain/canonical.ts",
+        "src/domain/chips.ts",
+        "src/domain/positions.ts",
+        "src/domain/strategy-context.ts",
+        "src/domain/preflop-tree.ts",
+        "src/domain/tournament-state.ts",
+        "src/domain/tournament-payoff.ts",
+        "src/domain/equity.ts",
+        "src/solver/external-sampling.ts",
+        "src/solver/multistreet-preflop.ts"
+      ],
+      "verifierSha256": "58a643e5d3af835a8c8a301eb2a95e2ed9038c70d4f9bf96ea523ffc55fc55bd",
+      "verifierFiles": [
+        "src/domain/holdem.ts",
+        "src/verification/exact-best-response.ts",
+        "src/verification/multistreet-preflop.ts"
+      ],
+      "license": "ORIGINAL_RANGEFORM_CODE_PRIVATE_REPOSITORY",
+      "baseCommit": "ae77cb53dcc63c789129e393e8458aa6c88ab1c3",
+      "hardware": {
+        "cpu": "AMD Ryzen 7 9800X3D 8-Core Processor           ",
+        "logicalCpus": 16,
+        "memoryBytes": 33455112192,
+        "node": "v24.19.0"
+      },
+      "limits": {
+        "iterations": 1000000,
+        "runtimeMs": 60000,
+        "nodes": 20000000,
+        "infosets": 500000,
+        "heapBytes": 805306368
+      },
+      "status": "COMPUTE_LIMIT",
+      "reason": "INFOSET_BUDGET",
+      "iterations": 3029,
+      "completedRegretTraversals": 18174,
+      "nodes": 732731,
+      "infosets": 500000,
+      "runtimeMs": 31021.1919,
+      "peakHeapBytes": 431294496,
+      "algorithm": "EXTERNAL_SAMPLING_MCCFR_IMPORTANCE_AVERAGING_V1",
+      "seed": 20260913,
+      "defaultPolicy": "UNIFORM_UNVISITED_INFORMATION_SETS",
+      "nashConv": null,
+      "exploitability": null,
+      "expectedRootCombos": 1326,
+      "visitedRootCombos": 1326,
+      "averagedRootCombos": 1184,
+      "verification": {
+        "status": "COMPUTE_LIMIT",
+        "reason": "EXACT_TREE_NODE_BUDGET",
+        "nodes": 20001,
+        "terminalPayoffs": 10615,
+        "dealsStarted": 1,
+        "totalChanceDeals": "20327525731521460932480000",
+        "visitedCandidateInfosets": 3,
+        "uniformDefaultInfosets": 8371,
+        "runtimeMs": 740.2456999999995,
+        "report": null
+      },
+      "rangeScope": "FULL_PRIOR_UNVERIFIED",
+      "treeScope": "PARTIAL_TREE",
+      "reportSha256": "c0f499ed533aafcf9678c66cff5f6560b973a6a76d72b12c4467c98a61a910ef"
+    },
+    {
+      "schemaVersion": "PREFLOP_EXPERIMENT_1",
+      "publishable": false,
+      "rangeScope": "FULL_PRIOR_UNVERIFIED",
+      "treeScope": "PUSH_FOLD_ONLY",
+      "context": {
+        "schemaVersion": 2,
+        "rulesVersion": "rangeform-nlhe-public-v1",
+        "game": "NLHE",
+        "gameType": "TOURNAMENT",
+        "evaluationModel": "CHIP_EV",
+        "evaluation": {
+          "model": "CHIP_EV"
+        },
+        "players": 2,
+        "blinds": {
+          "sbBb": 0.5,
+          "bbBb": 1
+        },
+        "postingOrder": "BLINDS_FIRST",
+        "ante": {
+          "type": "BBA",
+          "amountBb": 1
+        },
+        "rake": {
+          "type": "NONE"
+        },
+        "stacks": [
+          {
+            "position": "BTN",
+            "stackBb": 15
+          },
+          {
+            "position": "BB",
+            "stackBb": 15
+          }
+        ],
+        "hero": "BTN",
+        "actionHistory": [],
+        "board": [],
+        "deadCards": []
+      },
+      "tree": {
+        "version": 1,
+        "id": "rangeform-full-prior-pushfold-experiment-v1",
+        "preflop": {
+          "limp": false,
+          "raises": []
+        },
+        "postflop": {
+          "raises": [
+            [
+              {
+                "kind": "POT_AFTER_CALL",
+                "value": 0.5
+              }
+            ]
+          ]
+        },
+        "jam": true,
+        "continuation": "PLAY_TO_TERMINAL",
+        "cardAbstraction": "NONE",
+        "splitPot": "FRACTIONAL_CHIP_EV"
+      },
+      "prior": "UNIFORM_PHYSICAL_WITHOUT_REPLACEMENT",
+      "contextSha256": "42f6d57292eecca33b05ef88f70fb21b9f2c2fb08ec74fd382511f1ce5032d88",
+      "treeSha256": "fefaf64acfb3b2c4de4217fc8fb41faefa94c35ffaccbb9884ec469984e07ed8",
+      "sourceSha256": "fe802b70dde7d33663c152f852cf4b440b0991fa12b1a2fa1d4a9207de624a98",
+      "sourceFiles": [
+        "src/domain/cards.ts",
+        "src/domain/canonical.ts",
+        "src/domain/chips.ts",
+        "src/domain/positions.ts",
+        "src/domain/strategy-context.ts",
+        "src/domain/preflop-tree.ts",
+        "src/domain/tournament-state.ts",
+        "src/domain/tournament-payoff.ts",
+        "src/domain/equity.ts",
+        "src/solver/external-sampling.ts",
+        "src/solver/multistreet-preflop.ts"
+      ],
+      "verifierSha256": "58a643e5d3af835a8c8a301eb2a95e2ed9038c70d4f9bf96ea523ffc55fc55bd",
+      "verifierFiles": [
+        "src/domain/holdem.ts",
+        "src/verification/exact-best-response.ts",
+        "src/verification/multistreet-preflop.ts"
+      ],
+      "license": "ORIGINAL_RANGEFORM_CODE_PRIVATE_REPOSITORY",
+      "baseCommit": "ae77cb53dcc63c789129e393e8458aa6c88ab1c3",
+      "hardware": {
+        "cpu": "AMD Ryzen 7 9800X3D 8-Core Processor           ",
+        "logicalCpus": 16,
+        "memoryBytes": 33455112192,
+        "node": "v24.19.0"
+      },
+      "limits": {
+        "iterations": 1000000,
+        "runtimeMs": 60000,
+        "nodes": 20000000,
+        "infosets": 500000,
+        "heapBytes": 805306368
+      },
+      "status": "COMPUTE_LIMIT",
+      "reason": "RUNTIME_BUDGET",
+      "iterations": 537492,
+      "completedRegretTraversals": 1074986,
+      "nodes": 5322241,
+      "infosets": 2652,
+      "runtimeMs": 60003.5985,
+      "peakHeapBytes": 34117648,
+      "algorithm": "EXTERNAL_SAMPLING_MCCFR_IMPORTANCE_AVERAGING_V1",
+      "seed": 20260913,
+      "defaultPolicy": "UNIFORM_UNVISITED_INFORMATION_SETS",
+      "nashConv": null,
+      "exploitability": null,
+      "expectedRootCombos": 1326,
+      "visitedRootCombos": 1326,
+      "averagedRootCombos": 1326,
+      "verification": {
+        "status": "COMPUTE_LIMIT",
+        "reason": "EXACT_TREE_NODE_BUDGET",
+        "nodes": 20001,
+        "terminalPayoffs": 12000,
+        "dealsStarted": 4001,
+        "totalChanceDeals": "55627620048000",
+        "visitedCandidateInfosets": 2,
+        "uniformDefaultInfosets": 0,
+        "runtimeMs": 393.66829999999754,
+        "report": null
+      },
+      "reportSha256": "b99cd3cee97ca2e73c7bf8c7fb8e0f85e70e9cd88b69ddf6bc0fce10f915ac0d"
+    },
+    {
+      "schemaVersion": "PREFLOP_EXPERIMENT_1",
+      "publishable": false,
+      "rangeScope": "FULL_PRIOR_UNVERIFIED",
+      "treeScope": "PUSH_FOLD_ONLY",
+      "context": {
+        "schemaVersion": 2,
+        "rulesVersion": "rangeform-nlhe-public-v1",
+        "game": "NLHE",
+        "gameType": "TOURNAMENT",
+        "evaluationModel": "CHIP_EV",
+        "evaluation": {
+          "model": "CHIP_EV"
+        },
+        "players": 3,
+        "blinds": {
+          "sbBb": 0.5,
+          "bbBb": 1
+        },
+        "postingOrder": "BLINDS_FIRST",
+        "ante": {
+          "type": "BBA",
+          "amountBb": 1
+        },
+        "rake": {
+          "type": "NONE"
+        },
+        "stacks": [
+          {
+            "position": "BTN",
+            "stackBb": 15
+          },
+          {
+            "position": "SB",
+            "stackBb": 15
+          },
+          {
+            "position": "BB",
+            "stackBb": 15
+          }
+        ],
+        "hero": "BTN",
+        "actionHistory": [],
+        "board": [],
+        "deadCards": []
+      },
+      "tree": {
+        "version": 1,
+        "id": "rangeform-full-prior-pushfold-experiment-v1",
+        "preflop": {
+          "limp": false,
+          "raises": []
+        },
+        "postflop": {
+          "raises": [
+            [
+              {
+                "kind": "POT_AFTER_CALL",
+                "value": 0.5
+              }
+            ]
+          ]
+        },
+        "jam": true,
+        "continuation": "PLAY_TO_TERMINAL",
+        "cardAbstraction": "NONE",
+        "splitPot": "FRACTIONAL_CHIP_EV"
+      },
+      "prior": "UNIFORM_PHYSICAL_WITHOUT_REPLACEMENT",
+      "contextSha256": "d32e4bf1846dcbba9e0f5a8d3abb301de6b713b07e513f92c63eeb6646f6f35c",
+      "treeSha256": "fefaf64acfb3b2c4de4217fc8fb41faefa94c35ffaccbb9884ec469984e07ed8",
+      "sourceSha256": "fe802b70dde7d33663c152f852cf4b440b0991fa12b1a2fa1d4a9207de624a98",
+      "sourceFiles": [
+        "src/domain/cards.ts",
+        "src/domain/canonical.ts",
+        "src/domain/chips.ts",
+        "src/domain/positions.ts",
+        "src/domain/strategy-context.ts",
+        "src/domain/preflop-tree.ts",
+        "src/domain/tournament-state.ts",
+        "src/domain/tournament-payoff.ts",
+        "src/domain/equity.ts",
+        "src/solver/external-sampling.ts",
+        "src/solver/multistreet-preflop.ts"
+      ],
+      "verifierSha256": "58a643e5d3af835a8c8a301eb2a95e2ed9038c70d4f9bf96ea523ffc55fc55bd",
+      "verifierFiles": [
+        "src/domain/holdem.ts",
+        "src/verification/exact-best-response.ts",
+        "src/verification/multistreet-preflop.ts"
+      ],
+      "license": "ORIGINAL_RANGEFORM_CODE_PRIVATE_REPOSITORY",
+      "baseCommit": "ae77cb53dcc63c789129e393e8458aa6c88ab1c3",
+      "hardware": {
+        "cpu": "AMD Ryzen 7 9800X3D 8-Core Processor           ",
+        "logicalCpus": 16,
+        "memoryBytes": 33455112192,
+        "node": "v24.19.0"
+      },
+      "limits": {
+        "iterations": 1000000,
+        "runtimeMs": 60000,
+        "nodes": 20000000,
+        "infosets": 500000,
+        "heapBytes": 805306368
+      },
+      "status": "COMPUTE_LIMIT",
+      "reason": "RUNTIME_BUDGET",
+      "iterations": 188484,
+      "completedRegretTraversals": 565455,
+      "nodes": 3881729,
+      "infosets": 7956,
+      "runtimeMs": 60009.8984,
+      "peakHeapBytes": 54302424,
+      "algorithm": "EXTERNAL_SAMPLING_MCCFR_IMPORTANCE_AVERAGING_V1",
+      "seed": 20260913,
+      "defaultPolicy": "UNIFORM_UNVISITED_INFORMATION_SETS",
+      "nashConv": null,
+      "exploitability": null,
+      "expectedRootCombos": 1326,
+      "visitedRootCombos": 1326,
+      "averagedRootCombos": 1326,
+      "verification": {
+        "status": "COMPUTE_LIMIT",
+        "reason": "EXACT_TREE_NODE_BUDGET",
+        "nodes": 20001,
+        "terminalPayoffs": 10769,
+        "dealsStarted": 1539,
+        "totalChanceDeals": "50231740903344000",
+        "visitedCandidateInfosets": 6,
+        "uniformDefaultInfosets": 0,
+        "runtimeMs": 463.55159999999887,
+        "report": null
+      },
+      "reportSha256": "f2ea68abf0e57d7388e235059fd8090f21b653474c8defff30258d53284036dd"
+    },
+    {
+      "schemaVersion": "PREFLOP_EXPERIMENT_1",
+      "publishable": false,
+      "rangeScope": "FULL_PRIOR_UNVERIFIED",
+      "treeScope": "PUSH_FOLD_ONLY",
+      "context": {
+        "schemaVersion": 2,
+        "rulesVersion": "rangeform-nlhe-public-v1",
+        "game": "NLHE",
+        "gameType": "TOURNAMENT",
+        "evaluationModel": "CHIP_EV",
+        "evaluation": {
+          "model": "CHIP_EV"
+        },
+        "players": 6,
+        "blinds": {
+          "sbBb": 0.5,
+          "bbBb": 1
+        },
+        "postingOrder": "BLINDS_FIRST",
+        "ante": {
+          "type": "BBA",
+          "amountBb": 1
+        },
+        "rake": {
+          "type": "NONE"
+        },
+        "stacks": [
+          {
+            "position": "UTG",
+            "stackBb": 20
+          },
+          {
+            "position": "HJ",
+            "stackBb": 20
+          },
+          {
+            "position": "CO",
+            "stackBb": 20
+          },
+          {
+            "position": "BTN",
+            "stackBb": 20
+          },
+          {
+            "position": "SB",
+            "stackBb": 20
+          },
+          {
+            "position": "BB",
+            "stackBb": 20
+          }
+        ],
+        "hero": "UTG",
+        "actionHistory": [],
+        "board": [],
+        "deadCards": []
+      },
+      "tree": {
+        "version": 1,
+        "id": "rangeform-full-prior-pushfold-experiment-v1",
+        "preflop": {
+          "limp": false,
+          "raises": []
+        },
+        "postflop": {
+          "raises": [
+            [
+              {
+                "kind": "POT_AFTER_CALL",
+                "value": 0.5
+              }
+            ]
+          ]
+        },
+        "jam": true,
+        "continuation": "PLAY_TO_TERMINAL",
+        "cardAbstraction": "NONE",
+        "splitPot": "FRACTIONAL_CHIP_EV"
+      },
+      "prior": "UNIFORM_PHYSICAL_WITHOUT_REPLACEMENT",
+      "contextSha256": "d8719d6c1173a881524916d62ad5b1015f724ed9bf40262b945c14f0a9b630aa",
+      "treeSha256": "fefaf64acfb3b2c4de4217fc8fb41faefa94c35ffaccbb9884ec469984e07ed8",
+      "sourceSha256": "fe802b70dde7d33663c152f852cf4b440b0991fa12b1a2fa1d4a9207de624a98",
+      "sourceFiles": [
+        "src/domain/cards.ts",
+        "src/domain/canonical.ts",
+        "src/domain/chips.ts",
+        "src/domain/positions.ts",
+        "src/domain/strategy-context.ts",
+        "src/domain/preflop-tree.ts",
+        "src/domain/tournament-state.ts",
+        "src/domain/tournament-payoff.ts",
+        "src/domain/equity.ts",
+        "src/solver/external-sampling.ts",
+        "src/solver/multistreet-preflop.ts"
+      ],
+      "verifierSha256": "58a643e5d3af835a8c8a301eb2a95e2ed9038c70d4f9bf96ea523ffc55fc55bd",
+      "verifierFiles": [
+        "src/domain/holdem.ts",
+        "src/verification/exact-best-response.ts",
+        "src/verification/multistreet-preflop.ts"
+      ],
+      "license": "ORIGINAL_RANGEFORM_CODE_PRIVATE_REPOSITORY",
+      "baseCommit": "ae77cb53dcc63c789129e393e8458aa6c88ab1c3",
+      "hardware": {
+        "cpu": "AMD Ryzen 7 9800X3D 8-Core Processor           ",
+        "logicalCpus": 16,
+        "memoryBytes": 33455112192,
+        "node": "v24.19.0"
+      },
+      "limits": {
+        "iterations": 1000000,
+        "runtimeMs": 60000,
+        "nodes": 20000000,
+        "infosets": 500000,
+        "heapBytes": 805306368
+      },
+      "status": "COMPUTE_LIMIT",
+      "reason": "RUNTIME_BUDGET",
+      "iterations": 30847,
+      "completedRegretTraversals": 185085,
+      "nodes": 2147329,
+      "infosets": 82145,
+      "runtimeMs": 60107.0326,
+      "peakHeapBytes": 201984608,
+      "algorithm": "EXTERNAL_SAMPLING_MCCFR_IMPORTANCE_AVERAGING_V1",
+      "seed": 20260913,
+      "defaultPolicy": "UNIFORM_UNVISITED_INFORMATION_SETS",
+      "nashConv": null,
+      "exploitability": null,
+      "expectedRootCombos": 1326,
+      "visitedRootCombos": 1326,
+      "averagedRootCombos": 1326,
+      "verification": {
+        "status": "COMPUTE_LIMIT",
+        "reason": "EXACT_TREE_NODE_BUDGET",
+        "nodes": 20001,
+        "terminalPayoffs": 10080,
+        "dealsStarted": 161,
+        "totalChanceDeals": "20327525731521460932480000",
+        "visitedCandidateInfosets": 62,
+        "uniformDefaultInfosets": 0,
+        "runtimeMs": 875.9336000000039,
+        "report": null
+      },
+      "reportSha256": "42dead68b5a4783dcb5d11cb036d5c6975f3b6c54d966111d002ea3eec71f9f0"
+    }
+  ]
+}

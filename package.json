@@ -30,6 +30,8 @@
     "solve:nlhe:dcfr": "tsx scripts/solve-nlhe.ts",
     "solve:preflop": "tsx scripts/solve-preflop.ts",
     "solve:preflop:jobs": "tsx scripts/run-preflop-jobs.ts",
+    "solve:preflop:attempt": "tsx scripts/attempt-preflop.ts",
+    "solve:preflop:record-attempts": "tsx scripts/record-preflop-attempts.ts",
     "verify:nlhe": "tsx scripts/verify-nlhe.ts"
   },
   "dependencies": {

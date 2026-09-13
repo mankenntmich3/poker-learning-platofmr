@@ -127,3 +127,26 @@ current finite representation does not support unrestricted multiway. Actual
 3/6-player all-in benchmarks are recorded separately; they do not supply a
 strategy algorithm or NashConv certificate. No imported verified dataset has
 been approved and no heuristic frequencies entered normal training.
+
+
+## Full-prior multi-action execution (2026-09-13)
+
+The previous conditional release remains preserved. Rechecked primary sources
+again disclose the non-all-in limitation: [chirenonhive/poker-solver](https://github.com/chirenonhive/poker-solver)
+uses equity realization at such leaves; [amaster usage](https://github.com/amaster97/poker_solver/blob/main/USAGE.md)
+identifies limits on full chance-over-hole-card preflop. No unpinned upstream
+code or frequencies from those repositories were approved or imported.
+
+Instead, an original external-sampling MCCFR implementation was executed on
+full-prior HU/3/6 games with real bounded later-street betting and on smaller
+full-prior all-in trees. The algorithm follows [Lanctot et al.](https://www.mlanctot.info/files/papers/nips09mccfr.pdf);
+separate full-support importance-weighted averaging avoids assuming the simple
+HU opponent-node averaging rule works unchanged in multiway. No new external
+solver package or commercial dependency is used. Source hashes and local Node
+version are recorded, rather than attributing this new engine to the old SciPy
+LP or MIT DCFR implementation.
+
+All six real attempts failed to obtain a complete independent BR certificate.
+They are not GTO data and do not satisfy the complete HU release criterion.
+The exact model, action sizes, chance/compute limits, measurements, licensing
+boundary and next viable factorization work are in [full-prior QA](qa/full-prior-preflop.md).
