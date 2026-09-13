@@ -24,7 +24,7 @@ into a verified solution. Evidence: [executed solver/BR attempts](qa/full-prior-
 | 6 | NONE / BBA | DONE | Both forced-bet contexts supported; BBA runs and actual NONE smoke run; old artifacts unchanged. |
 | 7 | Action EVs / strategy EV / EV loss | PARTIAL | Existing conditional feedback retained; sampled new strategies have no certified EVs. |
 | 8 | Independent verification | PARTIAL | Separate full-chance builder and best-five settlement executed; incomplete full BR returns no certificate. |
-| 9 | Scalable verifier | PARTIAL | Existing counterfactual infoset BR reused; explicit full chance expansion still exceeds budget. |
+| 9 | Scalable verifier | PARTIAL | Independent fixed-deviation statistical rejection now completes in about 31 seconds; a complete BR upper certificate is still missing. |
 | 10 | Real 3-handed solving | PARTIAL | 3-player full-prior multi-action and reduced-tree strategies trained; neither certified. |
 | 11 | 3-handed positions / order | DONE | BTN/SB/BB replay and real solver order; shared domain tests. |
 | 12 | 3-handed BTN RFI | PARTIAL | Candidate strategies from BTN roots; no VERIFIED node. |
@@ -76,6 +76,7 @@ into a verified solution. Evidence: [executed solver/BR attempts](qa/full-prior-
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | HU | 10/15/20/25/30/40/50/80/100 | NONE / BBA1 | BTN/SB | Conditional root | Fold/Jam | CONDITIONAL_SUBGAME + PUSH_FOLD_ONLY | 26 supported / 1326 rows | Exact pinned equity + independent BR | max NashConv 3.345e-15 across old 18 nodes | Existing VERIFIED PARTIAL |
 | HU | 15 | BBA1 | BTN/SB | RFI attempt | Multi-action, real bounded continuation | FULL_PRIOR_UNVERIFIED + PARTIAL_TREE | 1326 prior; 1326 averaged roots | Full-chance attempt exhausted | Unavailable | COMPUTE_LIMIT |
+| HU | 15 | BBA1 | BTN/SB | Suit-isomorphic larger attempt | Multi-action, real bounded continuation | FULL_PRIOR_UNVERIFIED + PARTIAL_TREE | 1326 prior; 1326 averaged roots | Independent fixed-deviation statistical rejection | NashConv lower bound 0.0890429; upper unavailable | COMPUTE_LIMIT / POSITIVE_DEVIATION_WITNESS |
 | 3 | 15 | BBA1 | BTN | RFI attempt | Multi-action | FULL_PRIOR_UNVERIFIED + PARTIAL_TREE | 1326 prior; 1319 averaged roots | Full-chance attempt exhausted | Unavailable | COMPUTE_LIMIT |
 | 6 | 20 | BBA1 | UTG | RFI attempt | Multi-action | FULL_PRIOR_UNVERIFIED + PARTIAL_TREE | 1326 prior; 1184 averaged roots | Full-chance attempt exhausted | Unavailable | COMPUTE_LIMIT |
 | HU | 15 | BBA1 | BTN/SB | Reduced attempt | Fold/Jam | FULL_PRIOR_UNVERIFIED + PUSH_FOLD_ONLY | 1326 averaged roots | Full-chance attempt exhausted | Unavailable | COMPUTE_LIMIT |

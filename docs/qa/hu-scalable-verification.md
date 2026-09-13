@@ -120,3 +120,17 @@ factor public states and strengthen actual continuation learning, paired with
 a tight information-set BR upper bound; rejection witnesses alone are inadequate.
 No new COMPLETE_RANGE matrix, EV-loss trainer flow or HU release DoD is claimed.
 Prompt 2 remains incomplete; PR #5 remains Draft.
+
+## Validation of committed implementation
+
+Implementation commit `efc29f3448d33cc325b9f09453eab4dba93d7b1f` was pushed to
+`feature/mtt-gto-accuracy-v3`. Its complete
+[Linux/PostgreSQL quality workflow passed](https://github.com/mankenntmich3/poker-learning-platofmr/actions/runs/34773497065):
+fresh dependency installation, exact equity and conditional HU/river solver
+regeneration, independent verification, bounded multi-action execution,
+typecheck, lint, 116 unit tests, 48 integration tests, production build,
+seven production browser flows and five development-access browser flows.
+No CI tests skipped. Local checks also passed: typecheck/lint/build, 159 tests
+(five dedicated PostgreSQL cases deferred to that successful CI run), and both
+verified HU/river browser flows. This validates implementation and regression
+behavior, not the rejected multi-action strategy's game-theoretic accuracy.

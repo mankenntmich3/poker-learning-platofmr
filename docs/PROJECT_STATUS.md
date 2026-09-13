@@ -23,6 +23,13 @@ remains incomplete. Existing conditional HU/river and UI remain intact; no
 
 See [mathematics, executed evidence and remaining technical boundary](qa/hu-scalable-verification.md).
 
+Implementation `efc29f3` is committed and pushed. Its complete
+[CI passed](https://github.com/mankenntmich3/poker-learning-platofmr/actions/runs/34773497065):
+116 unit tests, 48 PostgreSQL integration tests, seven production and five
+development browser flows, typecheck/lint/build and real solver regeneration.
+No skipped CI tests. This follow-up only records that result and coverage;
+it does not publish the rejected candidates.
+
 ## Previous run — full-prior multi-action computation attempted, not verified
 
 2026-09-13, existing branch and draft PR #5. **The new full-HU Definition of Done
