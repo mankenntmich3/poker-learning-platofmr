@@ -12,7 +12,14 @@ See [strategy scope and provenance](docs/decisions/0003-nlhe-first.md), [current
 
 ## LOCAL DEVELOPMENT — QUICK START
 
-**V3 branch:** after setup, open [the verified River study](http://localhost:3000/mtt/river)
+**Current V3 branch:** open [HU preflop study](http://localhost:3000/mtt/preflop?stack=15&ante=1)
+after login, or Tournament → **HU-Teilspiel studieren**. This is a verified
+conditional Fold/Jam game with fixed AKo/QQ/A5s/76s inputs, **not complete HU GTO**.
+Nine stack depths, BBA/NONE, real action EVs and saved action/recall progress work.
+The same premium table also serves the existing verified river. See
+[preflop scope, exact computation and optional worker commands](docs/qa/verified-preflop.md).
+
+**Previous river milestone:** after setup, open [the verified River study](http://localhost:3000/mtt/river)
 or Tournament → **Verifizierten River studieren**. One real NLHE fixed-range river
 subgame provides a segmented matrix, action EVs, action/recall training and saved
 progress. This is **not** MTT preflop coverage; those nodes remain unavailable.

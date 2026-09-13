@@ -1,10 +1,10 @@
 # V3 — requirement-by-requirement audit
 
-Updated 2026-09-12. Continues draft PR #5; **V3 is not complete**. The original
+Updated 2026-09-13. Continues draft PR #5; **V3 is not complete**. The original
 [66-point specification](MTT_GTO_V3_SPEC.md) remains authoritative. DONE describes
 an implemented and tested behavior, not broad solver coverage. Every current
 verified strategy/EV/recall/SRS result is restricted to the documented conditional
-river subgame. No architectural interface is counted as a solved MTT node.
+river and HU push/fold subgames. No architectural interface is counted as a solved MTT node.
 
 Evidence abbreviations refer to [executed QA](qa/verified-river.md),
 [mathematical calibration](qa/river-calibration.json), `tests/solver/river-verification.test.ts`,
@@ -13,32 +13,32 @@ and `tests/e2e/verified-river.spec.ts`. Full gate results are in PROJECT_STATUS.
 
 | Requirement | DONE/PARTIAL/OPEN | Concrete implementation | Test/Evidence | Remaining blocker |
 | --- | --- | --- | --- | --- |
-| 1. Produktziel | PARTIAL | Ein verifiziertes NLHE-River-Teilspiel nutzbar | River-E2E | Breites MTT-Preflop-Studium |
-| 2. Wichtigste Qualitätsregel | PARTIAL | Regulärer River-Trainer nur mit verifizierten Daten | Provider-/Tampertests | Verifizierte Preflop-Nodes fehlen |
+| 1. Produktziel | PARTIAL | River und 18 konditionierte HU-Push/Fold-Nodes nutzbar | River-E2E | Breites MTT-Preflop-Studium |
+| 2. Wichtigste Qualitätsregel | PARTIAL | Regulärer River-/HU-Teilspiel-Trainer nur mit verifizierten Daten | Provider-/Tampertests | Vollständige HU-/Multiway-Preflop-Nodes fehlen |
 | 3. Spieltheoretische Qualität | PARTIAL | Echte vollständige BR/NashConv im bedingten River-Spiel | Zwei BR-Evaluatoren, LP | Multiway-NLHE-Verifikation |
 | 4. Keine unbelegten GTO-Werte | DONE | Keine ungeprüften Frequenzen als VERIFIED; Input-Ranges klar begrenzt | Gate-/Browsertests | — |
 | 5. Externe GTO-Anbieter | PARTIAL | Keine Anbieter-Charts ohne Rechte übernommen | Research und Lizenzbelege | Kein lizenzierter externer Datensatz |
 | 6. Open-Source-Solver-Research | PARTIAL | MIT-DCFR gepinnt/ausgeführt; SciPy/HiGHS integriert | Solverläufe und Source-Pins | Brauchbarer Multiplayer-Preflop-Solver |
 | 7. Solver-Pipeline | PARTIAL | Generator → unabhängige Prüfung → DB → Trainer funktioniert | Recompute, Integration, E2E | Multiway-Worker/Pipeline |
-| 8. Solution-Artifact | PARTIAL | Echtes Artefakt mit Profil, Context, 1081 Combo-Zeilen, EV/Reach | Projektions-/Checksumtests | Weitere NLHE-Modelle |
-| 9. Verification Gate | PARTIAL | Unabhängige Veröffentlichung für genau ein Modell; Rest gesperrt | Mutationstests | Preflop- und Importverifier |
-| 10. Solver Accuracy | PARTIAL | Versionierte River-Grenzen und numerische Reserve kalibriert | river-calibration.json | Andere Spielmodelle kalibrieren |
+| 8. Solution-Artifact | PARTIAL | Echtes Artefakt mit Profil, Context, 1081 River-/1326 Preflop-Zeilen, EV/Reach | Projektions-/Checksumtests | Weitere NLHE-Modelle |
+| 9. Verification Gate | PARTIAL | Unabhängige Veröffentlichung für zwei konditionierte Modelle; Rest gesperrt | Mutationstests | Vollständiger HU-/Multiway- und Importverifier |
+| 10. Solver Accuracy | PARTIAL | Versionierte River-/HU-Teilspiel-Grenzen und numerische Reserve kalibriert | river-calibration.json | Andere Spielmodelle kalibrieren |
 | 11. Cross-Validation | PARTIAL | LP vs DCFR-Werte; separate BR-Rekonstruktion und Exhaustiv-Subset | Mathematiktests, Crosscheck | Externe breite Preflop-Referenz |
 | 12. MTT als Hauptmodus | DONE | Tournament bleibt primäres Study-Ziel | mtt.spec.ts | — |
 | 13. Tournament Configuration | PARTIAL | Voller strenger Kontext und Grundkonfiguration | Context-/Replaytests | Komplette freie Konfigurations-UI |
 | 14. Effective Stack | DONE | Effective Stack als Minimum; voller Stackvektor bleibt erhalten | Domaintests, Jam-Rückgabe | — |
-| 15. Stack Coverage | PARTIAL | Stack-Presets vorhanden; nur ein 15-BB-Ancestry-River gelöst | Coverage und Lookup | MTT 10–200 BB |
+| 15. Stack Coverage | PARTIAL | Stack-Presets vorhanden; HU-Teilspiel bei neun 10–100-BB-Stacks gelöst | Coverage und Lookup | MTT 10–200 BB |
 | 16. Player Count / Handedness | PARTIAL | 2–9 Sitze und Exact-Context-Identität | Positions-/Kontexttests | Gelöste Ranges je Table Size |
 | 17. Positionen | DONE | Zentrale korrekte 2–9 Positionen einschließlich HU-BTN/SB | Positions-/HU-Tests | — |
 | 18. Visuelle Positionsausbildung | DONE | Hero, Button, Positionserklärung und Reihenfolge im MTT-Tisch | MTT-Browserflow | — |
 | 19. Multi-Action-Preflop | PARTIAL | Action-Domain kann Fold/Limp/Raise/Jam; realer River hat drei Actions | Replay und River-E2E | Gelöste Multi-Action-Preflop-Nodes |
-| 20. 15 BB ist nicht automatisch Jam | PARTIAL | Keine pauschale Stack→Shove-Regel | Replay-/Kontextprüfung | Echte 15-BB-Preflop-Frequenzen |
+| 20. 15 BB ist nicht automatisch Jam | PARTIAL | Keine pauschale Stack→Shove-Regel | Replay-/Kontextprüfung | Limp-/Small-Raise-Frequenzen |
 | 21. Preflop Betting Tree | PARTIAL | Legale Preflop-History vollständig replaybar | Public-Engine-Tests | Vollständiger Preflop-Solverbaum |
-| 22. MTT Preflop Solution Coverage | OPEN | 0 verifizierte MTT-Preflop-Nodes | Coverage/Exact-Lookup | 6/8/9-handed BBA 10–100 BB |
-| 23. Range Matrix Redesign | PARTIAL | Proportionale 13×13-Matrix für echte River-Solution | Matrix-E2E/Screenshots | Preflop-Daten fehlen |
-| 24. Action Color System | PARTIAL | Eigenständige Check/Bet/Jam-Farben und Legende | Browser/Axe | Alle Preflop-Actions/Fold-Farbsystem |
+| 22. MTT Preflop Solution Coverage | OPEN | 0 vollständige 6/8/9-handed MTT-Preflop-Nodes | Coverage/Exact-Lookup | 6/8/9-handed BBA 10–100 BB |
+| 23. Range Matrix Redesign | PARTIAL | Gemeinsame 13×13-Matrix für River und HU-Teilspiele | Matrix-E2E/Screenshots | Vollständige Preflop-Daten fehlen |
+| 24. Action Color System | PARTIAL | Eigenständige Fold/Check/Bet/Jam-Farben und Legende | Browser/Axe | Alle Preflop-Actions/Fold-Farbsystem |
 | 25. Sichtbare Prozentwerte | DONE | Compact/Detailed mit direkt sichtbaren Prozenten | Matrix-E2E | — |
-| 26. Matrix Filter | PARTIAL | Actions, Jam, Bet, Mixed, Reach, EV umgesetzt | Matrix-E2E | Fold-Ansicht mit echtem Fold-Node |
+| 26. Matrix Filter | PARTIAL | Fold, Jam, Bet, Mixed, Reach, EV umgesetzt | Matrix-E2E | Weitere Multi-Action-Preflop-Daten |
 | 27. Pure vs Mixed | DONE | Mixed-only und proportionale Mischungen aus echten Frequenzen | Matrix-/Grade-Tests | — |
 | 28. Combo Level | DONE | Physische Combo-Details; ununterstützte/geblockte Combos ausgeschlossen | 1081-Coverage-/Provider-Tests | — |
 | 29. Trainer neu aufbauen | PARTIAL | Neuer echter Poker-Tisch-Trainer mit gespeicherten Trials | River-E2E | Breite MTT-Szenarien/Sitzungsaggregation |
@@ -51,7 +51,7 @@ and `tests/e2e/verified-river.spec.ts`. Full gate results are in PROJECT_STATUS.
 | 36. Smart Training | PARTIAL | Smart gewichtet niedrige Mastery und Fälligkeit | Service-Implementierung | Strategische Wichtigkeit und volle Priorisierung |
 | 37. Postflop Solver Data | PARTIAL | Ein echter River-Solver-Node; Cash-Sandbox bleibt explizit separat | Mathematik/Browser | Breite Flop/Turn/River-Daten |
 | 38. Postflop Betting Trees | PARTIAL | Gelöster River Check/50%-Bet/Jam/Fold/Call-Baum | Tree-/Payout-/BR-Tests | Weitere Größen/Raises/Straßen |
-| 39. Solver Compute Budget | PARTIAL | CLI-Compute außerhalb Web-Requests; priorisierte Queue vorhanden | Ausgeführte Solverläufe | Budgetierter Worker und Kostensteuerung |
+| 39. Solver Compute Budget | PARTIAL | CLI-Compute außerhalb Web-Requests; budgetierter lokaler HU-Worker ausgeführt | Ausgeführte Solverläufe | Hosted Worker und Solver-Peak-RSS-Messung |
 | 40. On-Demand Solving | PARTIAL | CLI-Neuberechnung tatsächlich ausführbar | solve:nlhe + verify-nlhe | On-demand Web-Jobs weiterer Kontexte |
 | 41. Solution Database | PARTIAL | Atomare zertifizierte Publikation und Exact Lookup | PGlite/PG-Integration | Breites Archiv und Modelle |
 | 42. AI Coach | OPEN | Keine AI-Coach-Anbindung | Kein Feature behauptet | Solvergestützter Coach |
@@ -68,7 +68,7 @@ and `tests/e2e/verified-river.spec.ts`. Full gate results are in PROJECT_STATUS.
 | 53. Provenance sichtbar | DONE | Quelle, Version, Lizenz, Messung, Prüfer und Scope sichtbar | Provenance-Panel/QA | — |
 | 54. Training Safety | PARTIAL | Regulärer neuer Trainer nur freigegebene Solutions | Gate-/Authtests | Vollständige Experimental-Opt-in-Settings |
 | 55. Data Quality Dashboard | PARTIAL | Reports/Fehler in DB; River-Provenance sichtbar | Publikationsintegration | Developer Quality Dashboard |
-| 56. Coverage Heatmap | OPEN | Ehrliche Null-Preflop-Coverage und ein separater River-Node | UI und Lookup | Interaktive Coverage Heatmap |
+| 56. Coverage Heatmap | PARTIAL | Datenbankgeprüfte Tabelle: 18 HU-Teilspiele; 3/6h unavailable | Coverage-API, Browser | Vollständige Preflop-/Multiway-Coverage |
 | 57. Tests | PARTIAL | Reale Solver-/BR-/EV-/Recall-/SRS-/Persistenz-/Browsertests | Lokale Gates + CI | Tests für noch offene Funktionen |
 | 58. Geforderter E2E-Fluss | OPEN | River-Ersatzpfad besteht; geforderter 8h/15BB/HJ-Preflop-Pfad fehlt | River-E2E, MTT UNAVAILABLE | Echter geforderter Preflop-Node |
 | 59. Legacy Approximation | DONE | Approximation bleibt in klar getrennter Sandbox | Bestehende und neue Browserflows | — |
@@ -80,7 +80,12 @@ and `tests/e2e/verified-river.spec.ts`. Full gate results are in PROJECT_STATUS.
 | 65. Definition of Done | OPEN | V3 ausdrücklich nicht abgeschlossen | Coverage weiterhin 0 Preflop | Mehrere echte MTT-Stacks/Positionen |
 | 66. Ultimatives Produktziel | OPEN | Nur enges verifiziertes Teilspiel nutzbar | Umfang ausdrücklich sichtbar | Umfassendes adaptives MTT-GTO-Studium |
 
-**Coverage:** 1 conditional NLHE river root, 8 supported Hero combos, 56 compatible
+**New evidence:** [actual preflop flow](qa/verified-preflop.md),
+[calibration](qa/preflop-calibration.json), `preflop-verification.test.ts`,
+`verified-preflop.test.ts`, `verified-preflop.spec.ts`. HU DoD remains incomplete:
+only fixed 26-combo inputs and Fold/Jam, no limp/small raises or full prior.
+
+**Coverage:** 18 conditional HU push/fold roots (nine stacks × NONE/BBA), plus 1 conditional NLHE river root, 8 supported Hero combos, 56 compatible
 physical deals; **0 MTT preflop nodes** at requested 6/8/9-handed BBA 10–100 BB.
 No merge or deployment is implied. ICM/PKO, imported verified datasets and full
 multiway preflop remain unavailable.

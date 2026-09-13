@@ -729,3 +729,10 @@
 @media(max-width:1150px){.verified-range-layout{grid-template-columns:1fr}.verified-detail{max-width:none}.verified-detail .verified-bars{max-width:600px}}
 @media(max-width:600px){.verified-felt .nlhe-card{padding:4px}.verified-felt .nlhe-card b,.verified-felt .nlhe-card>span{font-size:16px}}
 @media(max-width:600px){.verified-scope,.verified-detail,.verified-decision,.verified-feedback,.verified-progress{padding:18px}.verified-poker-table{height:510px}.verified-seat{width:74px;font-size:9px;padding:8px 3px;min-height:68px}.verified-seat-position{font-size:11px}.verified-seat.hero{width:118px}.verified-felt{inset:12% 5%;border-width:7px;border-radius:45%}.verified-felt .nlhe-card{width:29px;height:43px;font-size:15px}.verified-felt .nlhe-cards{gap:3px}.verified-felt>small{font-size:9px}.verified-felt>strong{font-size:13px}.verified-action-buttons{gap:7px}.verified-action-buttons button{font-size:12px;min-height:58px}.verified-recall{gap:8px}.verified-provenance dl{grid-template-columns:1fr}.verified-toolbar label{flex:1}.verified-tabs button{font-size:12px;padding:9px}.verified-entry{padding:18px}.verified-dealer{right:-20px;top:-22px}}
+
+/* Same premium table and matrix for exact preflop and river. */
+.verified-color-fold { background: #6687c8; }
+.verified-legend.fold { color: #b7cdf4; }
+.verified-action-fold { background: #8fabdf; border-color: #8fabdf; }
+.verified-card-backs { display: flex; gap: 3px; justify-content: center; margin-top: 5px; }
+.verified-card-backs i { display: block; width: 17px; height: 23px; border: 1px solid #8297b5; border-radius: 3px; background: repeating-linear-gradient(45deg,#253652,#253652 3px,#354b70 3px,#354b70 5px); }

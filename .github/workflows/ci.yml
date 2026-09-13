@@ -48,6 +48,9 @@ jobs:
       - run: python -m pip install -r scripts/solver-requirements.txt
       - run: pnpm solve:nlhe output/regenerated-river.json
       - run: pnpm exec tsx scripts/verify-nlhe.ts output/regenerated-river.json
+      - run: python scripts/preflop_equity.py generate output/preflop-generator-equity.json
+      - run: pnpm solve:preflop 15 1 output/regenerated-preflop.json
+      - run: pnpm verify:nlhe output/regenerated-preflop.json
       - run: pnpm typecheck
       - run: pnpm lint
       - run: pnpm test:unit

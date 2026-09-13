@@ -109,3 +109,21 @@ regret or recall distance, and derives mastery/review dates from saved history.
 User deletion cascades; exports include the new data. `/mtt/river` keeps verifier
 and solver dependencies out of client bundles with type-only contracts and
 authenticated APIs. See [executed evidence](qa/verified-river.md).
+
+
+## Conditional HU preflop extension (2026-09-13)
+
+The existing trust boundary also permits `nlhe-hu-conditional-pushfold-v1` at nine
+explicit stacks and NONE/BBA 1. `preflop-definition.ts` binds the full two-seat
+stack vector, BTN/SB identity, action restriction and fixed physical input ranges.
+The Python generator solves two security LPs with its exhaustively generated
+payoffs. The separate TypeScript preflop verifier uses pinned, independently
+re-enumerated equity counts, public ledger replay and information-set BR. Full
+coverage includes all 1326 physical rows but only 26 positive-support rows.
+
+`verified-training.ts` selects an exact approved river/preflop context and retains
+artifact-checksum-scoped persistence. The same matrix/recall/mastery UI and shared
+`PokerTable` render both. No Python/solver computation runs in web requests;
+publication rechecks the profile against approved evidence. The bounded local
+CLI worker persists real execution states and metrics. No full HU, multi-action,
+3-handed or 6-handed solution is inferred from this conditional path.

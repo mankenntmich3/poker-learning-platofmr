@@ -1,2 +1,6 @@
 numpy==2.3.5
 scipy==1.16.2
+
+# Offline exact preflop equity only (permissive BSD licenses).
+numba==0.63.1
+llvmlite==0.46.0

@@ -9,7 +9,7 @@ describe('independent publication trust boundary',()=>{
   it('distinguishes complete structure from mathematical verification',()=>{
     const a=untrustedSolution();
     expect(validateSolutionStructure(a).status).toBe('STRUCTURALLY_VALID');
-    expect(verifyForPublication(a)).toMatchObject({status:'FAILED_VALIDATION',quality:null,policyVersion:'rangeform-verification-v3-river1'});
+    expect(verifyForPublication(a)).toMatchObject({status:'FAILED_VALIDATION',quality:null,policyVersion:'rangeform-verification-v3-preflop1'});
     expect(mayTrainAsGto(a)).toBe(false);
   });
   it('ignores self-reported zero exploitability, loose thresholds and a forged VERIFIED flag',()=>{

@@ -1,0 +1,113 @@
+{
+  "scope": "PAYOFF_BENCHMARK_ONLY_NOT_SOLVER_OR_STRATEGY",
+  "uniformPhysicalOrderedDealsBeforeSuitSymmetry": {
+    "2": 1624350,
+    "3": 1832266800,
+    "6": 1544626032777828000
+  },
+  "benchmarks": [
+    {
+      "players": 3,
+      "holes": [
+        "As",
+        "Kh",
+        "Qc",
+        "Qd",
+        "Ah",
+        "5h"
+      ],
+      "method": "direct_seven",
+      "boards": 1370754,
+      "splitBoards": 17361,
+      "shareUnits": [
+        26273620,
+        44130700,
+        11840920
+      ],
+      "shareDenominator": 82245240,
+      "runtimeSeconds": 6.796070799999143
+    },
+    {
+      "players": 3,
+      "holes": [
+        "As",
+        "Kh",
+        "Qc",
+        "Qd",
+        "Ah",
+        "5h"
+      ],
+      "method": "independent_best_five",
+      "boards": 1370754,
+      "splitBoards": 17361,
+      "shareUnits": [
+        26273620,
+        44130700,
+        11840920
+      ],
+      "shareDenominator": 82245240,
+      "runtimeSeconds": 128.10608499999944
+    },
+    {
+      "players": 6,
+      "holes": [
+        "As",
+        "Kh",
+        "Qc",
+        "Qd",
+        "Ah",
+        "5h",
+        "7c",
+        "6c",
+        "Jd",
+        "Td",
+        "9s",
+        "8s"
+      ],
+      "method": "direct_seven",
+      "boards": 658008,
+      "splitBoards": 3068,
+      "shareUnits": [
+        5997080,
+        9248570,
+        5364200,
+        6673010,
+        6356990,
+        5840630
+      ],
+      "shareDenominator": 39480480,
+      "runtimeSeconds": 3.8017770999977074
+    },
+    {
+      "players": 6,
+      "holes": [
+        "As",
+        "Kh",
+        "Qc",
+        "Qd",
+        "Ah",
+        "5h",
+        "7c",
+        "6c",
+        "Jd",
+        "Td",
+        "9s",
+        "8s"
+      ],
+      "method": "independent_best_five",
+      "boards": 658008,
+      "splitBoards": 3068,
+      "shareUnits": [
+        5997080,
+        9248570,
+        5364200,
+        6673010,
+        6356990,
+        5840630
+      ],
+      "shareDenominator": 39480480,
+      "runtimeSeconds": 126.1545159999987
+    }
+  ],
+  "limitations": "Two-player security LP cannot solve a multiplayer constant-sum game (not two-player minimax). A multiway strategy algorithm and independent unilateral BR verifier are not implemented. Showdown evaluation alone is not a preflop solution."
+}

@@ -27,7 +27,10 @@
     "test:dev-access": "playwright test --config playwright.dev.config.ts",
     "solve": "tsx scripts/solve.ts",
     "solve:nlhe": "tsx scripts/solve-nlhe.ts lp",
-    "solve:nlhe:dcfr": "tsx scripts/solve-nlhe.ts"
+    "solve:nlhe:dcfr": "tsx scripts/solve-nlhe.ts",
+    "solve:preflop": "tsx scripts/solve-preflop.ts",
+    "solve:preflop:jobs": "tsx scripts/run-preflop-jobs.ts",
+    "verify:nlhe": "tsx scripts/verify-nlhe.ts"
   },
   "dependencies": {
     "@next/env": "^16.3.4",

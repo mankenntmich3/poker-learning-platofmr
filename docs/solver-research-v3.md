@@ -94,3 +94,36 @@ model and full-profile best responses, including card removal and side pots;
 NashConv must sum unilateral improvements without applying the two-player /2
 convention. Current context/replay/queue supports preserving those parameters,
 but an executable approved multiplayer solver is not delivered in this run.
+
+
+## Executed preflop follow-up — 2026-09-13
+
+The current decision supersedes the historical no-data statement above: one
+conditional HU push/fold model is implemented, independently verified and usable
+at nine stacks with BBA/NONE. Complete HU and multiway coverage remain absent.
+See [executed scope and evidence](qa/verified-preflop.md).
+
+Rechecked primary upstream sources: [chirenonhive/poker-solver](https://github.com/chirenonhive/poker-solver),
+[amaster97/poker_solver](https://github.com/amaster97/poker_solver),
+[MatthewPDingle/GTOpen](https://github.com/MatthewPDingle/GTOpen).
+The first repository explicitly scores non-all-in closures with equity realization
+rather than solved postflop continuation; those outputs cannot validate the
+requested unrestricted limp/raise game. Existing amaster MIT/DCFR code remains
+pinned from the river evaluation. No source or data from the other candidates
+was integrated or certified based on README claims. Their unpinned latest heads
+are research leads, not reproducible execution identities.
+
+Selected execution: original Rangeform physical-combo HU security LP with the
+already pinned SciPy 1.16.2 / HiGHS 1.8.0 engine (BSD-3-Clause / MIT). Source commit
+for SciPy tag v1.16.2 is dd9a357d5945921310346226088ea8ab5c5356cc. Original local
+adapter source is identified by the canonical-LF two-file SHA-256 in
+`server/preflop-approval.ts`, plus this branch's Git commit. Two players, explicit
+full stack vector, SB/BTN 0.5, BB 1, optional BBA 1 paid from the BB stack.
+Fold/Jam versus Fold/Call only; all-in runouts exact, no postflop proxy or card
+bucketing. Exact fixed input ranges, not a complete random-deal preflop solution.
+
+Full independent enumeration took 30.7 minutes for the 21 matchup orbits; the
+current finite representation does not support unrestricted multiway. Actual
+3/6-player all-in benchmarks are recorded separately; they do not supply a
+strategy algorithm or NashConv certificate. No imported verified dataset has
+been approved and no heuristic frequencies entered normal training.

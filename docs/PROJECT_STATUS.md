@@ -2,6 +2,39 @@
 
 Repository: `mankenntmich3/poker-learning-platofmr` (confirmed spelling). Updated 2026-09-12.
 
+## Current run — conditional HU preflop works; complete HU requirement remains open
+
+Updated 2026-09-13 on the existing branch and draft PR #5. **The requested complete
+HU preflop game is NOT done.** Eighteen independently verified conditional HU
+push/fold roots now run end-to-end: 10/15/20/25/30/40/50/80/100 BB, NONE or BBA 1,
+BTN/SB Fold/Jam versus BB Fold/Call. Both seats have only the disclosed fixed
+AKo/QQ/A5s/76s inputs (26 supported physical combos each). No limp/small-raise or
+full-prior HU coverage, no 3/6-handed strategy coverage. The existing river is preserved.
+
+`/mtt/preflop?stack=15&ante=1`: shared premium PokerTable, 169-cell segmented matrix,
+physical combo selection, independently checked action EVs, EV Loss, Frequency
+Recall, exact-version saved mastery/reviews and relogin retention. Tournament has
+an actual database-backed conditional coverage table. Unsupported contexts remain
+unavailable, including supplied table-size/hero/query parameters outside this model.
+
+Solver: original HU security LP, SciPy 1.16.2 / HiGHS 1.8.0. All 35,958,384 boards
+across 21 exact suit/seat matchup orbits were enumerated twice: direct seven-card
+and independent best-five evaluators agree in every integer win/tie count.
+Independent server BR on the full profile gives HU 15 BB/BBA NashConv ~6.66e-16
+BB/hand, plus server-owned 1e-9 numerical allowance. The model's 1326 artifact rows
+include 1300 explicitly unsupported rows; these are never training recommendations.
+
+The local bounded job worker actually solved, verified and published a fresh
+artifact with durable statuses/timing. Real 3/6-player all-in benchmarks exist,
+but are not strategies. Full multiway solving and its verifier remain absent.
+Local application checks and browser flows pass; final new CI status follows below
+when available. PR remains draft; no merge or staging deployment.
+
+Evidence: [preflop execution, exact boundaries and commands](qa/verified-preflop.md),
+[calibration](qa/preflop-calibration.json), [multiway benchmark](qa/preflop-multiway-benchmark.json).
+
+## Previous run — river acceptance (historical)
+
 ## MTT GTO accuracy v3 — one working verified river subgame; V3 remains incomplete
 
 Continuing `feature/mtt-gto-accuracy-v3` and draft PR #5. The new `/mtt/river`

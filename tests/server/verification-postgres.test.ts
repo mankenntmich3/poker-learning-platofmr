@@ -17,6 +17,14 @@ describe.runIf(Boolean(process.env.TEST_DATABASE_URL))('PostgreSQL verification 
       expect(answer.feedback!.evLossBb).not.toBeNull();expect((await verifiedProgress(db,user.id)).decisions).toBe(1);
     }finally{await deleteAccount(db,user,password);await db.close();}
   });
+  it('persists exact conditional HU preflop EV feedback on PostgreSQL',async()=>{
+    const db=await createPostgresDatabase(process.env.TEST_DATABASE_URL!),password='CI-verified-preflop-only',spot={kind:'preflop' as const,stack:15,ante:1};
+    const {user}=await register(db,{name:'PG Preflop',email:`pg-preflop-${randomUUID()}@example.test`,password});
+    try{const a=await verifiedNode(db,spot);expect(a.strategies).toHaveLength(1326);
+      const q=await startVerifiedQuestion(db,user.id,'action','range',spot),answer=await answerVerifiedQuestion(db,user.id,{id:q.id,action:'jam'},spot);
+      expect(answer.feedback!.evLossBb).not.toBeNull();expect((await verifiedProgress(db,user.id,new Date(),spot)).decisions).toBe(1);
+    }finally{await deleteAccount(db,user,password);await db.close();}
+  });
   it('persists failed mathematical validation while keeping the exact node unavailable',async()=>{
     const db=await createPostgresDatabase(process.env.TEST_DATABASE_URL!),a=untrustedSolution();
     let job:string|undefined;

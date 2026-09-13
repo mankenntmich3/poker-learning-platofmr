@@ -18,7 +18,7 @@ test('Tournament ChipEV is the primary verified-only study mode', async ({ page 
   await expect(page.getByLabel('Tournament-Konfiguration')).toContainText('8-handed');
   await expect(page.getByRole('heading',{name:'HJ · Hijack'})).toBeVisible();
   await expect(page.getByRole('heading',{name:'Verified GTO solution currently unavailable.'})).toBeVisible();
-  await expect(page.getByText('0 verifizierte MTT-Nodes')).toBeVisible();
+  await expect(page.getByText('0 vollständige Preflop-Ranges')).toBeVisible();
   await page.locator('#mtt-players').selectOption('9');
   await expect(page.getByRole('img',{name:/9-handed Pokertisch/})).toBeVisible();
   await page.locator('#mtt-stack').selectOption('20');

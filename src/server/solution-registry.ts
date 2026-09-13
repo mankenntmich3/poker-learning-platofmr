@@ -6,7 +6,7 @@ import { solutionArtifactSchema, type VerifiedSolutionArtifact } from '@/solver/
 import { verifyForPublication } from './verify-solution';
 import { VERIFICATION_POLICY } from './verification-policy';
 
-export interface SolutionCoverageRow extends SqlRow { players:number; stackBb:number; anteType:string; heroPosition:string; verified:number; pending:number; failed:number }
+export interface SolutionCoverageRow extends SqlRow { players:number; stackBb:number; anteType:string; heroPosition:string; modelId:string; scope:string; verified:number; pending:number; failed:number }
 export interface SolverJobInput { context:StrategyContext; bettingTreeId:string; priority:1|2|3 }
 /** Betting-tree identifiers are content hashes, never mutable display names. */
 export function exactContextKey(context:unknown,bettingTreeId:string):string {
@@ -55,6 +55,20 @@ export async function findExactVerifiedSolution(db:Database,context:StrategyCont
   return null;
 }
 export async function solutionCoverage(db:Database):Promise<SolutionCoverageRow[]> {
-  // PRE-FLOP coverage only. Conditional river data cannot inflate it.
-  return db.query<SolutionCoverageRow>("SELECT players,stack_bb::float8 AS \"stackBb\",ante_type AS \"anteType\",hero_position AS \"heroPosition\",0::int AS verified,count(*) FILTER (WHERE status='PENDING_VALIDATION')::int AS pending,count(*) FILTER (WHERE status='FAILED_VALIDATION')::int AS failed FROM verified_solution_artifacts WHERE game='NLHE' AND game_type='TOURNAMENT' AND evaluation_model='CHIP_EV' AND jsonb_array_length(board)=0 GROUP BY players,stack_bb,ante_type,hero_position ORDER BY players,stack_bb,hero_position");
+  const rows=await db.query<{artifact:unknown;status:string;verification_policy:string;context_key:string;betting_tree_id:string;players:number;stack_bb:number;ante_type:string;hero_position:string}>("SELECT artifact,status,verification_policy,context_key,betting_tree_id,players,stack_bb,ante_type,hero_position FROM verified_solution_artifacts WHERE game='NLHE' AND game_type='TOURNAMENT' AND evaluation_model='CHIP_EV' AND jsonb_array_length(board)=0");
+  const groups=new Map<string,SolutionCoverageRow>();
+  for(const row of rows){
+    const parsed=solutionArtifactSchema.safeParse(row.artifact);
+    if(!parsed.success){
+      const key='legacy:'+row.context_key,group=groups.get(key)??{players:row.players,stackBb:Number(row.stack_bb),anteType:row.ante_type,heroPosition:row.hero_position,modelId:'UNVALIDATED_LEGACY',scope:'UNKNOWN',verified:0,pending:0,failed:0};
+      if(row.status==='FAILED_VALIDATION')group.failed++;else group.pending++;groups.set(key,group);continue;
+    }
+    const a=parsed.data,c=a.context,key=canonicalJson({context:c,modelId:a.modelId,tree:a.bettingTree.definitionSha256});
+    if(c.board.length)continue;
+    const group=groups.get(key)??{players:c.players,stackBb:Math.min(...c.stacks.map(s=>s.stackBb)),anteType:c.ante.type,heroPosition:c.hero,modelId:a.modelId,scope:c.conditioning?'CONDITIONAL_SUBGAME':'FULL_PRIOR',verified:0,pending:0,failed:0};
+    if(row.status==='VERIFIED'&&row.verification_policy===VERIFICATION_POLICY.version&&verifyForPublication(a).status==='VERIFIED'&&row.context_key===exactContextKey(c,a.bettingTree.definitionSha256)&&row.betting_tree_id===a.bettingTree.definitionSha256)group.verified=1;
+    else if(row.status==='FAILED_VALIDATION')group.failed++;else group.pending++;
+    groups.set(key,group);
+  }
+  return [...groups.values()].sort((a,b)=>a.players-b.players||a.stackBb-b.stackBb||a.heroPosition.localeCompare(b.heroPosition));
 }
