@@ -138,3 +138,13 @@ matrix → AKo → stack 20/15 switching → actual hole-card trial → jam → 
 action EVs/EV Loss → recall → persisted mastery → logout/login → retained answers.
 Existing river E2E still passes. New mobile desktop/390px flows include Axe and
 keyboard checks. Final exact-head CI result is recorded in PROJECT_STATUS.md.
+
+
+Final application validation: commit `0ef7f9ef813bf23473db618d1f319c81a0897d9e`,
+[CI run 34731503071](https://github.com/mankenntmich3/poker-learning-platofmr/actions/runs/34731503071),
+all gates successful. 100 unit, 46 PostgreSQL integration tests, seven production
+and five development browser flows; no skips. The Linux-regenerated HU artifact
+independently measured the same 6.66e-16 NashConv. Final local typecheck/build,
+100 unit tests, integration regressions and HU/river browser retests passed.
+The final visible Fold control has readable contrast; Axe now covers the actual
+preflop decision buttons as well as matrix and recall. Full HU DoD remains open.

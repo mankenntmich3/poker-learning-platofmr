@@ -1,6 +1,6 @@
 # Project status
 
-Repository: `mankenntmich3/poker-learning-platofmr` (confirmed spelling). Updated 2026-09-12.
+Repository: `mankenntmich3/poker-learning-platofmr` (confirmed spelling). Updated 2026-09-13.
 
 ## Current run — conditional HU preflop works; complete HU requirement remains open
 
@@ -27,8 +27,16 @@ include 1300 explicitly unsupported rows; these are never training recommendatio
 The local bounded job worker actually solved, verified and published a fresh
 artifact with durable statuses/timing. Real 3/6-player all-in benchmarks exist,
 but are not strategies. Full multiway solving and its verifier remain absent.
-Local application checks and browser flows pass; final new CI status follows below
-when available. PR remains draft; no merge or staging deployment.
+Application commit `0ef7f9ef813bf23473db618d1f319c81a0897d9e` passed
+[every CI gate](https://github.com/mankenntmich3/poker-learning-platofmr/actions/runs/34731503071):
+fresh Linux checkout/install, regenerated river and HU solver artifacts, all 21
+HU generator equity enumerations, independent profile verification, typecheck,
+lint, **100 unit + 46 integration tests against PostgreSQL 16**, production build,
+**7 production + 5 development browser flows**. No skipped CI tests. Local checks
+also pass; four external PostgreSQL checks are covered by that CI run. The Fold
+button contrast was corrected and the final HU decision UI passed Axe and visual
+inspection. The final follow-up changes documentation only.
+PR remains draft; no merge or staging deployment.
 
 Evidence: [preflop execution, exact boundaries and commands](qa/verified-preflop.md),
 [calibration](qa/preflop-calibration.json), [multiway benchmark](qa/preflop-multiway-benchmark.json).
