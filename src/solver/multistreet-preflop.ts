@@ -1,14 +1,16 @@
 import { allCombos, assertUniqueCards, createCombo, createDeck, type Card, type Combo } from '@/domain/cards';
-import { canonicalJson } from '@/domain/canonical';
 import { canonicalStrategyContext, type PublicEvent, type StrategyContext } from '@/domain/strategy-context';
 import { applyPublicEvent, initialTournamentState, replayPublicHistory, type TournamentState } from '@/domain/tournament-state';
 import { tournamentPayoffs } from '@/domain/tournament-payoff';
 import { treeActions, validateTree, type PreflopTreeDefinition } from '@/domain/preflop-tree';
 import type { SamplingGame, SeededRandom } from './external-sampling';
+import { encodedInformationKey, type InformationEncoding } from '@/domain/information-encoding';
 
 export interface PreflopRollout {
   state: TournamentState; holes: Combo[]; runout: Card[];
   history: PublicEvent[]; raises: number;
+  encoding?: InformationEncoding;
+  observationCache?: Map<string, { hole: Combo; deals: Card[][] }>;
 }
 /** Future cards are private chance outcomes until dealt. Info keys contain ONLY
  * the acting seat's cards and observable chronological events (perfect recall).
@@ -16,7 +18,7 @@ export interface PreflopRollout {
 export function rolloutInformationKey(rollout: PreflopRollout): string {
   const actor = rollout.state.seats.findIndex(s => s.position === rollout.state.actor);
   if (actor < 0) throw new Error('No decision.');
-  return canonicalJson({ seat: rollout.state.actor, hole: rollout.holes[actor], history: rollout.history });
+  return encodedInformationKey(rollout.state.actor!, rollout.holes[actor], rollout.history, rollout.encoding, rollout.observationCache);
 }
 export function drawPhysicalDeal(context: StrategyContext, random: SeededRandom): { holes: Combo[]; runout: Card[] } {
   const deck = createDeck().filter(c => !context.deadCards.includes(c) && !context.board.includes(c));
@@ -39,14 +41,15 @@ function raiseDepth(context: StrategyContext): number {
   }
   return count;
 }
-export function createMultistreetPreflopGame(input: StrategyContext, tree: PreflopTreeDefinition): SamplingGame<PreflopRollout> {
+export function createMultistreetPreflopGame(input: StrategyContext, tree: PreflopTreeDefinition, encoding: InformationEncoding = 'PHYSICAL'): SamplingGame<PreflopRollout> {
   const context = canonicalStrategyContext(input);
   if (context.conditioning || context.board.length || context.gameType !== 'TOURNAMENT' || context.evaluationModel !== 'CHIP_EV') throw new Error('This sampled experiment requires full-prior tournament preflop ChipEV.');
   validateTree(tree);
+  if (!['PHYSICAL', 'GLOBAL_SUIT_ISOMORPHISM_V1'].includes(encoding) || encoding !== 'PHYSICAL' && context.deadCards.length) throw new Error('Suit quotient requires an unblocked full prior.');
   const root = replayPublicHistory(context);
   return {
     players: context.players,
-    sampleRoot: random => ({ state: root, ...drawPhysicalDeal(context, random), history: context.actionHistory, raises: raiseDepth(context) }),
+    sampleRoot: random => ({ state: root, ...drawPhysicalDeal(context, random), history: context.actionHistory, raises: raiseDepth(context), encoding, observationCache: new Map() }),
     inspect: initial => {
       let rollout = initial;
       while (rollout.state.roundClosed && !rollout.state.terminal) {
@@ -64,9 +67,9 @@ export function createMultistreetPreflopGame(input: StrategyContext, tree: Prefl
   };
 }
 
-export function expectedRootInformationKeys(context: StrategyContext): string[] {
+export function expectedRootInformationKeys(context: StrategyContext, encoding: InformationEncoding = 'PHYSICAL'): string[] {
   const state = replayPublicHistory(context);
-  return allCombos(context.deadCards).map(hole => canonicalJson({ seat: state.actor, hole, history: context.actionHistory }));
+  return allCombos(context.deadCards).map(hole => encodedInformationKey(state.actor!, hole, context.actionHistory, encoding));
 }
 
 export function assertPhysicalRollout(rollout: PreflopRollout): void {

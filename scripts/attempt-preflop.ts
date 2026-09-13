@@ -9,19 +9,22 @@ import { fullPreflopPrior, MULTI_ACTION_TREE } from '../src/domain/preflop-tree'
 import { runExternalSampling } from '../src/solver/external-sampling';
 import { createMultistreetPreflopGame, expectedRootInformationKeys } from '../src/solver/multistreet-preflop';
 import { attemptFullPreflopVerification } from '../src/verification/multistreet-preflop';
+import type { InformationEncoding } from '../src/domain/information-encoding';
 
 async function main() {
 const players = Number(process.argv[2] ?? 2), stack = Number(process.argv[3] ?? 15), seconds = Number(process.argv[4] ?? 60);
 const output = process.argv[5] ?? `output/preflop-attempt-${players}-${stack}.json`;
 const treeMode = process.argv[6] ?? 'multi-action', ante = Number(process.argv[7] ?? 1);
+const encoding: InformationEncoding = process.argv[8] === 'suit' ? 'GLOBAL_SUIT_ISOMORPHISM_V1' : 'PHYSICAL';
+if (process.argv[8] && !['suit', 'physical'].includes(process.argv[8])) throw new Error('Information encoding: physical or suit.');
 if (![2, 3, 6].includes(players) || !Number.isFinite(stack) || stack < 10 || stack > 100 || !Number.isInteger(seconds) || seconds < 1 || seconds > 600 || !['multi-action', 'push-fold'].includes(treeMode) || ![0, 1].includes(ante)) throw new Error('Usage: attempt-preflop.ts [2|3|6] [stack 10..100] [seconds 1..600] [output] [multi-action|push-fold] [ante 0|1]');
 const context = defaultTournamentContext(players, stack);
 context.hero = positionsFor(players)[0]; context.actionHistory = [];
 context.ante = ante ? { type: 'BBA', amountBb: 1 } : { type: 'NONE', amountBb: 0 };
 const c = canonicalStrategyContext(context), tree = structuredClone(MULTI_ACTION_TREE);
 if (treeMode === 'push-fold') { tree.id = 'rangeform-full-prior-pushfold-experiment-v1'; tree.preflop = { limp: false, raises: [] }; }
-const limits = { iterations: 1_000_000, runtimeMs: seconds * 1000, nodes: 20_000_000, infosets: 500_000, heapBytes: 768 * 1024 * 1024 };
-const sourceFiles = ['src/domain/cards.ts', 'src/domain/canonical.ts', 'src/domain/chips.ts', 'src/domain/positions.ts', 'src/domain/strategy-context.ts', 'src/domain/preflop-tree.ts', 'src/domain/tournament-state.ts', 'src/domain/tournament-payoff.ts', 'src/domain/equity.ts', 'src/solver/external-sampling.ts', 'src/solver/multistreet-preflop.ts'];
+const limits = { iterations: 1_000_000, runtimeMs: seconds * 1000, nodes: 20_000_000, infosets: encoding === 'PHYSICAL' ? 500_000 : 2_000_000, heapBytes: (encoding === 'PHYSICAL' ? 768 : 1536) * 1024 * 1024 };
+const sourceFiles = ['src/domain/information-encoding.ts', 'src/domain/cards.ts', 'src/domain/canonical.ts', 'src/domain/chips.ts', 'src/domain/positions.ts', 'src/domain/strategy-context.ts', 'src/domain/preflop-tree.ts', 'src/domain/tournament-state.ts', 'src/domain/tournament-payoff.ts', 'src/domain/equity.ts', 'src/solver/external-sampling.ts', 'src/solver/multistreet-preflop.ts'];
 const source = await Promise.all(sourceFiles.map(async file => [file, await readFile(file, 'utf8')] as const));
 const buildHash = createHash('sha256');
 for (const [file, contents] of source) buildHash.update(file + '\n' + contents.replace(/\r\n/g, '\n'));
@@ -29,13 +32,15 @@ const verifierFiles = ['src/domain/holdem.ts', 'src/verification/exact-best-resp
 const verifierHash = createHash('sha256');
 for (const file of verifierFiles) verifierHash.update(file + '\n' + (await readFile(file, 'utf8')).replace(/\r\n/g, '\n'));
 console.log(JSON.stringify({ started: true, players, stack, ante: c.ante, expectedCombos: fullPreflopPrior(c).length, limits }));
-const result = runExternalSampling(createMultistreetPreflopGame(c, tree), 20260913, limits);
-const expected = expectedRootInformationKeys(c);
+const result = runExternalSampling(createMultistreetPreflopGame(c, tree, encoding), 20260913, limits);
+const expected = expectedRootInformationKeys(c, encoding);
 const roots = expected.map(key => ({ key, ...result.profile[key], learned: (result.profile[key]?.averageSamples ?? 0) > 0 }));
-const { profile, ...metrics } = result;
-const verification = attemptFullPreflopVerification(c, tree, profile, { nodes: 20_000, runtimeMs: 10_000 });
+const { profile, observedRootInformationSets, ...metrics } = result;
+const observedRootKeys = new Set(observedRootInformationSets);
+const verification = attemptFullPreflopVerification(c, tree, profile, { nodes: 20_000, runtimeMs: 10_000 }, encoding);
 const report = {
   schemaVersion: 'PREFLOP_EXPERIMENT_1', publishable: false,
+  informationEncoding: encoding,
   rangeScope: 'FULL_PRIOR_UNVERIFIED', treeScope: treeMode === 'push-fold' ? 'PUSH_FOLD_ONLY' : 'PARTIAL_TREE',
   context: c, tree, prior: 'UNIFORM_PHYSICAL_WITHOUT_REPLACEMENT',
   contextSha256: createHash('sha256').update(canonicalJson(c)).digest('hex'),
@@ -45,7 +50,7 @@ const report = {
   baseCommit: execFileSync('git', ['rev-parse', 'HEAD'], { encoding: 'utf8' }).trim(),
   hardware: { cpu: cpus()[0]?.model, logicalCpus: cpus().length, memoryBytes: totalmem(), node: process.version },
   limits, ...metrics, expectedRootCombos: expected.length,
-  visitedRootCombos: expected.filter(key => Object.hasOwn(profile, key)).length,
+  visitedRootCombos: expected.filter(key => observedRootKeys.has(key)).length,
   averagedRootCombos: roots.filter(r => r.learned).length,
   verification,
   roots, profile,

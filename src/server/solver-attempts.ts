@@ -10,6 +10,7 @@ const nonnegative = z.number().finite().nonnegative();
 const sha = z.string().regex(/^[a-f0-9]{64}$/);
 const attempt = z.object({
   schemaVersion: z.literal('PREFLOP_EXPERIMENT_1'), publishable: z.literal(false),
+  informationEncoding: z.enum(['PHYSICAL', 'GLOBAL_SUIT_ISOMORPHISM_V1']).optional(),
   context: strategyContextSchema, contextSha256: sha, treeSha256: sha, sourceSha256: sha,
   status: z.enum(['COMPUTE_LIMIT', 'NON_CONVERGED']), reason: z.string().min(1),
   iterations: nonnegative, completedRegretTraversals: nonnegative, nodes: nonnegative,

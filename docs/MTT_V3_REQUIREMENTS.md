@@ -1,5 +1,10 @@
 # V3 — requirement-by-requirement audit
 
+Latest evidence: [HU scalability follow-up](qa/hu-scalable-verification.md).
+Actual legal deviations statistically reject both new full-prior HU candidates.
+No new VERIFIED node or completed requirement is inferred from this lower-bound
+test or the lossless suit-encoding optimization. V3 remains incomplete.
+
 Updated 2026-09-13. Continues draft PR #5; **V3 is not complete**. The original
 [66-point specification](MTT_GTO_V3_SPEC.md) remains authoritative. DONE describes
 an implemented and tested behavior, not broad solver coverage. Every current

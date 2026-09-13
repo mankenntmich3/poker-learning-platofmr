@@ -1,0 +1,222 @@
+{
+  "candidateSha256": "5a173275c1d099afe128b087174cc1f577cd0c0a3ecca2cc41f5809bd20411eb",
+  "context": {
+    "schemaVersion": 2,
+    "rulesVersion": "rangeform-nlhe-public-v1",
+    "game": "NLHE",
+    "gameType": "TOURNAMENT",
+    "evaluationModel": "CHIP_EV",
+    "evaluation": {
+      "model": "CHIP_EV"
+    },
+    "players": 2,
+    "blinds": {
+      "sbBb": 0.5,
+      "bbBb": 1
+    },
+    "postingOrder": "BLINDS_FIRST",
+    "ante": {
+      "type": "BBA",
+      "amountBb": 1
+    },
+    "rake": {
+      "type": "NONE"
+    },
+    "stacks": [
+      {
+        "position": "BTN",
+        "stackBb": 15
+      },
+      {
+        "position": "BB",
+        "stackBb": 15
+      }
+    ],
+    "hero": "BTN",
+    "actionHistory": [],
+    "board": [],
+    "deadCards": []
+  },
+  "tree": {
+    "version": 1,
+    "id": "rangeform-preflop-multistreet-v1",
+    "preflop": {
+      "limp": true,
+      "raises": [
+        [
+          {
+            "kind": "TO_BB",
+            "value": 2
+          },
+          {
+            "kind": "TO_BB",
+            "value": 2.2
+          }
+        ],
+        [
+          {
+            "kind": "TO_BB",
+            "value": 5
+          },
+          {
+            "kind": "TO_BB",
+            "value": 6
+          }
+        ],
+        [
+          {
+            "kind": "TO_BB",
+            "value": 10
+          }
+        ]
+      ]
+    },
+    "postflop": {
+      "raises": [
+        [
+          {
+            "kind": "POT_AFTER_CALL",
+            "value": 0.5
+          }
+        ]
+      ]
+    },
+    "jam": true,
+    "continuation": "PLAY_TO_TERMINAL",
+    "cardAbstraction": "NONE",
+    "splitPot": "FRACTIONAL_CHIP_EV"
+  },
+  "verifierSourceSha256": "69c89077c6102098f40222765e71b5dee2101cf22d00e6cc6c37bee09c740607",
+  "verifierSourceFiles": [
+    "src/verification/preflop-deviations.ts",
+    "src/verification/multistreet-preflop.ts",
+    "src/domain/holdem.ts",
+    "src/domain/tournament-state.ts",
+    "src/domain/preflop-tree.ts",
+    "src/domain/strategy-context.ts",
+    "src/domain/information-encoding.ts",
+    "src/domain/cards.ts",
+    "src/domain/canonical.ts",
+    "src/domain/chips.ts",
+    "src/domain/positions.ts"
+  ],
+  "method": "INDEPENDENT_FIXED_DEVIATION_EMPIRICAL_BERNSTEIN_V1",
+  "publicationEligible": false,
+  "status": "POSITIVE_DEVIATION_WITNESS",
+  "requestedSamples": 20000,
+  "completedSamples": 20000,
+  "seed": "d54d01d9070e93d13c02a8b476c7d18c3b0006d43ead57ee208ff8cb881fe71d",
+  "randomGenerator": "AES_256_CTR_REJECTION_SHUFFLE",
+  "confidenceAssumption": "IID_RANDOM_DRAWS_IDEALIZATION_OF_RECORDED_CRYPTOGRAPHIC_STREAM",
+  "familywiseFailureProbability": 1e-9,
+  "supportWidthBb": 60,
+  "baseline": [
+    {
+      "n": 20000,
+      "mean": 0.3566649999999993,
+      "m2": 1693080.911555502
+    },
+    {
+      "n": 20000,
+      "mean": -0.3566649999999993,
+      "m2": 1693080.911555502
+    }
+  ],
+  "witnesses": [
+    {
+      "player": 0,
+      "rule": "ROOT_ACTION",
+      "actionId": "fold",
+      "n": 20000,
+      "mean": -0.8566650000000052,
+      "m2": 1693080.9115555023,
+      "variance": 84.6582784916997,
+      "lowerGainBb": -1.4690805608605164
+    },
+    {
+      "player": 0,
+      "rule": "ROOT_ACTION",
+      "actionId": "limp",
+      "n": 20000,
+      "mean": -0.14890000000000062,
+      "m2": 1354546.77579999,
+      "variance": 67.73072532626581,
+      "lowerGainBb": -0.7141248208035984
+    },
+    {
+      "player": 0,
+      "rule": "ROOT_ACTION",
+      "actionId": "raise-20000",
+      "n": 20000,
+      "mean": -0.27898999999999713,
+      "m2": 1435573.9515980007,
+      "variance": 71.78228669423474,
+      "lowerGainBb": -0.8560024729412856
+    },
+    {
+      "player": 0,
+      "rule": "ROOT_ACTION",
+      "actionId": "raise-22000",
+      "n": 20000,
+      "mean": -0.25245499999999815,
+      "m2": 1383731.1994594957,
+      "variance": 69.19001947394848,
+      "lowerGainBb": -0.821965116849793
+    },
+    {
+      "player": 0,
+      "rule": "ROOT_ACTION",
+      "actionId": "jam",
+      "n": 20000,
+      "mean": 0.0055850000000001,
+      "m2": 1289666.0861555003,
+      "variance": 64.48652863420672,
+      "lowerGainBb": -0.5499444985036455
+    },
+    {
+      "player": 0,
+      "rule": "POSTFLOP_CHECK_CALL",
+      "n": 20000,
+      "mean": 0.30797999999999837,
+      "m2": 426546.64639200305,
+      "variance": 21.32839873953713,
+      "lowerGainBb": -0.0817432191067412
+    },
+    {
+      "player": 0,
+      "rule": "POSTFLOP_JAM",
+      "n": 20000,
+      "mean": 0.4604449999999993,
+      "m2": 359744.7380394998,
+      "variance": 17.98813630879043,
+      "lowerGainBb": 0.08904291362555822
+    },
+    {
+      "player": 1,
+      "rule": "POSTFLOP_CHECK_CALL",
+      "n": 20000,
+      "mean": -0.2751250000000015,
+      "m2": 387065.6746874974,
+      "variance": 19.354251446947217,
+      "lowerGainBb": -0.6542099902952474
+    },
+    {
+      "player": 1,
+      "rule": "POSTFLOP_JAM",
+      "n": 20000,
+      "mean": 0.108315,
+      "m2": 240357.92721549925,
+      "variance": 12.018497285639244,
+      "lowerGainBb": -0.2254525046755791
+    }
+  ],
+  "lowerByPlayer": [
+    0.08904291362555822,
+    0
+  ],
+  "nashConvLowerBoundBb": 0.08904291362555822,
+  "nashConvUpperBoundBb": null,
+  "nodes": 851381,
+  "defaultLookups": 124380,
+  "runtimeMs": 30681.200800000002
+}

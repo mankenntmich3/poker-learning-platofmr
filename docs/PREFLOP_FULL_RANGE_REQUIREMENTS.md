@@ -1,5 +1,10 @@
 # Full-prior preflop follow-up: requirements 0–53
 
+Latest HU follow-up: [lossless suit encoding and independent quantitative
+rejection](qa/hu-scalable-verification.md). Neither the previous nor optimized
+candidate is sufficiently accurate. Requirements 1/2/7/8/9/43/48 remain open or
+partial; a scalable rejection lower bound is not successful BR certification.
+
 2026-09-13. **Definition of Done NOT met; PR #5 remains Draft; no staging update.**
 DONE below means a tested implementation of that particular requirement. It
 never converts a sampled candidate, generic interface or bounded failed verifier

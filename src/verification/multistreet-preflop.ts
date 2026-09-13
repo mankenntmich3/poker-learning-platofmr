@@ -3,13 +3,13 @@
  * never an exploitability certificate. Public rules/tree definitions are shared.
  */
 import { allCombos, assertUniqueCards, createDeck, type Card, type Combo } from '@/domain/cards';
-import { canonicalJson } from '@/domain/canonical';
 import { CHIP_UNITS_PER_BB } from '@/domain/chips';
 import { evaluateHoldem } from '@/domain/holdem';
 import { treeActions, validateTree, type PreflopTreeDefinition } from '@/domain/preflop-tree';
 import { canonicalStrategyContext, type PublicEvent, type StrategyContext } from '@/domain/strategy-context';
 import { applyPublicEvent, initialTournamentState, replayPublicHistory, type TournamentState } from '@/domain/tournament-state';
 import { measureCounterfactualBestResponses, type BehavioralProfile, type GameNode } from './exact-best-response';
+import { encodedInformationKey, type InformationEncoding } from '@/domain/information-encoding';
 
 /** Separate payout construction: partition live chip intervals using all seat
  * endpoints, then award the shared dead ante pool. Five-card oracle, not the
@@ -59,11 +59,12 @@ export function countFullChanceDeals(players: number, deadCards = 0): bigint {
 }
 
 export function attemptFullPreflopVerification(input: StrategyContext, tree: PreflopTreeDefinition,
-  candidate: Record<string, { actions: Record<string, number> }>, budget: PreflopVerificationBudget) {
+  candidate: Record<string, { actions: Record<string, number> }>, budget: PreflopVerificationBudget, encoding: InformationEncoding = 'PHYSICAL') {
   const started = performance.now(), context = canonicalStrategyContext(input);
   if (context.conditioning || context.board.length || context.gameType !== 'TOURNAMENT' || context.evaluationModel !== 'CHIP_EV') throw new Error('Only full physical preflop tournament ChipEV.');
   if (!Number.isInteger(budget.nodes) || budget.nodes < 1 || budget.nodes > 45_000 || !Number.isInteger(budget.runtimeMs) || budget.runtimeMs < 1) throw new Error('Invalid independent verification budget.');
   validateTree(tree);
+  if (!['PHYSICAL', 'GLOBAL_SUIT_ISOMORPHISM_V1'].includes(encoding) || encoding !== 'PHYSICAL' && context.deadCards.length) throw new Error('Unsupported suit quotient context.');
   const profile: BehavioralProfile = {}, publicRoot = replayPublicHistory(context);
   let nodes = 0, terminalPayoffs = 0, dealsStarted = 0, visitedCandidateInfosets = 0, uniformDefaultInfosets = 0;
   class Limit extends Error {}
@@ -82,7 +83,7 @@ export function attemptFullPreflopVerification(input: StrategyContext, tree: Pre
       return build(applyPublicEvent(state, event), [...history, event], 0, holes, runout);
     }
     const player = state.seats.findIndex(s => s.position === state.actor);
-    const key = canonicalJson({ seat: state.actor, hole: holes[player], history });
+    const key = encodedInformationKey(state.actor!, holes[player], history, encoding);
     const edges = treeActions(state, raises, tree), ids = edges.map(e => e.id);
     const policy = candidate[key]?.actions ?? Object.fromEntries(ids.map(id => [id, 1 / ids.length]));
     if (Object.keys(policy).sort().join('|') !== [...ids].sort().join('|') || Object.values(policy).some(n => !Number.isFinite(n) || n < 0 || n > 1)

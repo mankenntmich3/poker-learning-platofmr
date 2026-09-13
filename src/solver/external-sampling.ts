@@ -42,6 +42,8 @@ export interface SamplingResult {
   algorithm: 'EXTERNAL_SAMPLING_MCCFR_IMPORTANCE_AVERAGING_V1'; seed: number;
   defaultPolicy: 'UNIFORM_UNVISITED_INFORMATION_SETS';
   nashConv: null; exploitability: null;
+  observedRootInformationSets: string[];
+  unaveragedInformationSets: number;
   profile: Record<string, { actions: Record<string, number>; averageSamples: number }>;
 }
 class ComputeLimit extends Error {}
@@ -53,7 +55,7 @@ const normalize = (weights: number[]) => {
 export function runExternalSampling<S>(game: SamplingGame<S>, seed: number, limits: SamplingLimits): SamplingResult {
   if (!Number.isInteger(game.players) || game.players < 2 || game.players > 9) throw new Error('Invalid player count.');
   for (const value of Object.values(limits)) if (!Number.isSafeInteger(value) || value < 1) throw new Error('Positive finite integer compute limits required.');
-  const rng = new SeededRandom(seed), infos = new Map<string, Info>(), started = performance.now();
+  const rng = new SeededRandom(seed), infos = new Map<string, Info>(), started = performance.now(), rootKeys = new Set<string>();
   let nodes = 0, iterations = 0, traversals = 0, peakHeapBytes = process.memoryUsage().heapUsed;
   const guard = (depth: number) => {
     if (++nodes > limits.nodes) throw new ComputeLimit('NODE_BUDGET');
@@ -90,6 +92,7 @@ export function runExternalSampling<S>(game: SamplingGame<S>, seed: number, limi
             return node.payoff[player];
           }
           const info = infoFor(node), sigma = policy(info);
+          if (depth === 0) rootKeys.add(node.key);
           if (node.player !== player) return walk(node.actions[rng.choose(sigma)].child, depth + 1);
           const values = node.actions.map(a => walk(a.child, depth + 1));
           const value = values.reduce((s, v, i) => s + v * sigma[i], 0);
@@ -111,6 +114,7 @@ export function runExternalSampling<S>(game: SamplingGame<S>, seed: number, limi
         const node = game.inspect(state);
         if (node.kind === 'terminal') break;
         const info = infoFor(node), sigma = policy(info);
+        if (depth === 0) rootKeys.add(node.key);
         const weight = ownReach[node.player] / proposalReach;
         if (!Number.isFinite(weight)) throw new ComputeLimit('IMPORTANCE_WEIGHT_OVERFLOW');
         averages.push({ info, values: sigma.map(p => p * weight) });
@@ -127,11 +131,16 @@ export function runExternalSampling<S>(game: SamplingGame<S>, seed: number, limi
     status = 'COMPUTE_LIMIT'; reason = error.message;
   }
   const profile: SamplingResult['profile'] = {};
+  let unaveragedInformationSets = 0;
   for (const [key, info] of infos) {
+    // Zero accumulated average is exactly the declared uniform default. Do not
+    // serialize hundreds of thousands of identical fallback policy objects.
+    if (!info.samples) { unaveragedInformationSets++; continue; }
     const average = normalize(info.sum);
     profile[key] = { actions: Object.fromEntries(info.actions.map((a, i) => [a, average[i]])), averageSamples: info.samples };
   }
   return { status, reason, iterations, completedRegretTraversals: traversals, nodes, infosets: infos.size,
     runtimeMs: performance.now() - started, peakHeapBytes, algorithm: 'EXTERNAL_SAMPLING_MCCFR_IMPORTANCE_AVERAGING_V1', seed,
-    defaultPolicy: 'UNIFORM_UNVISITED_INFORMATION_SETS', nashConv: null, exploitability: null, profile };
+    defaultPolicy: 'UNIFORM_UNVISITED_INFORMATION_SETS', nashConv: null, exploitability: null,
+    observedRootInformationSets: [...rootKeys], unaveragedInformationSets, profile };
 }

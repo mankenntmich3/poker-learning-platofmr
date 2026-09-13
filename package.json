@@ -32,6 +32,7 @@
     "solve:preflop:jobs": "tsx scripts/run-preflop-jobs.ts",
     "solve:preflop:attempt": "tsx scripts/attempt-preflop.ts",
     "solve:preflop:record-attempts": "tsx scripts/record-preflop-attempts.ts",
+    "verify:preflop:deviations": "tsx scripts/verify-preflop-deviations.ts",
     "verify:nlhe": "tsx scripts/verify-nlhe.ts"
   },
   "dependencies": {

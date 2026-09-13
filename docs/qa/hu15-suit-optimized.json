@@ -1,0 +1,162 @@
+{
+  "schemaVersion": "PREFLOP_EXPERIMENT_1",
+  "publishable": false,
+  "informationEncoding": "GLOBAL_SUIT_ISOMORPHISM_V1",
+  "rangeScope": "FULL_PRIOR_UNVERIFIED",
+  "treeScope": "PARTIAL_TREE",
+  "context": {
+    "schemaVersion": 2,
+    "rulesVersion": "rangeform-nlhe-public-v1",
+    "game": "NLHE",
+    "gameType": "TOURNAMENT",
+    "evaluationModel": "CHIP_EV",
+    "evaluation": {
+      "model": "CHIP_EV"
+    },
+    "players": 2,
+    "blinds": {
+      "sbBb": 0.5,
+      "bbBb": 1
+    },
+    "postingOrder": "BLINDS_FIRST",
+    "ante": {
+      "type": "BBA",
+      "amountBb": 1
+    },
+    "rake": {
+      "type": "NONE"
+    },
+    "stacks": [
+      {
+        "position": "BTN",
+        "stackBb": 15
+      },
+      {
+        "position": "BB",
+        "stackBb": 15
+      }
+    ],
+    "hero": "BTN",
+    "actionHistory": [],
+    "board": [],
+    "deadCards": []
+  },
+  "tree": {
+    "version": 1,
+    "id": "rangeform-preflop-multistreet-v1",
+    "preflop": {
+      "limp": true,
+      "raises": [
+        [
+          {
+            "kind": "TO_BB",
+            "value": 2
+          },
+          {
+            "kind": "TO_BB",
+            "value": 2.2
+          }
+        ],
+        [
+          {
+            "kind": "TO_BB",
+            "value": 5
+          },
+          {
+            "kind": "TO_BB",
+            "value": 6
+          }
+        ],
+        [
+          {
+            "kind": "TO_BB",
+            "value": 10
+          }
+        ]
+      ]
+    },
+    "postflop": {
+      "raises": [
+        [
+          {
+            "kind": "POT_AFTER_CALL",
+            "value": 0.5
+          }
+        ]
+      ]
+    },
+    "jam": true,
+    "continuation": "PLAY_TO_TERMINAL",
+    "cardAbstraction": "NONE",
+    "splitPot": "FRACTIONAL_CHIP_EV"
+  },
+  "prior": "UNIFORM_PHYSICAL_WITHOUT_REPLACEMENT",
+  "contextSha256": "42f6d57292eecca33b05ef88f70fb21b9f2c2fb08ec74fd382511f1ce5032d88",
+  "treeSha256": "8d492385f793f08c366a7195e3064f067e77c7b261b6df5c4ce7eaf6fcae1651",
+  "sourceSha256": "58dd7a1df6b4114dc55613fd24c75a436d82088c4e430b8359b8ee7d281271d8",
+  "sourceFiles": [
+    "src/domain/information-encoding.ts",
+    "src/domain/cards.ts",
+    "src/domain/canonical.ts",
+    "src/domain/chips.ts",
+    "src/domain/positions.ts",
+    "src/domain/strategy-context.ts",
+    "src/domain/preflop-tree.ts",
+    "src/domain/tournament-state.ts",
+    "src/domain/tournament-payoff.ts",
+    "src/domain/equity.ts",
+    "src/solver/external-sampling.ts",
+    "src/solver/multistreet-preflop.ts"
+  ],
+  "verifierSha256": "41d10e2d9e85228f13f0e59a618c569a9a10a73e1059b5b537fe7baa3ce9ee27",
+  "verifierFiles": [
+    "src/domain/holdem.ts",
+    "src/verification/exact-best-response.ts",
+    "src/verification/multistreet-preflop.ts"
+  ],
+  "license": "ORIGINAL_RANGEFORM_CODE_PRIVATE_REPOSITORY",
+  "baseCommit": "7b85005da6bea0001c4a6d37b08d5b5a4a060a08",
+  "hardware": {
+    "cpu": "AMD Ryzen 7 9800X3D 8-Core Processor           ",
+    "logicalCpus": 16,
+    "memoryBytes": 33455112192,
+    "node": "v24.19.0"
+  },
+  "limits": {
+    "iterations": 1000000,
+    "runtimeMs": 300000,
+    "nodes": 20000000,
+    "infosets": 2000000,
+    "heapBytes": 1610612736
+  },
+  "status": "COMPUTE_LIMIT",
+  "reason": "INFOSET_BUDGET",
+  "iterations": 70520,
+  "completedRegretTraversals": 141040,
+  "nodes": 5248052,
+  "infosets": 2000000,
+  "runtimeMs": 125037.89600000001,
+  "peakHeapBytes": 1534389280,
+  "algorithm": "EXTERNAL_SAMPLING_MCCFR_IMPORTANCE_AVERAGING_V1",
+  "seed": 20260913,
+  "defaultPolicy": "UNIFORM_UNVISITED_INFORMATION_SETS",
+  "nashConv": null,
+  "exploitability": null,
+  "unaveragedInformationSets": 1953787,
+  "expectedRootCombos": 1326,
+  "visitedRootCombos": 1326,
+  "averagedRootCombos": 1326,
+  "verification": {
+    "status": "COMPUTE_LIMIT",
+    "reason": "EXACT_TREE_NODE_BUDGET",
+    "nodes": 20001,
+    "terminalPayoffs": 10715,
+    "dealsStarted": 9,
+    "totalChanceDeals": "55627620048000",
+    "visitedCandidateInfosets": 27,
+    "uniformDefaultInfosets": 3649,
+    "runtimeMs": 655.9730999999883,
+    "report": null
+  },
+  "reportSha256": "5a173275c1d099afe128b087174cc1f577cd0c0a3ecca2cc41f5809bd20411eb"
+}

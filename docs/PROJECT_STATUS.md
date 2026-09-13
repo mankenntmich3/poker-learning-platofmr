@@ -2,7 +2,28 @@
 
 Repository: `mankenntmich3/poker-learning-platofmr` (confirmed spelling). Updated 2026-09-13.
 
-## Current run — full-prior multi-action computation attempted, not verified
+## Current run — scalable HU rejection and lossless suit encoding
+
+The previously staged work was committed/pushed as `7b85005` first; its full
+[CI passed](https://github.com/mankenntmich3/poker-learning-platofmr/actions/runs/34772240143).
+Further work stayed on HU. A new independent fixed-deviation verifier completes
+without full chance enumeration and statistically rejects both the previous
+and optimized frozen profiles: NashConv lower bounds 0.0277326 and 0.0890429
+BB/hand respectively (20000 fixed samples, stated IID assumption, familywise
+failure probability 1e-9 per candidate). **These are lower bounds for rejection,
+not an upper certificate or permission to publish.**
+
+Lossless global suit canonicalization, observation caching and sparse average
+export now work. The larger HU 15/BBA run completed 70520 iterations and visited
+5248052 nodes before the 2-million-infoset limit; all 1326 root combos remain
+represented. Postflop continuation learning is still inadequate. No new
+VERIFIED node, complete HU matrix or trainable action EVs resulted. Prompt 2
+remains incomplete. Existing conditional HU/river and UI remain intact; no
+3/6-player expansion or staging deployment in this follow-up.
+
+See [mathematics, executed evidence and remaining technical boundary](qa/hu-scalable-verification.md).
+
+## Previous run — full-prior multi-action computation attempted, not verified
 
 2026-09-13, existing branch and draft PR #5. **The new full-HU Definition of Done
 is NOT met.** Original external-sampling MCCFR now actually traverses full-prior
