@@ -99,6 +99,35 @@ Complete low in-model BR is therefore insufficient for publication. The chance
 measure needs refinement and independent holdout calibration, in addition to
 the deliberately coarse continuation needing stronger strategic validation.
 
+### D: streamed refinement of the board measure
+
+The next implemented experiment, explicitly `PREFLOP_MODEL_V2_PILOT_3`, combines
+eight independent board measures (seeds 17/29/43/101/103/107/109/113) without
+adding public nodes or private observation slots. Chance operators are accumulated
+one block at a time; an independent verifier separately accumulates three
+outcome operators. A test compares streamed results/updates with concatenated
+world evaluation on an analytic game.
+
+2,000 full CFR+ iterations took **224.42 seconds**. Training-model NashConv is
+**0.000463467**, independently checked in **1.08 seconds**. Solver operators
+occupy 36,318,784 bytes; regrets/averages remain 10,310,352 bytes. The three unseen
+board seeds 127/131/137 give individual finite-model gaps 0.04079 / 0.04314 /
+0.04138; their joint measure gives **0.0190556**. Individual and joint holdout
+numbers use different chance measures and are not interchangeable comparisons.
+The physical test remains INCONCLUSIVE. This candidate also stays unapproved.
+
+These holdout BRs optimize within sampled finite games; they are not unbiased
+estimates or confidence bounds for unrestricted physical exploitability. They
+demonstrate unresolved finite-measure sensitivity. Their absence would not by
+itself establish a practical high-quality solution either.
+
+The existing external-sampling MCCFR implementation was also executed on the
+same V2 abstraction: 256,000 iterations, 7,530,978 nodes, 65,474 observed infosets,
+3.35 seconds and approximately 100.6 MB sampled heap. Independent model NashConv
+was **0.525261**. Its averaging path left 44,670 visited infosets unaveraged at
+this budget. This further supports the full chance-operator approach for this
+specific pilot, rather than merely switching programming languages.
+
 ## Independent verification and calibration
 
 `preflop_v2_verify.py` imports no solver traversal or regret implementation.
@@ -123,10 +152,10 @@ the new verifier reproduces their known NashConv to floating-point residual
 CFR+ and DCFR on both models. This does not replace their pinned production
 implementations. Full-prior exact all-in equity calibration remains missing.
 
-Five analytic tests cover hidden-information BR, deterministic solver
+Six analytic tests cover hidden-information BR, deterministic solver
 convergence, invalid profile rejection, and equality of sparse-operator versus
 full-world updates on a known game with unrevealed signals, and all 24 global
-suit renamings / physical hand-class multiplicities. These and the
+suit renamings / physical hand-class multiplicities, and streamed chance mixtures. These and the
 existing-model calibration are added to CI.
 
 The separate physical test lifts the finite-model strategy to legal NLHE play,
@@ -154,11 +183,16 @@ updates, identical checksums. Indexed arrays: 6.4 MB buffers plus measured
 heap overhead; Map/object/string keys: about 20.5 MB measured heap growth.
 Approximately 0.019 versus 0.768 seconds in this particular storage test.
 This is **not** a TypeScript-versus-Numba poker convergence comparison.
-The actual new solver uses Python/Numba and SciPy sparse operations. No Rust or
-C++ compiler was found in PATH, Program Files or the bundled runtime search;
-the requested native traversal benchmark remains open. No native performance
-claim is made. Efficient array files are exported; resumable checkpoints are
-not yet implemented.
+The actual new solver uses Python/Numba and SciPy sparse operations. No C++
+compiler was found locally, so a standalone original C++20 kernel and an
+equivalent indexed TypeScript traversal are now executed in private Linux CI.
+They consume the same finite game, chance stream and iteration budget; their
+full numeric profiles must agree within 1e-10, then undergo the separate
+operator BR. Numba is benchmarked on that same runner with its separately
+identified random stream and additional coverage counters. Results remain
+pending until that workflow completes; no native speed claim is made yet.
+The local TS traversal (not just storage) took 2.61 seconds for 5,303,636 decision
+visits. Efficient array files are exported; resumable checkpoints are not yet implemented.
 
 Dependencies were already pinned: NumPy 2.3.5, SciPy 1.16.2, Numba 0.63.1,
 llvmlite 0.46.0, with retained third-party notices. New game/solver code is
@@ -177,6 +211,7 @@ python scripts/test_preflop_v2.py
 python scripts/calibrate-preflop-v2.py
 python scripts/benchmark-preflop-v2.py output/preflop-model-v2.json output/v2-comparison.json 10000
 python scripts/preflop_v2_sparse.py output/preflop-model-v2.json output/v2-operator.json 2000 17
+python scripts/benchmark-v2-mixture.py output/v2-mixture.json 2000
 node --expose-gc --import tsx scripts/benchmark-regret-layout.ts
 ```
 
@@ -186,7 +221,7 @@ and hard iteration limits are diagnostic compute guards, not quality thresholds.
 ## Remaining release boundary
 
 The preferred next step is controlled refinement of the board chance measure
-with these fixed-size observation operators and independent holdout checks,
+and variance-aware independent evaluation beyond the eight-block attempt,
 then draw-aware/later-street continuation refinement. Increasing the old
 physical information-set budget is not the selected path.
 
@@ -201,3 +236,13 @@ Mathematical references: [CFR+](https://arxiv.org/abs/1407.5042),
 [public chance sampling discussion](https://poker.cs.ualberta.ca/publications/2016-johanson-phd-thesis.pdf).
 These motivate the methods; measured code/results above, not citations, establish
 what this implementation actually achieves.
+
+## Validation
+
+Implementation commit `694b49cd85c1f95a2a4bd23907f46bea9b6284c7` passed the complete
+[quality workflow](https://github.com/mankenntmich3/poker-learning-platofmr/actions/runs/34803712297):
+117 unit tests, 48 PostgreSQL integration tests, seven production and five
+development browser flows, five Python analytic tests at that commit, actual
+river/conditional-HU regeneration, V2 ledger replay/calibration, typecheck,
+lint and production build. The streamed-mixture/native comparison follow-up
+adds a sixth analytic test and requires its own subsequent workflow evidence.

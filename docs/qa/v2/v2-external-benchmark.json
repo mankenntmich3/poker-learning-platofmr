@@ -1,0 +1,38 @@
+{
+  "status": "NON_CONVERGED",
+  "reason": "ITERATION_BUDGET_NO_INDEPENDENT_CERTIFICATE",
+  "iterations": 256000,
+  "completedRegretTraversals": 512000,
+  "nodes": 7530978,
+  "infosets": 65474,
+  "runtimeMs": 3354.4383000000003,
+  "peakHeapBytes": 100571256,
+  "algorithm": "EXTERNAL_SAMPLING_MCCFR_IMPORTANCE_AVERAGING_V1",
+  "seed": 17,
+  "defaultPolicy": "UNIFORM_UNVISITED_INFORMATION_SETS",
+  "nashConv": null,
+  "exploitability": null,
+  "unaveragedInformationSets": 44670,
+  "scope": "FINITE_V2_ABSTRACT_GAME",
+  "publicationEligible": false,
+  "verification": {
+    "profileValues": [
+      0.4057486669840378,
+      -0.40574866698403766
+    ],
+    "bestResponses": [
+      0.7152348602912175,
+      -0.18997354845012313
+    ],
+    "nashConv": 0.5252613118410943,
+    "exploitability": 0.26263065592054713,
+    "improvements": [
+      0.30948619330717975,
+      0.21577511853391454
+    ],
+    "scope": "COMPLETE_FINITE_MODEL_ONLY",
+    "publicationEligible": false,
+    "method": "INDEPENDENT_THREE_OUTCOME_CSR_INFORMATION_SET_BR_V1",
+    "operatorBytes": 14525016
+  }
+}

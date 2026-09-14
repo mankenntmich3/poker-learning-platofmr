@@ -53,5 +53,14 @@ class Calibration(unittest.TestCase):
         self.assertEqual(counts.sum(),1326)
         for i in range(13):
             for j in range(13):self.assertEqual(counts[i*13+j],6 if i==j else 4 if i<j else 12)
+    def test_streamed_chance_mixture_matches_full_world_reference(self):
+        other=self.data.copy();other[:,4]=2-other[:,4]
+        profile=np.full(338,.5)
+        full,_=evaluate(self.model,np.concatenate([self.data,other]),profile)
+        streamed=verify(self.model,iter([self.data,other]),profile)
+        self.assertAlmostEqual(full['nashConv'],streamed['nashConv'])
+        first,_=solve(self.model,np.concatenate([self.data,other]),5)
+        second,_=solve(self.model,iter([self.data,other]),5)
+        np.testing.assert_allclose(first,second,atol=1e-12,rtol=0)
 
 if __name__=='__main__':unittest.main()

@@ -2,6 +2,12 @@ name: Quality gates
 on:
   push:
     branches: [main]
+  workflow_dispatch:
+    inputs:
+      research_benchmarks:
+        description: Run frozen research language benchmarks
+        type: boolean
+        default: false
   pull_request:
 permissions:
   contents: read
@@ -60,6 +66,20 @@ jobs:
       - run: pnpm exec tsx scripts/export-v2-calibration.ts
       - run: python scripts/test_preflop_v2.py
       - run: python scripts/calibrate-preflop-v2.py
+      # Same-host actual numeric traversal benchmark. TS/C++ share chance draws
+      # and must produce the same profile; a separate verifier measures quality.
+      - run: python scripts/v2-language-input.py prepare
+        if: github.event_name == 'workflow_dispatch' && inputs.research_benchmarks
+      - run: g++ --version && g++ -O3 -ffp-contract=off -std=c++20 scripts/v2_native_benchmark.cpp -o output/v2-native
+        if: github.event_name == 'workflow_dispatch' && inputs.research_benchmarks
+      - run: ./output/v2-native output/v2-language-input.bin output/v2-cpp-profile.bin 1000 | tee output/v2-cpp-language.json
+        if: github.event_name == 'workflow_dispatch' && inputs.research_benchmarks
+      - run: pnpm exec tsx scripts/v2-ts-benchmark.ts output/v2-language-input.bin output/v2-ts-profile.bin 1000 | tee output/v2-ts-language.json
+        if: github.event_name == 'workflow_dispatch' && inputs.research_benchmarks
+      - run: python scripts/v2-language-input.py verify
+        if: github.event_name == 'workflow_dispatch' && inputs.research_benchmarks
+      - run: python scripts/v2-language-input.py numba
+        if: github.event_name == 'workflow_dispatch' && inputs.research_benchmarks
       - run: pnpm typecheck
       - run: pnpm lint
       - run: pnpm test:unit
@@ -75,4 +95,12 @@ jobs:
           path: |
             playwright-report/
             test-results/
+          retention-days: 14
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: solver-language-qa
+          path: |
+            output/v2-*-language.json
+            output/v2-language-verification.json
           retention-days: 14

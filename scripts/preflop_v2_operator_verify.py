@@ -8,13 +8,20 @@ import numpy as np
 from scipy.sparse import coo_matrix
 
 def verify(model,data,profile):
-    if not len(data) or not np.all(np.isfinite(profile)):raise ValueError('Invalid finite input')
-    left=54*data[:,0].astype(np.int32)+data[:,2]%54
-    right=54*data[:,1].astype(np.int32)+data[:,3]%54
-    outcome=[]
-    for k in range(3):
-        selected=data[:,4]==k
-        outcome.append(coo_matrix((np.full(int(selected.sum()),1/len(data)),(left[selected],right[selected])),shape=(9126,9126)).tocsr())
+    if not np.all(np.isfinite(profile)):raise ValueError('Invalid finite input')
+    blocks=[data] if isinstance(data,np.ndarray) else data
+    outcome=[None,None,None];root_mass=np.zeros(169);total_weight=0
+    for block in blocks:
+        if not len(block):raise ValueError('Empty chance block')
+        left=54*block[:,0].astype(np.int32)+block[:,2]%54
+        right=54*block[:,1].astype(np.int32)+block[:,3]%54
+        for k in range(3):
+            selected=block[:,4]==k
+            x=coo_matrix((np.full(int(selected.sum()),1/len(block)),(left[selected],right[selected])),shape=(9126,9126)).tocsr()
+            outcome[k]=x if outcome[k] is None else outcome[k]+x
+        root_mass+=np.bincount(block[:,0],minlength=169)/len(block);total_weight+=1
+    if not total_weight:raise ValueError('Empty chance measure')
+    outcome=[x/total_weight for x in outcome];root_mass/=total_weight
     transposed=[x.T.tocsr() for x in outcome]
     policies={};offset=0
     for i,n in enumerate(model['nodes']):
@@ -40,9 +47,9 @@ def verify(model,data,profile):
                 return result
             actions=np.column_stack([walk(child,opponent) for child in n['edges']])
             if i==0 and player==0 and not best_response:
-                probabilities=np.bincount(data[:,0],minlength=169)/len(data)
-                conditional=actions.reshape(169,54,-1).sum(axis=1)/probabilities[:,None]
-                root_action_values.extend(conditional.tolist())
+                conditional=np.divide(actions.reshape(169,54,-1).sum(axis=1),root_mass[:,None],
+                                      out=np.zeros((169,actions.shape[1])),where=root_mass[:,None]>0)
+                root_action_values.extend(row.tolist() if root_mass[i]>0 else None for i,row in enumerate(conditional))
             if not best_response:return np.sum(actions*policies[i],axis=1)
             if n['street']==0:
                 values=actions.reshape(169,54,-1).sum(axis=1)

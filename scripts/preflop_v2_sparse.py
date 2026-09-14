@@ -14,9 +14,17 @@ from preflop_v2_verify import evaluate
 
 def solve(model,data,iterations,algorithm=1):
     nodes=model['nodes'];nobs=9126
-    h=data[:,2].astype(np.int32);v=data[:,3].astype(np.int32)
-    mass=coo_matrix((np.full(len(data),1/len(data)),(h,v)),shape=(nobs,nobs)).tocsr()
-    share=coo_matrix((data[:,4]/(2.*len(data)),(h,v)),shape=(nobs,nobs)).tocsr()
+    # Each block is an equal-weight complete hole prior; build a finite mixture
+    # without materializing its combined world-by-public-node tree.
+    blocks=[data] if isinstance(data,np.ndarray) else data
+    mass=None;share=None;block_count=0
+    for block in blocks:
+        h=block[:,2].astype(np.int32);v=block[:,3].astype(np.int32)
+        p=coo_matrix((np.full(len(block),1/len(block)),(h,v)),shape=(nobs,nobs)).tocsr()
+        e=coo_matrix((block[:,4]/(2.*len(block)),(h,v)),shape=(nobs,nobs)).tocsr()
+        mass=p if mass is None else mass+p;share=e if share is None else share+e;block_count+=1
+    if not block_count:raise ValueError('Empty chance measure')
+    mass/=block_count;share/=block_count
     operators=[(mass,share),(mass.T.tocsr(),share.T.tocsr())]
     marginal=[np.asarray(mass.sum(axis=1)).ravel(),np.asarray(mass.sum(axis=0)).ravel()]
     regrets={i:np.zeros((169 if n['street']==0 else nobs,len(n['edges']))) for i,n in enumerate(nodes) if n['actor']>=0}
@@ -72,6 +80,7 @@ def solve(model,data,iterations,algorithm=1):
     return profile,{'algorithm':['FULL_CFR','FULL_CFR_PLUS_LINEAR','FULL_DCFR'][algorithm],
                     'iterations':iterations,'seconds':seconds,'publicNodeVisits':visits,'publicNodesPerSecond':visits/seconds,
                     'chanceOperatorNonzeros':mass.nnz,'chanceOperatorBytes':operator_bytes,
+                    'chanceBlocks':block_count,
                     'regretAndAverageBytes':sum(x.nbytes for x in regrets.values())*2,
                     'scope':'EXACT_OPERATOR_COMPRESSION_OF_FINITE_BOARD_MODEL','publicationEligible':False}
 

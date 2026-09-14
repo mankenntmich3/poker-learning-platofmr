@@ -1,6 +1,6 @@
 # Project status
 
-Repository: `mankenntmich3/poker-learning-platofmr` (confirmed spelling). Updated 2026-09-13.
+Repository: `mankenntmich3/poker-learning-platofmr` (confirmed spelling). Updated 2026-09-14.
 
 ## Current run — factorized abstract HU core, not release-approved (2026-09-14)
 
@@ -23,6 +23,13 @@ unstable root frequencies. The physical deviation test is only INCONCLUSIVE.
 Finite-board and continuation quality need calibration; no V2 server policy,
 publication, matrix or trainer unlock was added. PR #5 remains Draft; staging
 and the original verified conditional HU/river data remain unchanged.
+
+The next executed pilot streams eight independent board measures into the same
+fixed state space: 224.42 seconds, training-model NashConv 0.0004635, joint
+three-seed holdout gap 0.01906. It remains unapproved. A same-input TypeScript/
+C++ traversal comparison and a same-host Numba comparison are added to private
+CI. The preceding `694b49c` implementation passed every quality gate, including
+165 unit/integration tests, 12 browser flows and the new Python calibrations.
 
 [Complete measured report](qa/preflop-model-v2.md) ·
 [All 24 requirements](PREFLOP_MODEL_V2_REQUIREMENTS.md) ·

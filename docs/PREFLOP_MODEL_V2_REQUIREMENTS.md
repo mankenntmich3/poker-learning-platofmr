@@ -13,8 +13,8 @@
 | 5 | All 1326 root combos | PARTIAL | All physical hole pairs represented and class projection; board-law and symmetry calibration need release review. |
 | 6 | Public-state factorization | DONE | 104 shared numeric nodes; sparse chance operators; no JSON hot-path keys. |
 | 7 | Indexed storage / checkpoints | PARTIAL | Arrays vs Map measured, binary profiles saved; resume/checkpoint protocol absent. |
-| 8 | TS / Numba / native traversal comparison | PARTIAL | TS storage and real Numba/SciPy solving measured; native and equal-work TS traversal missing. |
-| 9 | Algorithm execution/comparison | PARTIAL | Sampled CFR/positive-regret/DCFR and full-batch calibration run; fresh LP/native/external-sampling V2 comparison missing. |
+| 8 | TS / Numba / native traversal comparison | PARTIAL pending CI | Actual TS traversal measured; equivalent C++ and Numba comparison added to private CI; results must be checked. |
+| 9 | Algorithm execution/comparison | DONE for bounded comparisons | External sampling, chance-sampled CFR variants and full-batch CFR/CFR+/DCFR executed; existing exact small LPs regenerated/calibrated. This does not imply a released equilibrium. |
 | 10 | Controlled meaningful postflop abstraction | PARTIAL | Explicit one-flop-round pilot; lacks draw/nut and later-street quality calibration. |
 | 11 | Accurate model-scoped labeling | DONE | Diagnostics explicitly unapproved; no unrestricted GTO claim or user-facing release. |
 | 12 | Two-stage verification | PARTIAL | Complete finite-model BR and physical rejection tool execute; production acceptance not established. |
@@ -27,6 +27,6 @@
 | 19 | No multiway expansion | DONE | HU only; older multiway work untouched. |
 | 20 | No product feature detours | DONE | No new UI, Academy, imports, ICM, PKO or coach work. |
 | 21 | Full success criterion | NOT MET | Strong finite-model computation result; no server-approved practical node. |
-| 22 | Compare failures and implement next design | DONE for experiments | Frozen oracle weakness quantified; sparse full-chance CFR implemented next. |
+| 22 | Compare failures and implement next design | DONE for experiments | Frozen oracle weakness quantified; sparse full-chance CFR, independent operator BR and streamed eight-block refinement then implemented and measured. |
 | 23 | Draft / no deployment / preserve data | DONE | Existing approved artifacts untouched; PR remains Draft; no staging action. |
 | 24 | Report real results and limits | DONE | Quantitative QA evidence, source hashes and explicit open items retained. |
