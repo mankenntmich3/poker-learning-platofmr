@@ -40,7 +40,8 @@ test('dynamic postflop starts a persistent exact-node training session', async (
 
 test('demo explores mixed NLHE ranges, switches stack, trains exact spot and retains progress after relogin', async ({ page }, info) => {
   await demoLogin(page); const baseline = await (await page.request.get('/api/nlhe/progress')).json();
-  await page.getByRole('link', { name: 'Preflop entdecken' }).click();
+  await page.getByRole('link', { name: 'Tournament Study öffnen' }).click();
+  await page.getByRole('link', { name: 'Cash-Sandbox öffnen' }).click();
   // Slow server navigation must not make successive controls overwrite an earlier selection.
   await page.route('**/ranges?**', async route => {
     await new Promise(resolve => setTimeout(resolve, 500));

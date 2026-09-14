@@ -68,9 +68,9 @@ test('learn, train, persist, inspect and return on desktop and mobile', async ({
   await page.getByRole('button', { name: 'Fold · Wiederholen', exact: true }).click();
   await expect(page.getByRole('heading', { name: 'Deine Entscheidung ist gespeichert.' })).toBeVisible();
   await page.goto('/');
-  await expect(page.getByRole('link', { name: 'Preflop entdecken', exact: true })).toBeVisible();
+  await expect(page.getByRole('link', { name: 'Verifiziertes HU-Teilspiel entdecken', exact: true })).toBeVisible();
   await page.reload();
-  await expect(page.getByRole('link', { name: 'Preflop entdecken', exact: true })).toBeVisible();
+  await expect(page.getByRole('link', { name: 'Verifiziertes HU-Teilspiel entdecken', exact: true })).toBeVisible();
   expect((await (await page.request.get('/api/dashboard')).json()).nlhe.decisions).toBe(11);
 
   for (const width of [320, 375, 390, 430, 768, 1024, 1280, 1440, 1920]) {
@@ -78,7 +78,7 @@ test('learn, train, persist, inspect and return on desktop and mobile', async ({
     for (const route of ['/', '/trainer', '/ranges', '/postflop']) {
       await page.goto(route);
       await expect(page.locator('h1')).toBeVisible();
-      if (route === '/') await expect(page.getByRole('link', { name: 'Preflop entdecken', exact: true })).toBeVisible();
+      if (route === '/') await expect(page.getByRole('link', { name: 'Verifiziertes HU-Teilspiel entdecken', exact: true })).toBeVisible();
       if (route === '/trainer') {
         await page.getByRole('button', { name: 'Trainingssitzung starten' }).click();
         await expect(page.getByRole('button', { name: 'Fold', exact: true })).toBeVisible();
