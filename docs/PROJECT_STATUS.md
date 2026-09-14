@@ -2,7 +2,15 @@
 
 Repository: `mankenntmich3/poker-learning-platofmr` (confirmed spelling). Updated 2026-09-13.
 
-## Current run — factorized abstract HU core, not release-approved (2026-09-14)
+## Current run — stable V3 staging preview (2026-09-14)
+
+Solver experiments are paused. The separate staging-v3-preview branch starts
+from tested 694b49c; all newer research is preserved on the feature branch at
+90efc59. PR #5 remains Draft and main is unchanged. Existing approved conditional
+HU and river flows are the preview scope; full-prior HU/3/6 remain unavailable.
+Deployment and live QA: [staging preview evidence](qa/staging-v3-preview.md).
+
+## Previous run — factorized abstract HU core, not release-approved (2026-09-14)
 
 The unabstracted terminal-play approach was replaced for new offline work by a
 104-public-node, explicit one-flop-round/checkdown pilot. All 1,624,350 legal

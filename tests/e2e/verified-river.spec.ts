@@ -12,7 +12,7 @@ test('real solver → verified database → matrix → NLHE action/recall → pe
   await page.getByRole('button',{name:'Konto erstellen und starten'}).click();
   await expect(page.getByRole('heading',{name:'River · verifiziertes Teilspiel'})).toBeVisible();
   await expect(page.getByRole('gridcell')).toHaveCount(169);
-  await expect(page.getByText('VERIFIED_SOLVER · nur dieses River-Teilspiel')).toBeVisible();
+  await expect(page.getByText('VERIFIED · nur dieses River-Teilspiel')).toBeVisible();
   await page.getByRole('gridcell',{name:/^98s:/}).click();
   await expect(page.getByRole('heading',{name:'98s · Combo-Details'})).toBeVisible();
   await page.getByRole('gridcell',{name:/^98s:/}).press('ArrowLeft');

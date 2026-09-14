@@ -1,9 +1,9 @@
 import {describe,it,expect} from 'vitest';
-import {createPostgresDatabase} from '@/server/db';
+import {createPostgresDatabase,migrate} from '@/server/db';
 import {queueSolverJob,publishVerifiedSolution,findExactVerifiedSolution} from '@/server/solution-registry';
 import {TEST_TREE_SHA,untrustedSolution} from '../fixtures/untrusted-solution';
 import {verifiedNode,startVerifiedQuestion,answerVerifiedQuestion,verifiedProgress} from '@/server/verified-training';
-import {register,deleteAccount} from '@/server/service';
+import {register,deleteAccount,completeLesson,login,dashboard} from '@/server/service';
 import {randomUUID} from 'node:crypto';
 
 describe.runIf(Boolean(process.env.TEST_DATABASE_URL))('PostgreSQL verification boundary',()=>{
@@ -15,6 +15,12 @@ describe.runIf(Boolean(process.env.TEST_DATABASE_URL))('PostgreSQL verification 
       const q=await startVerifiedQuestion(db,user.id,'action','range');
       const answer=await answerVerifiedQuestion(db,user.id,{id:q.id,action:'jam'});
       expect(answer.feedback!.evLossBb).not.toBeNull();expect((await verifiedProgress(db,user.id)).decisions).toBe(1);
+      await completeLesson(db,user,1);
+      await migrate(db); await migrate(db);
+      expect((await login(db,{email:user.email,password})).user.id).toBe(user.id);
+      expect((await dashboard(db,user)).lessonCompleted).toBe(true);
+      expect((await verifiedProgress(db,user.id)).decisions).toBe(1);
+      expect(await findExactVerifiedSolution(db,a.context,a.bettingTree.definitionSha256)).not.toBeNull();
     }finally{await deleteAccount(db,user,password);await db.close();}
   });
   it('persists exact conditional HU preflop EV feedback on PostgreSQL',async()=>{

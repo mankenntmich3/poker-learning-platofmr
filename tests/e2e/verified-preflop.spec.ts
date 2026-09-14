@@ -12,7 +12,7 @@ test('conditional HU preflop → AKo → exact EV → recall → relogin persist
   await page.getByRole('button',{name:'Konto erstellen und starten'}).click();
   await expect(page.getByRole('heading',{name:'Preflop · verifiziertes Push/Fold-Teilspiel'})).toBeVisible();
   await expect(page.getByRole('gridcell')).toHaveCount(169);
-  await expect(page.getByText('VERIFIED_SOLVER · nur konditioniertes HU-Push/Fold')).toBeVisible();
+  await expect(page.getByText('VERIFIED CONDITIONAL · HU-Push/Fold')).toBeVisible();
   await page.getByLabel('Stacktiefe').selectOption('20');
   await expect(page.getByLabel('Stacktiefe')).toHaveValue('20');
   await page.getByLabel('Stacktiefe').selectOption('15');
