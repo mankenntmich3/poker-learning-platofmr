@@ -53,6 +53,13 @@ jobs:
       - run: pnpm verify:nlhe output/regenerated-preflop.json
       # Actual full-prior multi-action execution; diagnostics cannot publish.
       - run: pnpm solve:preflop:attempt 2 15 1 output/preflop-smoke.json
+      # V2 remains diagnostic-only. Independently replay its ledger and calibrate
+      # numeric CFR/BR against the existing immutable HU and river models.
+      - run: pnpm exec tsx scripts/build-preflop-model-v2.ts
+      - run: pnpm exec tsx scripts/validate-v2-model.ts
+      - run: pnpm exec tsx scripts/export-v2-calibration.ts
+      - run: python scripts/test_preflop_v2.py
+      - run: python scripts/calibrate-preflop-v2.py
       - run: pnpm typecheck
       - run: pnpm lint
       - run: pnpm test:unit

@@ -1,0 +1,28 @@
+{
+  "node": "v24.19.0",
+  "scope": "STORAGE_ONLY_NOT_TRAVERSAL_OR_CONVERGENCE",
+  "results": [
+    {
+      "kind": "INDEXED_FLOAT64",
+      "infosets": 100000,
+      "updates": 2000000,
+      "seconds": 0.0192928,
+      "updatesPerSecond": 103665616.18842264,
+      "allocatedMs": 0.01850000000001728,
+      "heapDelta": 108664,
+      "arrayBufferDelta": 6400000,
+      "checksum": 499995
+    },
+    {
+      "kind": "STRING_MAP_OBJECT",
+      "infosets": 100000,
+      "updates": 2000000,
+      "seconds": 0.7681469,
+      "updatesPerSecond": 2603668.6472340124,
+      "allocatedMs": 30.6901,
+      "heapDelta": 20516368,
+      "arrayBufferDelta": 0,
+      "checksum": 499995
+    }
+  ]
+}

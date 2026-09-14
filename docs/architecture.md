@@ -1,5 +1,12 @@
 # Architecture
 
+Current offline V2 solver work uses shared numeric public nodes, indexed regret
+arrays and sparse joint-observation chance operators. A separate three-outcome
+CSR best-response implementation is cross-checked against full-world NumPy BR.
+This is an explicit finite-board, one-flop-round pilot; holdout board-law error
+prevents publication. No new web dependency/provider or production approval
+policy is introduced. See [executed architecture comparison](qa/preflop-model-v2.md).
+
 Rangeform is a personal poker learning application with a path to a hosted SaaS. Study Engine v2 extends the existing NLHE preflop loop into configurable heads-up flop/turn/river study. Original APPROXIMATED policies provide the initial study data; they are not equilibrium solutions. The independently computed Kuhn solution remains an internal regression.
 
 ## Study Engine v2

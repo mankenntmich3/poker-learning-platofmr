@@ -2,7 +2,33 @@
 
 Repository: `mankenntmich3/poker-learning-platofmr` (confirmed spelling). Updated 2026-09-13.
 
-## Current run — scalable HU rejection and lossless suit encoding
+## Current run — factorized abstract HU core, not release-approved (2026-09-14)
+
+The unabstracted terminal-play approach was replaced for new offline work by a
+104-public-node, explicit one-flop-round/checkdown pilot. All 1,624,350 legal
+ordered physical hole pairs are represented, with a finite sampled board law
+and explicit global suit closure. Indexed sampled CFR and separately trained
+continuation oracles were executed and compared; the frozen-prior oracle has
+unlocked NashConv 0.1135 and is not the chosen design.
+
+The subsequent exact sparse chance-operator CFR reaches complete finite-model
+NashConv **0.0003666–0.0005111 BB/hand** across three board seeds in 133–143
+seconds each. A separate three-outcome operator verifier reproduces independent
+full-world BR in about 0.18–0.19 seconds. Known conditional HU and river LP
+profiles are correctly remeasured; new deterministic solver calibration and
+independent public-tree/terminal-ledger replay execute.
+
+**No approval:** holdout board measures give NashConv **0.0516–0.0589**, with
+unstable root frequencies. The physical deviation test is only INCONCLUSIVE.
+Finite-board and continuation quality need calibration; no V2 server policy,
+publication, matrix or trainer unlock was added. PR #5 remains Draft; staging
+and the original verified conditional HU/river data remain unchanged.
+
+[Complete measured report](qa/preflop-model-v2.md) ·
+[All 24 requirements](PREFLOP_MODEL_V2_REQUIREMENTS.md) ·
+[Owner's architecture request](PREFLOP_MODEL_V2_SPEC.md).
+
+## Previous run — scalable HU rejection and lossless suit encoding
 
 The previously staged work was committed/pushed as `7b85005` first; its full
 [CI passed](https://github.com/mankenntmich3/poker-learning-platofmr/actions/runs/34772240143).

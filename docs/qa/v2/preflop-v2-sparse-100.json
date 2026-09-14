@@ -1,0 +1,32 @@
+{
+  "algorithm": "FULL_CFR_PLUS_LINEAR",
+  "iterations": 100,
+  "seconds": 6.428758200001539,
+  "publicNodeVisits": 20800,
+  "publicNodesPerSecond": 3235.4615546117475,
+  "chanceOperatorNonzeros": 429710,
+  "chanceOperatorBytes": 20772112,
+  "regretAndAverageBytes": 10310352,
+  "scope": "EXACT_OPERATOR_COMPRESSION_OF_FINITE_BOARD_MODEL",
+  "publicationEligible": false,
+  "verificationSeconds": 4.155366299999514,
+  "verification": {
+    "profileValues": [
+      0.41115253014738923,
+      -0.41115253014738923
+    ],
+    "bestResponses": [
+      0.43394226705597194,
+      -0.388031797335221
+    ],
+    "improvements": [
+      0.022789736908582714,
+      0.023120732812168254
+    ],
+    "nashConv": 0.04591046972075097,
+    "exploitability": 0.022955234860375484,
+    "worldNodeVisits": 506797200,
+    "scope": "COMPLETE_FINITE_MODEL_ONLY",
+    "publicationEligible": false
+  }
+}

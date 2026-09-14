@@ -82,7 +82,7 @@ export function measurePreflopDeviations(input: FrozenPreflopCandidate, seed: st
       if (forced && !chosen) throw new Error('Illegal predeclared deviation.');
       if (!chosen) {
         const key = encodedInformationKey(state.actor!, holes[actor], history, input.informationEncoding, cache), row = input.profile[key];
-        if (!row && !mapping) defaultLookups++;
+        if (!row) defaultLookups++;
         const policy = mapping ? mapping(state, holes[actor], history, edges.map(e => e.id)) : row?.actions ?? Object.fromEntries(edges.map(e => [e.id, 1 / edges.length]));
         if (Object.keys(policy).sort().join('|') !== edges.map(e => e.id).sort().join('|') || Object.values(policy).some(p => !Number.isFinite(p) || p < 0 || p > 1) || Math.abs(Object.values(policy).reduce((s, p) => s + p, 0) - 1) > 1e-10) throw new Error('Invalid frozen policy.');
         let draw = draws[depth]; chosen = edges.at(-1)!;

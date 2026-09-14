@@ -47,4 +47,8 @@ describe('independent scalable deviation bounds and exact suit identity', () => 
     expect(report.status).toBe('COMPUTE_LIMIT'); expect(report.nashConvLowerBoundBb).toBeNull();
     expect(report.witnesses.every(w => w.lowerGainBb === null)).toBe(true);
   });
+  it('rejects illegal probabilities from an experimental numeric policy mapping', () => {
+    expect(() => measurePreflopDeviations({ context: defaultTournamentContext(2), tree: MULTI_ACTION_TREE, profile: {}, defaultPolicy: 'UNIFORM_UNVISITED_INFORMATION_SETS' }, '56'.repeat(32), 100, .01, 10000,
+      (_state, _hole, _history, legal) => Object.fromEntries(legal.map(a => [a, Number.NaN])))).toThrow('Invalid frozen policy');
+  });
 });
