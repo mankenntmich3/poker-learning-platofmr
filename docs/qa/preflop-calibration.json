@@ -1,0 +1,534 @@
+{
+  "scope": "CONDITIONAL_HU_PUSH_FOLD_ONLY; 26 supported physical combos per seat; NOT complete HU preflop",
+  "equityEvidenceSha256": "fdae85f293aa2992affa8adc74be4d0c1c8da116e158fe8f252dff3bb8157fec",
+  "matchups": 21,
+  "boardsPerMatchup": 1712304,
+  "exactBoardEvaluationsPerImplementation": 35958384,
+  "generatorRuntimeSeconds": 69.41307310000002,
+  "independentEnumerationRuntimeSeconds": 1843.5041053999998,
+  "method": "direct seven-card generator versus independent 21-subset five-card oracle; identical integer wins/ties/total for every matchup",
+  "reports": [
+    {
+      "stack": 10,
+      "ante": 0,
+      "checksum": "d5adb66109a46b7d517aee1be350f0d457a7a56b37425e8135663208643da637",
+      "verificationRuntimeMs": 87.05009999999999,
+      "method": "EXACT_CONDITIONAL_PREFLOP_BEST_RESPONSE",
+      "verifierVersion": "rangeform-preflop-br-v1",
+      "profileValues": [
+        0.06859205776173397,
+        -0.06859205776173397
+      ],
+      "bestResponseValues": [
+        0.06859205776173366,
+        -0.06859205776173291
+      ],
+      "improvements": [
+        0,
+        1.0547118733938987e-15
+      ],
+      "nashConv": 1.0547118733938987e-15,
+      "exploitability": 5.273559366969494e-16,
+      "utilityUnit": "BB_PER_HAND",
+      "compatibleDeals": 554,
+      "informationSets": 52,
+      "scope": "CONDITIONAL_HU_PUSH_FOLD_ONLY",
+      "numericalAllowanceBb": 1e-9,
+      "equityEvidenceSha256": "fdae85f293aa2992affa8adc74be4d0c1c8da116e158fe8f252dff3bb8157fec",
+      "boardsPerMatchup": 1712304
+    },
+    {
+      "stack": 10,
+      "ante": 1,
+      "checksum": "7a1ba9daa7615c8813f4abfa1d4c6cc9c00a762e99057054041991b451ca6f90",
+      "verificationRuntimeMs": 52.06220000000002,
+      "method": "EXACT_CONDITIONAL_PREFLOP_BEST_RESPONSE",
+      "verifierVersion": "rangeform-preflop-br-v1",
+      "profileValues": [
+        0.5180505415162517,
+        -0.5180505415162517
+      ],
+      "bestResponseValues": [
+        0.5180505415162512,
+        -0.5180505415162506
+      ],
+      "improvements": [
+        0,
+        1.1102230246251565e-15
+      ],
+      "nashConv": 1.1102230246251565e-15,
+      "exploitability": 5.551115123125783e-16,
+      "utilityUnit": "BB_PER_HAND",
+      "compatibleDeals": 554,
+      "informationSets": 52,
+      "scope": "CONDITIONAL_HU_PUSH_FOLD_ONLY",
+      "numericalAllowanceBb": 1e-9,
+      "equityEvidenceSha256": "fdae85f293aa2992affa8adc74be4d0c1c8da116e158fe8f252dff3bb8157fec",
+      "boardsPerMatchup": 1712304
+    },
+    {
+      "stack": 15,
+      "ante": 0,
+      "checksum": "30aefb7f64b1cdacfee58172fffe0f054472715e6c7344fe72bda0e4de685272",
+      "verificationRuntimeMs": 53.20339999999999,
+      "method": "EXACT_CONDITIONAL_PREFLOP_BEST_RESPONSE",
+      "verifierVersion": "rangeform-preflop-br-v1",
+      "profileValues": [
+        0.06859205776173406,
+        -0.06859205776173406
+      ],
+      "bestResponseValues": [
+        0.06859205776173369,
+        -0.0685920577617333
+      ],
+      "improvements": [
+        0,
+        7.632783294297951e-16
+      ],
+      "nashConv": 7.632783294297951e-16,
+      "exploitability": 3.8163916471489756e-16,
+      "utilityUnit": "BB_PER_HAND",
+      "compatibleDeals": 554,
+      "informationSets": 52,
+      "scope": "CONDITIONAL_HU_PUSH_FOLD_ONLY",
+      "numericalAllowanceBb": 1e-9,
+      "equityEvidenceSha256": "fdae85f293aa2992affa8adc74be4d0c1c8da116e158fe8f252dff3bb8157fec",
+      "boardsPerMatchup": 1712304
+    },
+    {
+      "stack": 15,
+      "ante": 1,
+      "checksum": "6144da23946fee5514e37a2bb7f69dc60b5b63ed7317d4ef288224d58103d2a9",
+      "verificationRuntimeMs": 73.07889999999998,
+      "method": "EXACT_CONDITIONAL_PREFLOP_BEST_RESPONSE",
+      "verifierVersion": "rangeform-preflop-br-v1",
+      "profileValues": [
+        0.5180505415162507,
+        -0.5180505415162507
+      ],
+      "bestResponseValues": [
+        0.5180505415162512,
+        -0.5180505415162505
+      ],
+      "improvements": [
+        4.440892098500626e-16,
+        2.220446049250313e-16
+      ],
+      "nashConv": 6.661338147750939e-16,
+      "exploitability": 3.3306690738754696e-16,
+      "utilityUnit": "BB_PER_HAND",
+      "compatibleDeals": 554,
+      "informationSets": 52,
+      "scope": "CONDITIONAL_HU_PUSH_FOLD_ONLY",
+      "numericalAllowanceBb": 1e-9,
+      "equityEvidenceSha256": "fdae85f293aa2992affa8adc74be4d0c1c8da116e158fe8f252dff3bb8157fec",
+      "boardsPerMatchup": 1712304
+    },
+    {
+      "stack": 20,
+      "ante": 0,
+      "checksum": "4de2d164c9b3d0511d74552b243ba460ea46ffa402688ebec6818d1b9b17a958",
+      "verificationRuntimeMs": 53.97519999999997,
+      "method": "EXACT_CONDITIONAL_PREFLOP_BEST_RESPONSE",
+      "verifierVersion": "rangeform-preflop-br-v1",
+      "profileValues": [
+        -0.0011204360182601634,
+        0.0011204360182601634
+      ],
+      "bestResponseValues": [
+        -0.001120436018260909,
+        0.0011204360182617001
+      ],
+      "improvements": [
+        0,
+        1.536748159280954e-15
+      ],
+      "nashConv": 1.536748159280954e-15,
+      "exploitability": 7.68374079640477e-16,
+      "utilityUnit": "BB_PER_HAND",
+      "compatibleDeals": 554,
+      "informationSets": 52,
+      "scope": "CONDITIONAL_HU_PUSH_FOLD_ONLY",
+      "numericalAllowanceBb": 1e-9,
+      "equityEvidenceSha256": "fdae85f293aa2992affa8adc74be4d0c1c8da116e158fe8f252dff3bb8157fec",
+      "boardsPerMatchup": 1712304
+    },
+    {
+      "stack": 20,
+      "ante": 1,
+      "checksum": "1ff19d71eac9655c8efe4fd910b2229582316b30fd1c5d1c697f18e343c527c5",
+      "verificationRuntimeMs": 54.79789999999997,
+      "method": "EXACT_CONDITIONAL_PREFLOP_BEST_RESPONSE",
+      "verifierVersion": "rangeform-preflop-br-v1",
+      "profileValues": [
+        0.5180505415162512,
+        -0.5180505415162512
+      ],
+      "bestResponseValues": [
+        0.5180505415162511,
+        -0.5180505415162504
+      ],
+      "improvements": [
+        0,
+        7.771561172376096e-16
+      ],
+      "nashConv": 7.771561172376096e-16,
+      "exploitability": 3.885780586188048e-16,
+      "utilityUnit": "BB_PER_HAND",
+      "compatibleDeals": 554,
+      "informationSets": 52,
+      "scope": "CONDITIONAL_HU_PUSH_FOLD_ONLY",
+      "numericalAllowanceBb": 1e-9,
+      "equityEvidenceSha256": "fdae85f293aa2992affa8adc74be4d0c1c8da116e158fe8f252dff3bb8157fec",
+      "boardsPerMatchup": 1712304
+    },
+    {
+      "stack": 25,
+      "ante": 0,
+      "checksum": "3fd088faeae0fe72c5bcb121efbc290d1aa50d4176396debdbf50127f3391206",
+      "verificationRuntimeMs": 57.65999999999997,
+      "method": "EXACT_CONDITIONAL_PREFLOP_BEST_RESPONSE",
+      "verifierVersion": "rangeform-preflop-br-v1",
+      "profileValues": [
+        -0.08894567137661652,
+        0.08894567137661652
+      ],
+      "bestResponseValues": [
+        -0.08894567137661782,
+        0.08894567137661835
+      ],
+      "improvements": [
+        0,
+        1.8318679906315083e-15
+      ],
+      "nashConv": 1.8318679906315083e-15,
+      "exploitability": 9.159339953157541e-16,
+      "utilityUnit": "BB_PER_HAND",
+      "compatibleDeals": 554,
+      "informationSets": 52,
+      "scope": "CONDITIONAL_HU_PUSH_FOLD_ONLY",
+      "numericalAllowanceBb": 1e-9,
+      "equityEvidenceSha256": "fdae85f293aa2992affa8adc74be4d0c1c8da116e158fe8f252dff3bb8157fec",
+      "boardsPerMatchup": 1712304
+    },
+    {
+      "stack": 25,
+      "ante": 1,
+      "checksum": "c79352caca28d7bebb679ebfe71df7dd9e251ab3085648034bf2d8f26709b420",
+      "verificationRuntimeMs": 56.51229999999998,
+      "method": "EXACT_CONDITIONAL_PREFLOP_BEST_RESPONSE",
+      "verifierVersion": "rangeform-preflop-br-v1",
+      "profileValues": [
+        0.5100895597404527,
+        -0.5100895597404527
+      ],
+      "bestResponseValues": [
+        0.5100895597404517,
+        -0.5100895597404506
+      ],
+      "improvements": [
+        0,
+        2.1094237467877974e-15
+      ],
+      "nashConv": 2.1094237467877974e-15,
+      "exploitability": 1.0547118733938987e-15,
+      "utilityUnit": "BB_PER_HAND",
+      "compatibleDeals": 554,
+      "informationSets": 52,
+      "scope": "CONDITIONAL_HU_PUSH_FOLD_ONLY",
+      "numericalAllowanceBb": 1e-9,
+      "equityEvidenceSha256": "fdae85f293aa2992affa8adc74be4d0c1c8da116e158fe8f252dff3bb8157fec",
+      "boardsPerMatchup": 1712304
+    },
+    {
+      "stack": 30,
+      "ante": 0,
+      "checksum": "c58e1d1a91438f7b9b78b40b47583d2c11dc6899df9f17043febad0bea63f30c",
+      "verificationRuntimeMs": 51.453700000000026,
+      "method": "EXACT_CONDITIONAL_PREFLOP_BEST_RESPONSE",
+      "verifierVersion": "rangeform-preflop-br-v1",
+      "profileValues": [
+        -0.16967509025270983,
+        0.16967509025270983
+      ],
+      "bestResponseValues": [
+        -0.16967509025270947,
+        0.16967509025271052
+      ],
+      "improvements": [
+        3.608224830031759e-16,
+        6.938893903907228e-16
+      ],
+      "nashConv": 1.0547118733938987e-15,
+      "exploitability": 5.273559366969494e-16,
+      "utilityUnit": "BB_PER_HAND",
+      "compatibleDeals": 554,
+      "informationSets": 52,
+      "scope": "CONDITIONAL_HU_PUSH_FOLD_ONLY",
+      "numericalAllowanceBb": 1e-9,
+      "equityEvidenceSha256": "fdae85f293aa2992affa8adc74be4d0c1c8da116e158fe8f252dff3bb8157fec",
+      "boardsPerMatchup": 1712304
+    },
+    {
+      "stack": 30,
+      "ante": 1,
+      "checksum": "905818db9f5bf35ea476e09fedd9bde0a79de05eb80b5380a90345063f309aa0",
+      "verificationRuntimeMs": 54.15499999999997,
+      "method": "EXACT_CONDITIONAL_PREFLOP_BEST_RESPONSE",
+      "verifierVersion": "rangeform-preflop-br-v1",
+      "profileValues": [
+        0.42226432438209544,
+        -0.42226432438209544
+      ],
+      "bestResponseValues": [
+        0.42226432438209477,
+        -0.42226432438209394
+      ],
+      "improvements": [
+        0,
+        1.4988010832439613e-15
+      ],
+      "nashConv": 1.4988010832439613e-15,
+      "exploitability": 7.494005416219807e-16,
+      "utilityUnit": "BB_PER_HAND",
+      "compatibleDeals": 554,
+      "informationSets": 52,
+      "scope": "CONDITIONAL_HU_PUSH_FOLD_ONLY",
+      "numericalAllowanceBb": 1e-9,
+      "equityEvidenceSha256": "fdae85f293aa2992affa8adc74be4d0c1c8da116e158fe8f252dff3bb8157fec",
+      "boardsPerMatchup": 1712304
+    },
+    {
+      "stack": 40,
+      "ante": 0,
+      "checksum": "c63e01cc459cc610eac6f4e47448e86d3275320fc13d343163e533a4b4dd42e9",
+      "verificationRuntimeMs": 55.132600000000025,
+      "method": "EXACT_CONDITIONAL_PREFLOP_BEST_RESPONSE",
+      "verifierVersion": "rangeform-preflop-br-v1",
+      "profileValues": [
+        -0.16967509025270983,
+        0.16967509025270983
+      ],
+      "bestResponseValues": [
+        -0.16967509025270947,
+        0.16967509025271052
+      ],
+      "improvements": [
+        3.608224830031759e-16,
+        6.938893903907228e-16
+      ],
+      "nashConv": 1.0547118733938987e-15,
+      "exploitability": 5.273559366969494e-16,
+      "utilityUnit": "BB_PER_HAND",
+      "compatibleDeals": 554,
+      "informationSets": 52,
+      "scope": "CONDITIONAL_HU_PUSH_FOLD_ONLY",
+      "numericalAllowanceBb": 1e-9,
+      "equityEvidenceSha256": "fdae85f293aa2992affa8adc74be4d0c1c8da116e158fe8f252dff3bb8157fec",
+      "boardsPerMatchup": 1712304
+    },
+    {
+      "stack": 40,
+      "ante": 1,
+      "checksum": "50984b2cfd70ca752959bb0f3177f5a85aa707b41ace99d9e8ea988745f14928",
+      "verificationRuntimeMs": 55.55549999999994,
+      "method": "EXACT_CONDITIONAL_PREFLOP_BEST_RESPONSE",
+      "verifierVersion": "rangeform-preflop-br-v1",
+      "profileValues": [
+        0.24661385366538235,
+        -0.24661385366538235
+      ],
+      "bestResponseValues": [
+        0.2466138536653813,
+        -0.24661385366538066
+      ],
+      "improvements": [
+        0,
+        1.6930901125533637e-15
+      ],
+      "nashConv": 1.6930901125533637e-15,
+      "exploitability": 8.465450562766819e-16,
+      "utilityUnit": "BB_PER_HAND",
+      "compatibleDeals": 554,
+      "informationSets": 52,
+      "scope": "CONDITIONAL_HU_PUSH_FOLD_ONLY",
+      "numericalAllowanceBb": 1e-9,
+      "equityEvidenceSha256": "fdae85f293aa2992affa8adc74be4d0c1c8da116e158fe8f252dff3bb8157fec",
+      "boardsPerMatchup": 1712304
+    },
+    {
+      "stack": 50,
+      "ante": 0,
+      "checksum": "d985fe93bd88b008702777cd6302a5fad793fe7052b73c27153faad91ed01d5b",
+      "verificationRuntimeMs": 55.67240000000004,
+      "method": "EXACT_CONDITIONAL_PREFLOP_BEST_RESPONSE",
+      "verifierVersion": "rangeform-preflop-br-v1",
+      "profileValues": [
+        -0.16967509025270983,
+        0.16967509025270983
+      ],
+      "bestResponseValues": [
+        -0.16967509025270947,
+        0.16967509025271052
+      ],
+      "improvements": [
+        3.608224830031759e-16,
+        6.938893903907228e-16
+      ],
+      "nashConv": 1.0547118733938987e-15,
+      "exploitability": 5.273559366969494e-16,
+      "utilityUnit": "BB_PER_HAND",
+      "compatibleDeals": 554,
+      "informationSets": 52,
+      "scope": "CONDITIONAL_HU_PUSH_FOLD_ONLY",
+      "numericalAllowanceBb": 1e-9,
+      "equityEvidenceSha256": "fdae85f293aa2992affa8adc74be4d0c1c8da116e158fe8f252dff3bb8157fec",
+      "boardsPerMatchup": 1712304
+    },
+    {
+      "stack": 50,
+      "ante": 1,
+      "checksum": "4633cf02fd436eac058a32f91a7aeab2c3829ff87c17fa91b3f0b797b1c450d2",
+      "verificationRuntimeMs": 50.42930000000001,
+      "method": "EXACT_CONDITIONAL_PREFLOP_BEST_RESPONSE",
+      "verifierVersion": "rangeform-preflop-br-v1",
+      "profileValues": [
+        0.07096338294867015,
+        -0.07096338294867015
+      ],
+      "bestResponseValues": [
+        0.0709633829486677,
+        -0.0709633829486668
+      ],
+      "improvements": [
+        0,
+        3.344546861683284e-15
+      ],
+      "nashConv": 3.344546861683284e-15,
+      "exploitability": 1.672273430841642e-15,
+      "utilityUnit": "BB_PER_HAND",
+      "compatibleDeals": 554,
+      "informationSets": 52,
+      "scope": "CONDITIONAL_HU_PUSH_FOLD_ONLY",
+      "numericalAllowanceBb": 1e-9,
+      "equityEvidenceSha256": "fdae85f293aa2992affa8adc74be4d0c1c8da116e158fe8f252dff3bb8157fec",
+      "boardsPerMatchup": 1712304
+    },
+    {
+      "stack": 80,
+      "ante": 0,
+      "checksum": "d45df0c2ed3dc1d8a8578d45aef75e12fe1645fcc234a76abf37b02f96f944a2",
+      "verificationRuntimeMs": 52.61450000000002,
+      "method": "EXACT_CONDITIONAL_PREFLOP_BEST_RESPONSE",
+      "verifierVersion": "rangeform-preflop-br-v1",
+      "profileValues": [
+        -0.16967509025270983,
+        0.16967509025270983
+      ],
+      "bestResponseValues": [
+        -0.16967509025270947,
+        0.16967509025271052
+      ],
+      "improvements": [
+        3.608224830031759e-16,
+        6.938893903907228e-16
+      ],
+      "nashConv": 1.0547118733938987e-15,
+      "exploitability": 5.273559366969494e-16,
+      "utilityUnit": "BB_PER_HAND",
+      "compatibleDeals": 554,
+      "informationSets": 52,
+      "scope": "CONDITIONAL_HU_PUSH_FOLD_ONLY",
+      "numericalAllowanceBb": 1e-9,
+      "equityEvidenceSha256": "fdae85f293aa2992affa8adc74be4d0c1c8da116e158fe8f252dff3bb8157fec",
+      "boardsPerMatchup": 1712304
+    },
+    {
+      "stack": 80,
+      "ante": 1,
+      "checksum": "33714cb4ced16dcef786571611e23eed717795509b5919244adbb5aa204bf21a",
+      "verificationRuntimeMs": 52.97539999999992,
+      "method": "EXACT_CONDITIONAL_PREFLOP_BEST_RESPONSE",
+      "verifierVersion": "rangeform-preflop-br-v1",
+      "profileValues": [
+        0.05234657039711216,
+        -0.05234657039711216
+      ],
+      "bestResponseValues": [
+        0.05234657039711231,
+        -0.052346570397111436
+      ],
+      "improvements": [
+        1.5265566588595902e-16,
+        7.216449660063518e-16
+      ],
+      "nashConv": 8.743006318923108e-16,
+      "exploitability": 4.371503159461554e-16,
+      "utilityUnit": "BB_PER_HAND",
+      "compatibleDeals": 554,
+      "informationSets": 52,
+      "scope": "CONDITIONAL_HU_PUSH_FOLD_ONLY",
+      "numericalAllowanceBb": 1e-9,
+      "equityEvidenceSha256": "fdae85f293aa2992affa8adc74be4d0c1c8da116e158fe8f252dff3bb8157fec",
+      "boardsPerMatchup": 1712304
+    },
+    {
+      "stack": 100,
+      "ante": 0,
+      "checksum": "92f5218d09f0de86032a1e5b16ffef0704ed370386f978cdfde4d59e2fe6ce5b",
+      "verificationRuntimeMs": 55.43540000000007,
+      "method": "EXACT_CONDITIONAL_PREFLOP_BEST_RESPONSE",
+      "verifierVersion": "rangeform-preflop-br-v1",
+      "profileValues": [
+        -0.16967509025270983,
+        0.16967509025270983
+      ],
+      "bestResponseValues": [
+        -0.16967509025270947,
+        0.16967509025271052
+      ],
+      "improvements": [
+        3.608224830031759e-16,
+        6.938893903907228e-16
+      ],
+      "nashConv": 1.0547118733938987e-15,
+      "exploitability": 5.273559366969494e-16,
+      "utilityUnit": "BB_PER_HAND",
+      "compatibleDeals": 554,
+      "informationSets": 52,
+      "scope": "CONDITIONAL_HU_PUSH_FOLD_ONLY",
+      "numericalAllowanceBb": 1e-9,
+      "equityEvidenceSha256": "fdae85f293aa2992affa8adc74be4d0c1c8da116e158fe8f252dff3bb8157fec",
+      "boardsPerMatchup": 1712304
+    },
+    {
+      "stack": 100,
+      "ante": 1,
+      "checksum": "df289431845f7d3f0543ddd945a62536c4727b41f8bf00471005d40568271336",
+      "verificationRuntimeMs": 53.9067,
+      "method": "EXACT_CONDITIONAL_PREFLOP_BEST_RESPONSE",
+      "verifierVersion": "rangeform-preflop-br-v1",
+      "profileValues": [
+        0.05234657039711216,
+        -0.05234657039711216
+      ],
+      "bestResponseValues": [
+        0.05234657039711231,
+        -0.052346570397111436
+      ],
+      "improvements": [
+        1.5265566588595902e-16,
+        7.216449660063518e-16
+      ],
+      "nashConv": 8.743006318923108e-16,
+      "exploitability": 4.371503159461554e-16,
+      "utilityUnit": "BB_PER_HAND",
+      "compatibleDeals": 554,
+      "informationSets": 52,
+      "scope": "CONDITIONAL_HU_PUSH_FOLD_ONLY",
+      "numericalAllowanceBb": 1e-9,
+      "equityEvidenceSha256": "fdae85f293aa2992affa8adc74be4d0c1c8da116e158fe8f252dff3bb8157fec",
+      "boardsPerMatchup": 1712304
+    }
+  ]
+}

@@ -173,7 +173,7 @@ export async function updateSettings(db: Database, user: StudyUser, input: z.inf
 
 export async function exportAccount(db: Database, user: StudyUser): Promise<Record<string, unknown>> {
   await enforceRateLimit(db, `export:${user.id}`, 6, 3600);
-  const [lessons, decisions, nlheSessions, nlheDecisions, studySpots, studyDecisions, studySessions, studyQuestions] = await Promise.all([
+  const [lessons, decisions, nlheSessions, nlheDecisions, studySpots, studyDecisions, studySessions, studyQuestions, verifiedQuestions] = await Promise.all([
     db.query('SELECT lesson_id, completed_at FROM lesson_completions WHERE user_id = $1 ORDER BY completed_at', [user.id]),
     db.query('SELECT id, attempt_id, spot_id, action, regret, evaluation, created_at FROM training_decisions WHERE user_id = $1 ORDER BY created_at, id', [user.id]),
     db.query('SELECT id, config, solution_version, created_at, completed_at FROM nlhe_sessions WHERE user_id = $1 ORDER BY created_at', [user.id]),
@@ -182,8 +182,9 @@ export async function exportAccount(db: Database, user: StudyUser): Promise<Reco
     db.query('SELECT id,node_id,spot,chosen_action,feedback,created_at FROM study_engine_decisions WHERE user_id=$1 ORDER BY created_at',[user.id]),
     db.query('SELECT id,root_spot,options,created_at,completed_at FROM study_engine_sessions WHERE user_id=$1 ORDER BY created_at',[user.id]),
     db.query('SELECT q.id,q.session_id,q.ordinal,q.spot,q.snapshot FROM study_engine_questions q JOIN study_engine_sessions s ON s.id=q.session_id WHERE s.user_id=$1 ORDER BY s.created_at,q.ordinal',[user.id]),
+    db.query('SELECT id,artifact_id,artifact_checksum,combo,mode,feedback,submitted,created_at,answered_at FROM verified_training_questions WHERE user_id=$1 ORDER BY created_at',[user.id]),
   ]);
-  return { schemaVersion: 3, exportedAt: new Date().toISOString(), user, lessonCompletions: lessons, trainingDecisions: decisions, nlheSessions, nlheDecisions, studySpots, studyDecisions, studySessions, studyQuestions };
+  return { schemaVersion: 4, exportedAt: new Date().toISOString(), user, lessonCompletions: lessons, trainingDecisions: decisions, nlheSessions, nlheDecisions, studySpots, studyDecisions, studySessions, studyQuestions, verifiedQuestions };
 }
 export async function deleteAccount(db: Database, user: StudyUser, password: string): Promise<void> {
   deleteAccountSchema.parse({ password });

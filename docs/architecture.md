@@ -1,5 +1,12 @@
 # Architecture
 
+Current offline V2 solver work uses shared numeric public nodes, indexed regret
+arrays and sparse joint-observation chance operators. A separate three-outcome
+CSR best-response implementation is cross-checked against full-world NumPy BR.
+This is an explicit finite-board, one-flop-round pilot; holdout board-law error
+prevents publication. No new web dependency/provider or production approval
+policy is introduced. See [executed architecture comparison](qa/preflop-model-v2.md).
+
 Rangeform is a personal poker learning application with a path to a hosted SaaS. Study Engine v2 extends the existing NLHE preflop loop into configurable heads-up flop/turn/river study. Original APPROXIMATED policies provide the initial study data; they are not equilibrium solutions. The independently computed Kuhn solution remains an internal regression.
 
 ## Study Engine v2
@@ -72,3 +79,79 @@ Accessed 2026-09-06. Versions are locked in `pnpm-lock.yaml`.
 `src/domain/holdem.ts` supplies six-seat integer-chip betting, blinds, all-ins, street progression, best-five evaluation, side pots and chip conservation. The browser-safe cards module enumerates 52 cards, 1,326 combos and 169 classes with blockers. `StrategyProvider` is generic with Kuhn defaults retained; `NlheStrategyProvider` implements the same abstraction with NLHE configuration and action types. `scripts/nlhe.ts` publishes hashed original policy parameters, checksums the relevant source, and validates all 386 preset contexts before updating the index. Server decisions use the provider data, never client-supplied frequencies. The trainer samples physical combos weighted by prior reach; it does not sample classes uniformly. See decision 0003 for assumptions and unmeasured accuracy.
 
 Hosted staging uses the same application with managed PostgreSQL and invitation-only signup. Local setup never reads or creates hosted accounts. `/api/live` is a database-free host probe; `/api/health` checks actual database and NLHE provider readiness.
+
+## MTT V3 verification boundary (2026-09-12)
+
+Public NLHE context/replay lives in domain/strategy-context.ts and domain/tournament-state.ts. The original six-max Cash engine remains independent. Context schema v2 binds every seat stack, forced-bet rules, rake, future evaluation state, full public action/deal history and blocker set. It preserves chip vectors; scalar effective stack is display-only.
+
+solver/verified-solution.ts performs structural validation and cannot grant VERIFIED. verification/exact-best-response.ts independently evaluates bounded finite games, with no solver traversal or payoff imports. server/verification-policy.ts owns versioned approval policy. server/verify-solution.ts is the publication trust boundary: it permits only the independently reconstructed, calibrated conditional river model described below and rejects every other NLHE model/import. No artifact metadata or serialized status flag can authorize training.
+
+Migration 009 preserves and quarantines historical uncertified artifacts. The conditional river path below now atomically stores an independent report with exact strategy/context/model/tree/policy identities; the Phase-1 metadata-only publisher remains removed. Generic finite-game mathematical tests are never loaded as NLHE artifacts. See qa/mtt-trust-review.md.
+
+
+## Independently verified conditional river path
+
+`domain/river-definition.ts` fixes the public context, weighted conditional root
+ranges and tree identity. Context v2 binds normalized physical range distributions
+for every live seat. These are study inputs, not solved ancestry.
+
+`solver/river-model.ts` creates a complete physical-deal tree and generator
+projection with the direct seven-card evaluator. `scripts/solve-river-lp.py`
+executes pinned SciPy/HiGHS security LPs; `scripts/solve-river.py` separately
+integrates the pinned MIT DCFR reference. `verification/river-best-response.ts`
+does not consume generator payoffs: it reconstructs commitments, enumerates
+five-card evaluations, calculates complete information-set best responses and
+recomputes every combo EV/reach. The generic verifier also has a bounded
+counterfactual dynamic algorithm cross-checked with exhaustive pure policies.
+
+Policy v3-river1 permits only this context/model/source/license with calibrated
+bounds and a numerical allowance. `solution-registry.ts` atomically persists an
+approved artifact/report/job and independently rechecks exact lookups.
+`VerifiedStrategyProvider` implements the existing generic provider contract with
+NLHE types. No preflop fallback or imported approval exists.
+
+Migration 010 stores user-owned version-bound training questions, responses and
+feedback. `server/verified-training.ts` samples only solved support, grades EV
+regret or recall distance, and derives mastery/review dates from saved history.
+User deletion cascades; exports include the new data. `/mtt/river` keeps verifier
+and solver dependencies out of client bundles with type-only contracts and
+authenticated APIs. See [executed evidence](qa/verified-river.md).
+
+
+## Conditional HU preflop extension (2026-09-13)
+
+The existing trust boundary also permits `nlhe-hu-conditional-pushfold-v1` at nine
+explicit stacks and NONE/BBA 1. `preflop-definition.ts` binds the full two-seat
+stack vector, BTN/SB identity, action restriction and fixed physical input ranges.
+The Python generator solves two security LPs with its exhaustively generated
+payoffs. The separate TypeScript preflop verifier uses pinned, independently
+re-enumerated equity counts, public ledger replay and information-set BR. Full
+coverage includes all 1326 physical rows but only 26 positive-support rows.
+
+`verified-training.ts` selects an exact approved river/preflop context and retains
+artifact-checksum-scoped persistence. The same matrix/recall/mastery UI and shared
+`PokerTable` render both. No Python/solver computation runs in web requests;
+publication rechecks the profile against approved evidence. The bounded local
+CLI worker persists real execution states and metrics. No full HU, multi-action,
+3-handed or 6-handed solution is inferred from this conditional path.
+
+
+## Full-prior preflop experiments (2026-09-13)
+
+`domain/preflop-tree.ts` supplies actual parameterized legal transitions;
+`domain/tournament-payoff.ts` pays terminal chips with separate dead ante/live
+wager layers. `solver/multistreet-preflop.ts` uses physical without-replacement
+deals and genuine later-street play. `solver/external-sampling.ts` executes
+bounded regret updates and importance-weighted average sampling. None of those
+classes can grant VERIFIED. Information keys preserve own cards and all public
+observations without revealing future runouts or opponents.
+
+`verification/multistreet-preflop.ts` separately reconstructs complete chance,
+uses the best-five evaluator and independent settlement, and only then delegates
+to the existing independent counterfactual BR. Current full-game attempts exhaust
+resources, so return no accuracy report. The diagnostic output schema is separate
+from approved solution artifacts; the current publication policy is unchanged.
+Migration 011 adds failure statuses and priority P4 to existing solver jobs. The
+development recorder stores compact failure evidence and cannot publish a
+strategy. Full profiles stay in ignored offline output. No new API, matrix or
+trainer data source is enabled. See [executed evidence](qa/full-prior-preflop.md).

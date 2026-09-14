@@ -25,7 +25,15 @@
     "test:integration": "vitest run tests/server",
     "test:e2e": "playwright test",
     "test:dev-access": "playwright test --config playwright.dev.config.ts",
-    "solve": "tsx scripts/solve.ts"
+    "solve": "tsx scripts/solve.ts",
+    "solve:nlhe": "tsx scripts/solve-nlhe.ts lp",
+    "solve:nlhe:dcfr": "tsx scripts/solve-nlhe.ts",
+    "solve:preflop": "tsx scripts/solve-preflop.ts",
+    "solve:preflop:jobs": "tsx scripts/run-preflop-jobs.ts",
+    "solve:preflop:attempt": "tsx scripts/attempt-preflop.ts",
+    "solve:preflop:record-attempts": "tsx scripts/record-preflop-attempts.ts",
+    "verify:preflop:deviations": "tsx scripts/verify-preflop-deviations.ts",
+    "verify:nlhe": "tsx scripts/verify-nlhe.ts"
   },
   "dependencies": {
     "@next/env": "^16.3.4",

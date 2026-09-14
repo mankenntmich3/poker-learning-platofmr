@@ -1,0 +1,278 @@
+[
+  {
+    "case": "EXISTING_VERIFIED_RIVER",
+    "algorithm": "FULL_CFR",
+    "seconds": 0.5719613999990543,
+    "verification": {
+      "profileValues": [
+        1.2234042820162403,
+        -1.2234042820162403
+      ],
+      "bestResponses": [
+        1.223865887887401,
+        -1.2135174639671475
+      ],
+      "improvements": [
+        0.0004616058711606197,
+        0.00988681804909275
+      ],
+      "nashConv": 0.010348423920253369,
+      "exploitability": 0.0051742119601266845,
+      "worldNodeVisits": 1344,
+      "scope": "COMPLETE_FINITE_MODEL_ONLY",
+      "publicationEligible": false
+    },
+    "knownLPVerification": {
+      "profileValues": [
+        1.2234693877551022,
+        -1.2234693877551022
+      ],
+      "bestResponses": [
+        1.2234693877551024,
+        -1.2234693877551013
+      ],
+      "improvements": [
+        2.220446049250313e-16,
+        8.881784197001252e-16
+      ],
+      "nashConv": 1.1102230246251565e-15,
+      "exploitability": 5.551115123125783e-16,
+      "worldNodeVisits": 1344,
+      "scope": "COMPLETE_FINITE_MODEL_ONLY",
+      "publicationEligible": false
+    },
+    "iterations": 100000,
+    "worlds": 56,
+    "workingArrayBytes": 56784
+  },
+  {
+    "case": "EXISTING_VERIFIED_RIVER",
+    "algorithm": "FULL_CFR_PLUS_LINEAR",
+    "seconds": 0.3693505000010191,
+    "verification": {
+      "profileValues": [
+        1.221670749643663,
+        -1.221670749643663
+      ],
+      "bestResponses": [
+        1.223786521798269,
+        -1.2214251156823208
+      ],
+      "improvements": [
+        0.0021157721546061214,
+        0.0002456339613421399
+      ],
+      "nashConv": 0.0023614061159482613,
+      "exploitability": 0.0011807030579741307,
+      "worldNodeVisits": 1344,
+      "scope": "COMPLETE_FINITE_MODEL_ONLY",
+      "publicationEligible": false
+    },
+    "knownLPVerification": {
+      "profileValues": [
+        1.2234693877551022,
+        -1.2234693877551022
+      ],
+      "bestResponses": [
+        1.2234693877551024,
+        -1.2234693877551013
+      ],
+      "improvements": [
+        2.220446049250313e-16,
+        8.881784197001252e-16
+      ],
+      "nashConv": 1.1102230246251565e-15,
+      "exploitability": 5.551115123125783e-16,
+      "worldNodeVisits": 1344,
+      "scope": "COMPLETE_FINITE_MODEL_ONLY",
+      "publicationEligible": false
+    },
+    "iterations": 100000,
+    "worlds": 56,
+    "workingArrayBytes": 56784
+  },
+  {
+    "case": "EXISTING_VERIFIED_RIVER",
+    "algorithm": "FULL_DCFR",
+    "seconds": 0.36102070000015374,
+    "verification": {
+      "profileValues": [
+        1.2218247013977652,
+        -1.2218247013977652
+      ],
+      "bestResponses": [
+        1.2238227536567137,
+        -1.2212249690989647
+      ],
+      "improvements": [
+        0.001998052258948446,
+        0.0005997322988005038
+      ],
+      "nashConv": 0.00259778455774895,
+      "exploitability": 0.001298892278874475,
+      "worldNodeVisits": 1344,
+      "scope": "COMPLETE_FINITE_MODEL_ONLY",
+      "publicationEligible": false
+    },
+    "knownLPVerification": {
+      "profileValues": [
+        1.2234693877551022,
+        -1.2234693877551022
+      ],
+      "bestResponses": [
+        1.2234693877551024,
+        -1.2234693877551013
+      ],
+      "improvements": [
+        2.220446049250313e-16,
+        8.881784197001252e-16
+      ],
+      "nashConv": 1.1102230246251565e-15,
+      "exploitability": 5.551115123125783e-16,
+      "worldNodeVisits": 1344,
+      "scope": "COMPLETE_FINITE_MODEL_ONLY",
+      "publicationEligible": false
+    },
+    "iterations": 100000,
+    "worlds": 56,
+    "workingArrayBytes": 56784
+  },
+  {
+    "case": "EXISTING_CONDITIONAL_HU",
+    "algorithm": "FULL_CFR",
+    "seconds": 1.5840470000002824,
+    "verification": {
+      "profileValues": [
+        0.5180428230235153,
+        -0.5180428230235153
+      ],
+      "bestResponses": [
+        0.5180575253691054,
+        -0.5180358391043122
+      ],
+      "improvements": [
+        1.470234559008965e-05,
+        6.983919203173983e-06
+      ],
+      "nashConv": 2.1686264793263632e-05,
+      "exploitability": 1.0843132396631816e-05,
+      "worldNodeVisits": 8310,
+      "scope": "COMPLETE_FINITE_MODEL_ONLY",
+      "publicationEligible": false
+    },
+    "knownLPVerification": {
+      "profileValues": [
+        0.5180505415162455,
+        -0.5180505415162455
+      ],
+      "bestResponses": [
+        0.5180505415162455,
+        -0.5180505415162455
+      ],
+      "improvements": [
+        0.0,
+        0.0
+      ],
+      "nashConv": 0.0,
+      "exploitability": 0.0,
+      "worldNodeVisits": 8310,
+      "scope": "COMPLETE_FINITE_MODEL_ONLY",
+      "publicationEligible": false
+    },
+    "iterations": 100000,
+    "worlds": 554,
+    "workingArrayBytes": 32448
+  },
+  {
+    "case": "EXISTING_CONDITIONAL_HU",
+    "algorithm": "FULL_CFR_PLUS_LINEAR",
+    "seconds": 1.6400071000007301,
+    "verification": {
+      "profileValues": [
+        0.5180505412295479,
+        -0.5180505412295479
+      ],
+      "bestResponses": [
+        0.518050541655921,
+        -0.5180505410898724
+      ],
+      "improvements": [
+        4.2637315900151407e-10,
+        1.39675493393554e-10
+      ],
+      "nashConv": 5.660486523950681e-10,
+      "exploitability": 2.8302432619753404e-10,
+      "worldNodeVisits": 8310,
+      "scope": "COMPLETE_FINITE_MODEL_ONLY",
+      "publicationEligible": false
+    },
+    "knownLPVerification": {
+      "profileValues": [
+        0.5180505415162455,
+        -0.5180505415162455
+      ],
+      "bestResponses": [
+        0.5180505415162455,
+        -0.5180505415162455
+      ],
+      "improvements": [
+        0.0,
+        0.0
+      ],
+      "nashConv": 0.0,
+      "exploitability": 0.0,
+      "worldNodeVisits": 8310,
+      "scope": "COMPLETE_FINITE_MODEL_ONLY",
+      "publicationEligible": false
+    },
+    "iterations": 100000,
+    "worlds": 554,
+    "workingArrayBytes": 32448
+  },
+  {
+    "case": "EXISTING_CONDITIONAL_HU",
+    "algorithm": "FULL_DCFR",
+    "seconds": 1.5762371000000712,
+    "verification": {
+      "profileValues": [
+        0.5180505415162371,
+        -0.5180505415162371
+      ],
+      "bestResponses": [
+        0.5180505415162476,
+        -0.5180505415162352
+      ],
+      "improvements": [
+        1.0547118733938987e-14,
+        1.887379141862766e-15
+      ],
+      "nashConv": 1.2434497875801753e-14,
+      "exploitability": 6.217248937900877e-15,
+      "worldNodeVisits": 8310,
+      "scope": "COMPLETE_FINITE_MODEL_ONLY",
+      "publicationEligible": false
+    },
+    "knownLPVerification": {
+      "profileValues": [
+        0.5180505415162455,
+        -0.5180505415162455
+      ],
+      "bestResponses": [
+        0.5180505415162455,
+        -0.5180505415162455
+      ],
+      "improvements": [
+        0.0,
+        0.0
+      ],
+      "nashConv": 0.0,
+      "exploitability": 0.0,
+      "worldNodeVisits": 8310,
+      "scope": "COMPLETE_FINITE_MODEL_ONLY",
+      "publicationEligible": false
+    },
+    "iterations": 100000,
+    "worlds": 554,
+    "workingArrayBytes": 32448
+  }
+]

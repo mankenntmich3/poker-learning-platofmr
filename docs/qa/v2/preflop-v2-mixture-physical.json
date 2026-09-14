@@ -1,0 +1,122 @@
+{
+  "method": "INDEPENDENT_FIXED_DEVIATION_EMPIRICAL_BERNSTEIN_V1",
+  "publicationEligible": false,
+  "status": "INCONCLUSIVE",
+  "requestedSamples": 20000,
+  "completedSamples": 20000,
+  "seed": "d9d2ba4c445ad2c67a8531408f84ccfb7c65d9165f693bc6ac1a43816f5d367d",
+  "randomGenerator": "AES_256_CTR_REJECTION_SHUFFLE",
+  "confidenceAssumption": "IID_RANDOM_DRAWS_IDEALIZATION_OF_RECORDED_CRYPTOGRAPHIC_STREAM",
+  "familywiseFailureProbability": 1e-9,
+  "supportWidthBb": 60,
+  "baseline": [
+    {
+      "n": 20000,
+      "mean": 0.4056332549999996,
+      "m2": 910068.9589605699
+    },
+    {
+      "n": 20000,
+      "mean": -0.4056332549999996,
+      "m2": 910068.9589605699
+    }
+  ],
+  "witnesses": [
+    {
+      "player": 0,
+      "rule": "ROOT_ACTION",
+      "actionId": "fold",
+      "n": 20000,
+      "mean": -0.9056332550000034,
+      "m2": 910068.9589605696,
+      "variance": 45.505723234190185,
+      "lowerGainBb": -1.3970980652551468
+    },
+    {
+      "player": 0,
+      "rule": "ROOT_ACTION",
+      "actionId": "limp",
+      "n": 20000,
+      "mean": -0.013633400000000268,
+      "m2": 381645.80293090915,
+      "variance": 19.083244308760897,
+      "lowerGainBb": -0.38986178126757587
+    },
+    {
+      "player": 0,
+      "rule": "ROOT_ACTION",
+      "actionId": "raise-20000",
+      "n": 20000,
+      "mean": -0.14449088499999924,
+      "m2": 530970.5115262474,
+      "variance": 26.549853068965817,
+      "lowerGainBb": -0.5587322750170689
+    },
+    {
+      "player": 0,
+      "rule": "ROOT_ACTION",
+      "actionId": "jam",
+      "n": 20000,
+      "mean": -0.14723325499999976,
+      "m2": 892736.4836842516,
+      "variance": 44.63905613701943,
+      "lowerGainBb": -0.6355693383150421
+    },
+    {
+      "player": 0,
+      "rule": "POSTFLOP_CHECK_CALL",
+      "n": 20000,
+      "mean": -0.08371670499999925,
+      "m2": 113741.83559944897,
+      "variance": 5.6873761487798875,
+      "lowerGainBb": -0.3637942511806391
+    },
+    {
+      "player": 0,
+      "rule": "POSTFLOP_JAM",
+      "n": 20000,
+      "mean": 0.14074174499999934,
+      "m2": 667831.3777360955,
+      "variance": 33.39323854873221,
+      "lowerGainBb": -0.30384506095021546
+    },
+    {
+      "player": 1,
+      "rule": "POSTFLOP_CHECK_CALL",
+      "n": 20000,
+      "mean": -0.09486663499999963,
+      "m2": 72908.03358750527,
+      "variance": 3.645583958573192,
+      "lowerGainBb": -0.3518964272984212
+    },
+    {
+      "player": 1,
+      "rule": "POSTFLOP_JAM",
+      "n": 20000,
+      "mean": -0.14644174499999962,
+      "m2": 182899.50301823733,
+      "variance": 9.145432422532993,
+      "lowerGainBb": -0.4575087232434751
+    }
+  ],
+  "lowerByPlayer": [
+    0,
+    0
+  ],
+  "nashConvLowerBoundBb": 0,
+  "nashConvUpperBoundBb": null,
+  "nodes": 915514,
+  "defaultLookups": 0,
+  "runtimeMs": 19435.3432,
+  "sources": {
+    "scripts/verify-preflop-v2-physical.ts": "8fd683f8c2e338e7038973301baf10a1927dd21e6775b174e8cca016b7227ae3",
+    "src/verification/preflop-deviations.ts": "6853d78a0279539c0e55b1e21545b5eaabcc159b3094b307b359ad5fcd8499c3",
+    "src/verification/multistreet-preflop.ts": "44cdc38032d529630a37e7e50c7a48e288cfcdff2e6fb10e8210df44c0b4b524",
+    "src/domain/holdem.ts": "48b497581b9e22fd22cbf53d26c474b6f46227a9391d0a0ce1c701115c6e9aa8",
+    "src/domain/tournament-state.ts": "200d5b85108b2ff2c666eb5dcc6d764ab954cf6fb14967ad31074d97f3486537",
+    "src/domain/preflop-tree.ts": "7f206c468f302b02e20b1f21ee97cd25d9f69d3eaf0b253436d911c40168ea94"
+  },
+  "modelHash": "29878fb2f4cf2e19553948bb265da1e725316a9e0aa3b0234f8b5a1858baf921",
+  "profileHash": "c38eaf96122c864b0ffa058cca9e5ccef96f390955e245e5b38ee709fdc761ff",
+  "lift": "MODEL_ACTIONS_THEN_FORCED_CHECK_CALL; OFF_TREE_CHECK_CALL"
+}

@@ -1,6 +1,6 @@
 export const COURSE_PATH = '/academy/grundlagen';
 export const LESSON_PATH = '/academy/grundlagen/entscheidungen';
-const destinations = new Set(['/', '/academy', COURSE_PATH, LESSON_PATH, '/trainer', '/ranges', '/settings', '/postflop']);
+const destinations = new Set(['/', '/academy', COURSE_PATH, LESSON_PATH, '/trainer', '/ranges', '/settings', '/postflop', '/mtt', '/mtt/river', '/mtt/preflop']);
 export function safeReturnTo(value: unknown): string {
   if (typeof value !== 'string' || !value.startsWith('/') || value.startsWith('//') || value.includes('\\')) return '/';
   const url = new URL(value, 'https://rangeform.invalid');
@@ -9,6 +9,9 @@ export function safeReturnTo(value: unknown): string {
   if ((url.pathname === '/trainer' || url.pathname === '/ranges') && url.search) {
     try { return `${url.pathname}?${configSearch(configFromSearch(url.searchParams))}`; } catch { return url.pathname; }
   }
+  if(url.pathname==='/mtt/preflop'){try{url.searchParams.set('kind','preflop');return `/mtt/preflop${verifiedSpotSearch(parseVerifiedSpot(url.searchParams))}`;}catch{return '/mtt/preflop';}}
   return url.pathname;
 }
 import { configFromSearch, configSearch } from './nlhe';
+
+import {parseVerifiedSpot,verifiedSpotSearch} from './verified-spot';

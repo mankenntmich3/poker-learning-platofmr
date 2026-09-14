@@ -4,7 +4,7 @@ next-env.d.ts
 .data/
 .env*
 !.env.example
-coverage/
+/coverage/
 playwright-report/
 test-results/
 *.tsbuildinfo
@@ -14,3 +14,5 @@ Thumbs.db
 .tools/
 output/
 tmp/
+__pycache__/
+*.pyc

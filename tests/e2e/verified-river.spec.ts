@@ -1,0 +1,56 @@
+import { test,expect } from '@playwright/test';
+import { randomUUID } from 'node:crypto';
+import AxeBuilder from '@axe-core/playwright';
+
+test('real solver → verified database → matrix → NLHE action/recall → persisted progress',async({page},testInfo)=>{
+  const email=`river-${randomUUID()}@example.test`,password=`River-${randomUUID()}`,errors:string[]=[];
+  page.on('pageerror',e=>errors.push(e.message));
+  await page.goto('/mtt/river');await expect(page).toHaveURL(/login/);
+  await page.getByRole('button',{name:'Konto erstellen',exact:true}).click();
+  await page.locator('input[name="name"]').fill('River Study');
+  await page.locator('input[name="email"]').fill(email);await page.locator('input[name="password"]').fill(password);
+  await page.getByRole('button',{name:'Konto erstellen und starten'}).click();
+  await expect(page.getByRole('heading',{name:'River · verifiziertes Teilspiel'})).toBeVisible();
+  await expect(page.getByRole('gridcell')).toHaveCount(169);
+  await expect(page.getByText('VERIFIED_SOLVER · nur dieses River-Teilspiel')).toBeVisible();
+  await page.getByRole('gridcell',{name:/^98s:/}).click();
+  await expect(page.getByRole('heading',{name:'98s · Combo-Details'})).toBeVisible();
+  await page.getByRole('gridcell',{name:/^98s:/}).press('ArrowLeft');
+  await page.getByLabel('Matrixansicht').selectOption('mixed');
+  await page.getByLabel('Prozentwerte').selectOption('detailed');
+  await page.getByLabel('Prozentwerte').selectOption('compact');
+  expect((await new AxeBuilder({page}).withTags(['wcag2a','wcag2aa','wcag21aa']).analyze()).violations.map(v=>({id:v.id,nodes:v.nodes.map(n=>n.target)}))).toEqual([]);
+  await page.screenshot({path:testInfo.outputPath('verified-matrix-desktop.png'),fullPage:true});
+  await page.getByRole('button',{name:'Diese Range trainieren'}).click();
+  await expect(page.getByRole('heading',{name:'BTN ist am Zug'})).toBeVisible();
+  await expect(page.getByText('Deine Hand',{exact:true})).toBeVisible();
+  await expect(page.getByLabel('NLHE Trainingstisch')).toContainText('Pot 5,50 BB');
+  await page.screenshot({path:testInfo.outputPath('verified-table-desktop.png'),fullPage:true});
+  await page.getByRole('button',{name:'Jam 13 BB',exact:true}).click();
+  await expect(page.getByRole('heading',{name:'Solver Strategy'})).toBeVisible();
+  await expect(page.getByText(/EV Loss:/)).toBeVisible();
+  await expect(page.getByRole('status')).toContainText('Fortschritt gespeichert · 1 Entscheidungen');
+  await page.setViewportSize({width:390,height:844});
+  await page.getByLabel('Trainingsmodus').selectOption('recall');
+  await page.getByRole('button',{name:'Nächste Hand'}).click();
+  await page.getByRole('button',{name:'Frequenzen prüfen'}).click();
+  await expect(page.getByText(/Frequency Accuracy:/)).toBeVisible();
+  await page.screenshot({path:testInfo.outputPath('verified-table-mobile.png'),fullPage:true});
+  const violations=await new AxeBuilder({page}).withTags(['wcag2a','wcag2aa','wcag21aa']).analyze();
+  expect(violations.violations.map(v=>({id:v.id,nodes:v.nodes.map(n=>n.target)}))).toEqual([]);
+  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=window.innerWidth+1)).toBe(true);
+  await page.getByRole('button',{name:'Mein Fortschritt',exact:true}).click();
+  await expect(page.getByText(/2 gespeicherte Entscheidungen/)).toBeVisible();
+  await page.goto('/settings');await page.getByRole('button',{name:'Abmelden',exact:true}).click();
+  // A click does not await the logout request/router transition. Navigating
+  // immediately can race the deliberate redirect to /login and lose `next`.
+  await expect(page).toHaveURL(/\/login$/);
+  await expect(page.locator('input[name="email"]')).toBeVisible();
+  await page.goto('/mtt/river');await expect(page).toHaveURL(/login/);
+  await page.locator('input[name="email"]').fill(email);await page.locator('input[name="password"]').fill(password);
+  await page.getByRole('button',{name:'Anmelden',exact:true}).last().click();
+  await expect(page.getByRole('heading',{name:'River · verifiziertes Teilspiel'})).toBeVisible();
+  await page.getByRole('button',{name:'Mein Fortschritt',exact:true}).click();
+  await expect(page.getByText(/2 gespeicherte Entscheidungen/)).toBeVisible();
+  expect(errors).toEqual([]);
+});

@@ -1,0 +1,447 @@
+{
+  "model": {
+    "id": "PREFLOP_MODEL_V2_PILOT_1",
+    "context": {
+      "schemaVersion": 2,
+      "rulesVersion": "rangeform-nlhe-public-v1",
+      "game": "NLHE",
+      "gameType": "TOURNAMENT",
+      "evaluationModel": "CHIP_EV",
+      "evaluation": {
+        "model": "CHIP_EV"
+      },
+      "players": 2,
+      "blinds": {
+        "sbBb": 0.5,
+        "bbBb": 1
+      },
+      "postingOrder": "BLINDS_FIRST",
+      "ante": {
+        "type": "BBA",
+        "amountBb": 1
+      },
+      "rake": {
+        "type": "NONE"
+      },
+      "stacks": [
+        {
+          "position": "BTN",
+          "stackBb": 15
+        },
+        {
+          "position": "BB",
+          "stackBb": 15
+        }
+      ],
+      "hero": "BTN",
+      "actionHistory": [],
+      "board": [],
+      "deadCards": []
+    },
+    "preflop": {
+      "limp": true,
+      "raises": [
+        [
+          {
+            "kind": "TO_BB",
+            "value": 2
+          }
+        ],
+        [
+          {
+            "kind": "TO_BB",
+            "value": 6
+          }
+        ]
+      ]
+    },
+    "continuation": "ONE_FLOP_BET_ROUND_THEN_FORCED_CHECKDOWN",
+    "boardAbstraction": "FLOP_SUIT_COUNT_X_PAIRED_V1",
+    "privateAbstraction": "EXACT_PREFLOP_CLASS_X_FLOP_MADE_CATEGORY_V1",
+    "recall": "RETAIN_ROOT_CLASS_AND_PUBLIC_NODE_HISTORY",
+    "chance": "ALL_ORDERED_COMPATIBLE_PHYSICAL_HOLES_ONE_SEEDED_RUNOUT_PER_PAIR",
+    "chanceLimitation": "Exact physical hole prior; finite empirical board model, NOT exact NLHE runout law",
+    "actions": {
+      "flop": "CHECK_THIRD_POT_JAM_THEN_FOLD_CALL",
+      "later": "FORCED_CHECKDOWN"
+    },
+    "algorithm": "VERSIONED_BY_RUN",
+    "verifier": "INDEPENDENT_NUMPY_PUBLIC_TREE_BR_V1",
+    "convergencePolicy": "DIAGNOSTIC_ONLY_NO_PUBLICATION_POLICY",
+    "publicationEligible": false
+  },
+  "modelHash": "8ecaac68037d1d693b3ef4d67b7d1e5bf8f8cb04519dc248bf5d0b359a9965d6",
+  "sources": {
+    "scripts/build-preflop-model-v2.ts": "0206c87a648be390667f147babfba6a5fd00075fa58ea16714ac9bb70fc77ffd",
+    "scripts/preflop_v2_kernel.py": "63c50ac6f65628a536f393a9ea2bdfd46386514c552b0fde1be95cec34f4a920",
+    "scripts/preflop_v2_verify.py": "40362a0850c4c1f2a2bc40d81843c63ca1aa82a4519c042b59f4314f559c8951",
+    "scripts/preflop_equity.py": "35b67064be105e27ebf921eb2eca0fcf07a4c7d73d60b14ea4c2d8c1578f8a88",
+    "scripts/benchmark-preflop-v2.py": "b1ca5632561974884f807e2d577995ba641121bcb26e994635cace90ec6b1920"
+  },
+  "platform": "Windows-11-10.0.26200-SP0",
+  "python": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+  "chanceWorlds": 1624350,
+  "chanceBytes": 16243500,
+  "chancePreparationSeconds": 0.0032037999990279786,
+  "chanceSeed": 20260913,
+  "chanceHash": "c635ec456846aae3dc78d83e603797575a2324d31069a531697cc6f4d51086ea",
+  "physicalRootCombos": 1326,
+  "physicalJointHolePrior": "ALL_1624350_ORDERED_COMPATIBLE_DEALS_EQUAL_WEIGHT",
+  "publicNodes": 104,
+  "runs": [
+    {
+      "variant": "A_FLOP_ABSTRACT_CFR",
+      "algorithm": "CHANCE_SAMPLED_CFR",
+      "seed": 17,
+      "iterations": 10000,
+      "chanceBatch": 256,
+      "seconds": 22.619399400000475,
+      "visitedDecisionNodes": 46723470,
+      "nodesPerSecond": 2065637.0743424345,
+      "arrayWorkingBytes": 30931056,
+      "allocatedActionEntries": 644397,
+      "updatedActionEntries": 216643,
+      "verificationSeconds": 4.318085900000369,
+      "verification": {
+        "profileValues": [
+          0.4175622747708595,
+          -0.4175622747708595
+        ],
+        "bestResponses": [
+          0.4576515977342844,
+          -0.3810565521830072
+        ],
+        "improvements": [
+          0.04008932296342488,
+          0.036505722587852285
+        ],
+        "nashConv": 0.07659504555127716,
+        "exploitability": 0.03829752277563858,
+        "worldNodeVisits": 506797200,
+        "scope": "COMPLETE_FINITE_MODEL_ONLY",
+        "publicationEligible": false
+      }
+    },
+    {
+      "variant": "A_FLOP_ABSTRACT_CFR",
+      "algorithm": "CHANCE_SAMPLED_CFR",
+      "seed": 29,
+      "iterations": 10000,
+      "chanceBatch": 256,
+      "seconds": 22.040367999999944,
+      "visitedDecisionNodes": 47264094,
+      "nodesPerSecond": 2144433.069357105,
+      "arrayWorkingBytes": 30931056,
+      "allocatedActionEntries": 644397,
+      "updatedActionEntries": 216683,
+      "verificationSeconds": 4.298570599999948,
+      "verification": {
+        "profileValues": [
+          0.4176854816400751,
+          -0.4176854816400751
+        ],
+        "bestResponses": [
+          0.45509491759921833,
+          -0.38087575671773155
+        ],
+        "improvements": [
+          0.037409435959143256,
+          0.03680972492234352
+        ],
+        "nashConv": 0.07421916088148678,
+        "exploitability": 0.03710958044074339,
+        "worldNodeVisits": 506797200,
+        "scope": "COMPLETE_FINITE_MODEL_ONLY",
+        "publicationEligible": false
+      }
+    },
+    {
+      "variant": "A_FLOP_ABSTRACT_CFR",
+      "algorithm": "CHANCE_SAMPLED_CFR",
+      "seed": 43,
+      "iterations": 10000,
+      "chanceBatch": 256,
+      "seconds": 22.04670239999905,
+      "visitedDecisionNodes": 47051236,
+      "nodesPerSecond": 2134162.0686095003,
+      "arrayWorkingBytes": 30931056,
+      "allocatedActionEntries": 644397,
+      "updatedActionEntries": 217179,
+      "verificationSeconds": 4.102124799999729,
+      "verification": {
+        "profileValues": [
+          0.4211010191094547,
+          -0.4211010191094547
+        ],
+        "bestResponses": [
+          0.4561357541489144,
+          -0.38069709140349056
+        ],
+        "improvements": [
+          0.0350347350394597,
+          0.04040392770596413
+        ],
+        "nashConv": 0.07543866274542382,
+        "exploitability": 0.03771933137271191,
+        "worldNodeVisits": 506797200,
+        "scope": "COMPLETE_FINITE_MODEL_ONLY",
+        "publicationEligible": false
+      }
+    },
+    {
+      "variant": "A_FLOP_ABSTRACT_CFR",
+      "algorithm": "CHANCE_SAMPLED_PLUS_LINEAR",
+      "seed": 17,
+      "iterations": 10000,
+      "chanceBatch": 256,
+      "seconds": 22.183004900000014,
+      "visitedDecisionNodes": 104891324,
+      "nodesPerSecond": 4728454.25914322,
+      "arrayWorkingBytes": 30931056,
+      "allocatedActionEntries": 644397,
+      "updatedActionEntries": 229572,
+      "verificationSeconds": 4.102970300000379,
+      "verification": {
+        "profileValues": [
+          0.4156998524456316,
+          -0.4156998524456316
+        ],
+        "bestResponses": [
+          0.5054367206024912,
+          -0.33559567734762735
+        ],
+        "improvements": [
+          0.0897368681568596,
+          0.08010417509800427
+        ],
+        "nashConv": 0.16984104325486388,
+        "exploitability": 0.08492052162743194,
+        "worldNodeVisits": 506797200,
+        "scope": "COMPLETE_FINITE_MODEL_ONLY",
+        "publicationEligible": false
+      }
+    },
+    {
+      "variant": "A_FLOP_ABSTRACT_CFR",
+      "algorithm": "CHANCE_SAMPLED_DCFR",
+      "seed": 17,
+      "iterations": 10000,
+      "chanceBatch": 256,
+      "seconds": 22.647961500000747,
+      "visitedDecisionNodes": 102766367,
+      "nodesPerSecond": 4537554.825850292,
+      "arrayWorkingBytes": 30931056,
+      "allocatedActionEntries": 644397,
+      "updatedActionEntries": 229528,
+      "verificationSeconds": 4.070991200000208,
+      "verification": {
+        "profileValues": [
+          0.41607235260973036,
+          -0.41607235260973036
+        ],
+        "bestResponses": [
+          0.49683695472541567,
+          -0.3432904853691933
+        ],
+        "improvements": [
+          0.08076460211568531,
+          0.07278186724053703
+        ],
+        "nashConv": 0.15354646935622235,
+        "exploitability": 0.07677323467811117,
+        "worldNodeVisits": 506797200,
+        "scope": "COMPLETE_FINITE_MODEL_ONLY",
+        "publicationEligible": false
+      }
+    },
+    {
+      "variant": "B_FROZEN_UNCONDITIONAL_SUBGAME_ORACLE",
+      "seed": 59,
+      "seconds": 19.409657900001548,
+      "oracleConstructionSeconds": 99.25289669999984,
+      "oracleBytes": 64974000,
+      "arrayWorkingBytes": 30931056,
+      "nodesPerSecond": 988074.4987266607,
+      "verification": {
+        "profileValues": [
+          0.41603719146687396,
+          -0.41603719146687396
+        ],
+        "bestResponses": [
+          0.43649080687102576,
+          -0.4011994391203929
+        ],
+        "improvements": [
+          0.020453615404151804,
+          0.014837752346481048
+        ],
+        "nashConv": 0.03529136775063285,
+        "exploitability": 0.017645683875316426,
+        "worldNodeVisits": 165683700,
+        "scope": "COMPLETE_FINITE_MODEL_ONLY",
+        "publicationEligible": false
+      },
+      "subgames": [
+        {
+          "root": 3,
+          "verification": {
+            "profileValues": [
+              0.4682029428327352,
+              -0.4682029428327352
+            ],
+            "bestResponses": [
+              0.49441442049763745,
+              -0.43658189764845023
+            ],
+            "improvements": [
+              0.026211477664902227,
+              0.03162104518428499
+            ],
+            "nashConv": 0.05783252284918722,
+            "exploitability": 0.02891626142459361,
+            "worldNodeVisits": 73095750,
+            "scope": "COMPLETE_FINITE_MODEL_ONLY",
+            "publicationEligible": false
+          }
+        },
+        {
+          "root": 20,
+          "verification": {
+            "profileValues": [
+              0.4117099486072939,
+              -0.4117099486072939
+            ],
+            "bestResponses": [
+              0.44399121731426844,
+              -0.37354841619593043
+            ],
+            "improvements": [
+              0.032281268706974564,
+              0.03816153241136344
+            ],
+            "nashConv": 0.070442801118338,
+            "exploitability": 0.035221400559169,
+            "worldNodeVisits": 73095750,
+            "scope": "COMPLETE_FINITE_MODEL_ONLY",
+            "publicationEligible": false
+          }
+        },
+        {
+          "root": 37,
+          "verification": {
+            "profileValues": [
+              0.23188674160409692,
+              -0.23188674160409692
+            ],
+            "bestResponses": [
+              0.26979049239156727,
+              -0.20047016729930892
+            ],
+            "improvements": [
+              0.03790375078747035,
+              0.031416574304788
+            ],
+            "nashConv": 0.06932032509225836,
+            "exploitability": 0.03466016254612918,
+            "worldNodeVisits": 73095750,
+            "scope": "COMPLETE_FINITE_MODEL_ONLY",
+            "publicationEligible": false
+          }
+        },
+        {
+          "root": 63,
+          "verification": {
+            "profileValues": [
+              0.41410918374504424,
+              -0.41410918374504424
+            ],
+            "bestResponses": [
+              0.44382902587496553,
+              -0.37542029325246384
+            ],
+            "improvements": [
+              0.029719842129921292,
+              0.0386888904925804
+            ],
+            "nashConv": 0.06840873262250169,
+            "exploitability": 0.034204366311250844,
+            "worldNodeVisits": 73095750,
+            "scope": "COMPLETE_FINITE_MODEL_ONLY",
+            "publicationEligible": false
+          }
+        },
+        {
+          "root": 80,
+          "verification": {
+            "profileValues": [
+              0.23191335050142672,
+              -0.23191335050142672
+            ],
+            "bestResponses": [
+              0.2713846502549582,
+              -0.20050741343672518
+            ],
+            "improvements": [
+              0.0394712997535315,
+              0.031405937064701545
+            ],
+            "nashConv": 0.07087723681823305,
+            "exploitability": 0.035438618409116523,
+            "worldNodeVisits": 73095750,
+            "scope": "COMPLETE_FINITE_MODEL_ONLY",
+            "publicationEligible": false
+          }
+        }
+      ],
+      "unlockedModelADeviation": {
+        "profileValues": [
+          0.41603719146687396,
+          -0.41603719146687396
+        ],
+        "bestResponses": [
+          0.4819037954259897,
+          -0.36839189335616757
+        ],
+        "improvements": [
+          0.06586660395911575,
+          0.04764529811070639
+        ],
+        "nashConv": 0.11351190206982215,
+        "exploitability": 0.05675595103491107,
+        "worldNodeVisits": 506797200,
+        "scope": "COMPLETE_FINITE_MODEL_ONLY",
+        "publicationEligible": false
+      },
+      "limitation": "Continuation priors frozen; not counterfactual range-conditioned NLHE continuation values"
+    }
+  ],
+  "rootStability": [
+    {
+      "seeds": [
+        17,
+        29
+      ],
+      "maxRootL1": 1.5754061807666724,
+      "meanRootL1": 0.40459981890432245
+    },
+    {
+      "seeds": [
+        17,
+        43
+      ],
+      "maxRootL1": 1.7625757291712891,
+      "meanRootL1": 0.4041724808419671
+    },
+    {
+      "seeds": [
+        29,
+        43
+      ],
+      "maxRootL1": 1.9218024482724316,
+      "meanRootL1": 0.3842256058075182
+    }
+  ],
+  "publicationEligible": false,
+  "status": "EXPERIMENTAL_MODEL_NOT_SERVER_APPROVED",
+  "physicalDeviationTest": "NOT_YET_IMPLEMENTED_FOR_V2_MAPPING"
+}

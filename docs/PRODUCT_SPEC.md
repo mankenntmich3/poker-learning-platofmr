@@ -1,4 +1,10 @@
-# Current owner priorities — Study Engine v2, 2026-09-11
+# Current owner priorities — MTT GTO accuracy v3, 2026-09-11
+
+Rangeform's default product direction is Tournament NLHE ChipEV with BBA, dynamic 2–9 handed positions, exact effective stacks, multi-action betting trees, solver-verified artifacts and adaptive training. Cash remains available as a separate mode. ICM, PKO and Mystery Bounty belong in the context model but must not produce strategy until their engines are independently implemented and validated.
+
+The normal GTO trainer may use only `VERIFIED_SOLVER` or `IMPORTED_VERIFIED` artifacts that pass the quality gate. `APPROXIMATED`, `DEMO` and future `INTERPOLATED` data stay outside standard training. Missing exact coverage must display `Verified GTO solution currently unavailable.` No format, handedness, ante or stack fallback is allowed. Implementation is on `feature/mtt-gto-accuracy-v3`; research and licensing conclusions are recorded in [solver-research-v3.md](solver-research-v3.md).
+
+## Previous owner priorities — Study Engine v2, 2026-09-11
 
 The full current request is [STUDY_ENGINE_V2_SPEC.md](STUDY_ENGINE_V2_SPEC.md). It supersedes the one-fixed-flop restriction below: evolve the existing usable product into configurable six-max NLHE ChipEV study with heads-up postflop, freely selected cards, legal street histories, range evolution and exact-node training. Keep local access, hosted PostgreSQL, user data and strict provenance. No new paid services, fabricated GTO/EV, multiway, ICM, PLO or real-money functionality. Work on `feature/gto-study-engine-v2` and deliver a PR against main. Implementation and acceptance are tracked in PROJECT_STATUS and decision 0004.
 

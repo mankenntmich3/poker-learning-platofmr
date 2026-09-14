@@ -1,0 +1,241 @@
+{
+  "modelHash": "428828ed1808114ad16196c78814df5320f099b6dac3eb0388adc8b95a6818c9",
+  "note": "PILOT_2 makes global suit closure explicit; identical finite observation/payoff operators to PILOT_1; all model BRs recomputed",
+  "runs": [
+    {
+      "strategyChanceSeed": 17,
+      "evaluationChanceSeed": 17,
+      "verificationSeconds": 4.159120499998608,
+      "verification": {
+        "profileValues": [
+          0.41647600537777213,
+          -0.41647600537777213
+        ],
+        "bestResponses": [
+          0.41675440750510945,
+          -0.41624333281762105
+        ],
+        "improvements": [
+          0.0002784021273373183,
+          0.0002326725601510815
+        ],
+        "nashConv": 0.0005110746874883998,
+        "exploitability": 0.0002555373437441999,
+        "worldNodeVisits": 506797200,
+        "scope": "COMPLETE_FINITE_MODEL_ONLY",
+        "publicationEligible": false
+      },
+      "profileSha256": "d3ad182e5ad534be0484f8a4077badc0be899419df22527e2803eefd11a9f421",
+      "chanceSha256": "171be31ecbbd6a2e0de2687f32408ac123c4dc8876084286b68f0cd7cf73f417"
+    },
+    {
+      "strategyChanceSeed": 17,
+      "evaluationChanceSeed": 29,
+      "verificationSeconds": 4.330434700001206,
+      "verification": {
+        "profileValues": [
+          0.41870585131141197,
+          -0.41870585131141197
+        ],
+        "bestResponses": [
+          0.4461537402561404,
+          -0.3925641671427136
+        ],
+        "improvements": [
+          0.027447888944728438,
+          0.026141684168698387
+        ],
+        "nashConv": 0.053589573113426825,
+        "exploitability": 0.026794786556713412,
+        "worldNodeVisits": 506797200,
+        "scope": "COMPLETE_FINITE_MODEL_ONLY",
+        "publicationEligible": false
+      },
+      "profileSha256": "d3ad182e5ad534be0484f8a4077badc0be899419df22527e2803eefd11a9f421",
+      "chanceSha256": "e0aa516cd3a4801eca0fb53d8439956628338c6ad3a0fc45956e280534331e0c"
+    },
+    {
+      "strategyChanceSeed": 17,
+      "evaluationChanceSeed": 43,
+      "verificationSeconds": 4.25731690000066,
+      "verification": {
+        "profileValues": [
+          0.41615187444807455,
+          -0.41615187444807455
+        ],
+        "bestResponses": [
+          0.4446757499662911,
+          -0.3872280175464507
+        ],
+        "improvements": [
+          0.028523875518216557,
+          0.028923856901623857
+        ],
+        "nashConv": 0.057447732419840414,
+        "exploitability": 0.028723866209920207,
+        "worldNodeVisits": 506797200,
+        "scope": "COMPLETE_FINITE_MODEL_ONLY",
+        "publicationEligible": false
+      },
+      "profileSha256": "d3ad182e5ad534be0484f8a4077badc0be899419df22527e2803eefd11a9f421",
+      "chanceSha256": "5de7043bf935b25c18c2662b6568ee5dc1956ad184ccb016bd29c107986dea85"
+    },
+    {
+      "strategyChanceSeed": 29,
+      "evaluationChanceSeed": 17,
+      "verificationSeconds": 4.316624399998545,
+      "verification": {
+        "profileValues": [
+          0.4084772058311148,
+          -0.4084772058311148
+        ],
+        "bestResponses": [
+          0.44244394838867973,
+          -0.383554435236687
+        ],
+        "improvements": [
+          0.03396674255756493,
+          0.024922770594427823
+        ],
+        "nashConv": 0.058889513151992756,
+        "exploitability": 0.029444756575996378,
+        "worldNodeVisits": 506797200,
+        "scope": "COMPLETE_FINITE_MODEL_ONLY",
+        "publicationEligible": false
+      },
+      "profileSha256": "2546f4b7feba8db33a1247704940b0ab0ab0a5c4feb026734070684f0e8379f0",
+      "chanceSha256": "171be31ecbbd6a2e0de2687f32408ac123c4dc8876084286b68f0cd7cf73f417"
+    },
+    {
+      "strategyChanceSeed": 29,
+      "evaluationChanceSeed": 29,
+      "verificationSeconds": 4.188504199999443,
+      "verification": {
+        "profileValues": [
+          0.42257563629619066,
+          -0.42257563629619066
+        ],
+        "bestResponses": [
+          0.42279366323740397,
+          -0.4224163736805003
+        ],
+        "improvements": [
+          0.0002180269412133118,
+          0.00015926261569038092
+        ],
+        "nashConv": 0.0003772895569036927,
+        "exploitability": 0.00018864477845184635,
+        "worldNodeVisits": 506797200,
+        "scope": "COMPLETE_FINITE_MODEL_ONLY",
+        "publicationEligible": false
+      },
+      "profileSha256": "2546f4b7feba8db33a1247704940b0ab0ab0a5c4feb026734070684f0e8379f0",
+      "chanceSha256": "e0aa516cd3a4801eca0fb53d8439956628338c6ad3a0fc45956e280534331e0c"
+    },
+    {
+      "strategyChanceSeed": 29,
+      "evaluationChanceSeed": 43,
+      "verificationSeconds": 4.172541800000545,
+      "verification": {
+        "profileValues": [
+          0.4164350709089662,
+          -0.4164350709089662
+        ],
+        "bestResponses": [
+          0.4456101760194935,
+          -0.3903523574581602
+        ],
+        "improvements": [
+          0.02917510511052729,
+          0.026082713450805983
+        ],
+        "nashConv": 0.05525781856133327,
+        "exploitability": 0.027628909280666636,
+        "worldNodeVisits": 506797200,
+        "scope": "COMPLETE_FINITE_MODEL_ONLY",
+        "publicationEligible": false
+      },
+      "profileSha256": "2546f4b7feba8db33a1247704940b0ab0ab0a5c4feb026734070684f0e8379f0",
+      "chanceSha256": "5de7043bf935b25c18c2662b6568ee5dc1956ad184ccb016bd29c107986dea85"
+    },
+    {
+      "strategyChanceSeed": 43,
+      "evaluationChanceSeed": 17,
+      "verificationSeconds": 4.164803099998608,
+      "verification": {
+        "profileValues": [
+          0.41198706890915243,
+          -0.41198706890915243
+        ],
+        "bestResponses": [
+          0.4435576043006512,
+          -0.3859806890500298
+        ],
+        "improvements": [
+          0.03157053539149879,
+          0.02600637985912263
+        ],
+        "nashConv": 0.05757691525062142,
+        "exploitability": 0.02878845762531071,
+        "worldNodeVisits": 506797200,
+        "scope": "COMPLETE_FINITE_MODEL_ONLY",
+        "publicationEligible": false
+      },
+      "profileSha256": "d96f5e5c3fd05a155ac6c9d59a12a7546c05bb797ad6f7a1dd908e93b54b1652",
+      "chanceSha256": "171be31ecbbd6a2e0de2687f32408ac123c4dc8876084286b68f0cd7cf73f417"
+    },
+    {
+      "strategyChanceSeed": 43,
+      "evaluationChanceSeed": 29,
+      "verificationSeconds": 4.256655999999566,
+      "verification": {
+        "profileValues": [
+          0.4212093247636697,
+          -0.4212093247636697
+        ],
+        "bestResponses": [
+          0.44718908570913607,
+          -0.3956288531365568
+        ],
+        "improvements": [
+          0.02597976094546639,
+          0.025580471627112855
+        ],
+        "nashConv": 0.051560232572579245,
+        "exploitability": 0.025780116286289623,
+        "worldNodeVisits": 506797200,
+        "scope": "COMPLETE_FINITE_MODEL_ONLY",
+        "publicationEligible": false
+      },
+      "profileSha256": "d96f5e5c3fd05a155ac6c9d59a12a7546c05bb797ad6f7a1dd908e93b54b1652",
+      "chanceSha256": "e0aa516cd3a4801eca0fb53d8439956628338c6ad3a0fc45956e280534331e0c"
+    },
+    {
+      "strategyChanceSeed": 43,
+      "evaluationChanceSeed": 43,
+      "verificationSeconds": 4.376876300000731,
+      "verification": {
+        "profileValues": [
+          0.4193660989168605,
+          -0.4193660989168605
+        ],
+        "bestResponses": [
+          0.41957661874466473,
+          -0.41921004493537484
+        ],
+        "improvements": [
+          0.00021051982780423417,
+          0.00015605398148565985
+        ],
+        "nashConv": 0.000366573809289894,
+        "exploitability": 0.000183286904644947,
+        "worldNodeVisits": 506797200,
+        "scope": "COMPLETE_FINITE_MODEL_ONLY",
+        "publicationEligible": false
+      },
+      "profileSha256": "d96f5e5c3fd05a155ac6c9d59a12a7546c05bb797ad6f7a1dd908e93b54b1652",
+      "chanceSha256": "5de7043bf935b25c18c2662b6568ee5dc1956ad184ccb016bd29c107986dea85"
+    }
+  ],
+  "publicationEligible": false
+}

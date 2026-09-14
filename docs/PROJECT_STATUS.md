@@ -1,6 +1,185 @@
 # Project status
 
-Repository: `mankenntmich3/poker-learning-platofmr` (confirmed spelling). Updated 2026-09-11.
+Repository: `mankenntmich3/poker-learning-platofmr` (confirmed spelling). Updated 2026-09-14.
+
+## Current run — factorized abstract HU core, not release-approved (2026-09-14)
+
+The unabstracted terminal-play approach was replaced for new offline work by a
+104-public-node, explicit one-flop-round/checkdown pilot. All 1,624,350 legal
+ordered physical hole pairs are represented, with a finite sampled board law
+and explicit global suit closure. Indexed sampled CFR and separately trained
+continuation oracles were executed and compared; the frozen-prior oracle has
+unlocked NashConv 0.1135 and is not the chosen design.
+
+The subsequent exact sparse chance-operator CFR reaches complete finite-model
+NashConv **0.0003666–0.0005111 BB/hand** across three board seeds in 133–143
+seconds each. A separate three-outcome operator verifier reproduces independent
+full-world BR in about 0.18–0.19 seconds. Known conditional HU and river LP
+profiles are correctly remeasured; new deterministic solver calibration and
+independent public-tree/terminal-ledger replay execute.
+
+**No approval:** holdout board measures give NashConv **0.0516–0.0589**, with
+unstable root frequencies. The physical deviation test is only INCONCLUSIVE.
+Finite-board and continuation quality need calibration; no V2 server policy,
+publication, matrix or trainer unlock was added. PR #5 remains Draft; staging
+and the original verified conditional HU/river data remain unchanged.
+
+The next executed pilot streams eight independent board measures into the same
+fixed state space: 224.42 seconds, training-model NashConv 0.0004635, joint
+three-seed holdout gap 0.01906. It remains unapproved. A same-input TypeScript/
+C++ traversal comparison and a same-host Numba comparison are added to private
+CI. The preceding `694b49c` implementation passed every quality gate, including
+165 unit/integration tests, 12 browser flows and the new Python calibrations.
+
+[Complete measured report](qa/preflop-model-v2.md) ·
+[All 24 requirements](PREFLOP_MODEL_V2_REQUIREMENTS.md) ·
+[Owner's architecture request](PREFLOP_MODEL_V2_SPEC.md).
+
+## Previous run — scalable HU rejection and lossless suit encoding
+
+The previously staged work was committed/pushed as `7b85005` first; its full
+[CI passed](https://github.com/mankenntmich3/poker-learning-platofmr/actions/runs/34772240143).
+Further work stayed on HU. A new independent fixed-deviation verifier completes
+without full chance enumeration and statistically rejects both the previous
+and optimized frozen profiles: NashConv lower bounds 0.0277326 and 0.0890429
+BB/hand respectively (20000 fixed samples, stated IID assumption, familywise
+failure probability 1e-9 per candidate). **These are lower bounds for rejection,
+not an upper certificate or permission to publish.**
+
+Lossless global suit canonicalization, observation caching and sparse average
+export now work. The larger HU 15/BBA run completed 70520 iterations and visited
+5248052 nodes before the 2-million-infoset limit; all 1326 root combos remain
+represented. Postflop continuation learning is still inadequate. No new
+VERIFIED node, complete HU matrix or trainable action EVs resulted. Prompt 2
+remains incomplete. Existing conditional HU/river and UI remain intact; no
+3/6-player expansion or staging deployment in this follow-up.
+
+See [mathematics, executed evidence and remaining technical boundary](qa/hu-scalable-verification.md).
+
+Implementation `efc29f3` is committed and pushed. Its complete
+[CI passed](https://github.com/mankenntmich3/poker-learning-platofmr/actions/runs/34773497065):
+116 unit tests, 48 PostgreSQL integration tests, seven production and five
+development browser flows, typecheck/lint/build and real solver regeneration.
+No skipped CI tests. This follow-up only records that result and coverage;
+it does not publish the rejected candidates.
+
+## Previous run — full-prior multi-action computation attempted, not verified
+
+2026-09-13, existing branch and draft PR #5. **The new full-HU Definition of Done
+is NOT met.** Original external-sampling MCCFR now actually traverses full-prior
+52-card HU/3/6-player trees, including limp, parallel small opens, 3/4-bets, jam
+and real bounded flop/turn/river continuation. Independent best-five payout and
+full-chance verification attempts execute, but hit budget before complete BR.
+No reported convergence, default policy or failed partial result is published.
+
+HU 15/BBA: 16034 completed iterations, 1234001 visited nodes, all 1326 root
+combos averaged, 500000 infoset cap reached. 3-handed 15/BBA and 6-handed 20/BBA
+also genuinely trained, as did smaller full-prior push/fold fallbacks for all
+three table sizes. **No new NashConv certificate, full-range matrix, action EVs
+or trainable verified preflop node resulted.** This is execution progress, not
+a completed usable-product milestone.
+
+Migration 011 and the development recorder persist COMPUTE_LIMIT/NON_CONVERGED
+diagnostics with priorities P1–P4. Six actual local jobs recorded; no experiment
+profile enters verified artifacts or training. Existing river, 18 conditional
+HU solutions, shared premium table/matrix and retained progress remain intact.
+No staging deployment or merge. Details, measurements, limits and next steps:
+[executed QA](qa/full-prior-preflop.md), [all 54 follow-up sections](PREFLOP_FULL_RANGE_REQUIREMENTS.md),
+[original 66-point audit](MTT_V3_REQUIREMENTS.md).
+
+## Previous run — conditional HU preflop works; complete HU requirement remains open
+
+Updated 2026-09-13 on the existing branch and draft PR #5. **The requested complete
+HU preflop game is NOT done.** Eighteen independently verified conditional HU
+push/fold roots now run end-to-end: 10/15/20/25/30/40/50/80/100 BB, NONE or BBA 1,
+BTN/SB Fold/Jam versus BB Fold/Call. Both seats have only the disclosed fixed
+AKo/QQ/A5s/76s inputs (26 supported physical combos each). No limp/small-raise or
+full-prior HU coverage, no 3/6-handed strategy coverage. The existing river is preserved.
+
+`/mtt/preflop?stack=15&ante=1`: shared premium PokerTable, 169-cell segmented matrix,
+physical combo selection, independently checked action EVs, EV Loss, Frequency
+Recall, exact-version saved mastery/reviews and relogin retention. Tournament has
+an actual database-backed conditional coverage table. Unsupported contexts remain
+unavailable, including supplied table-size/hero/query parameters outside this model.
+
+Solver: original HU security LP, SciPy 1.16.2 / HiGHS 1.8.0. All 35,958,384 boards
+across 21 exact suit/seat matchup orbits were enumerated twice: direct seven-card
+and independent best-five evaluators agree in every integer win/tie count.
+Independent server BR on the full profile gives HU 15 BB/BBA NashConv ~6.66e-16
+BB/hand, plus server-owned 1e-9 numerical allowance. The model's 1326 artifact rows
+include 1300 explicitly unsupported rows; these are never training recommendations.
+
+The local bounded job worker actually solved, verified and published a fresh
+artifact with durable statuses/timing. Real 3/6-player all-in benchmarks exist,
+but are not strategies. Full multiway solving and its verifier remain absent.
+Application commit `0ef7f9ef813bf23473db618d1f319c81a0897d9e` passed
+[every CI gate](https://github.com/mankenntmich3/poker-learning-platofmr/actions/runs/34731503071):
+fresh Linux checkout/install, regenerated river and HU solver artifacts, all 21
+HU generator equity enumerations, independent profile verification, typecheck,
+lint, **100 unit + 46 integration tests against PostgreSQL 16**, production build,
+**7 production + 5 development browser flows**. No skipped CI tests. Local checks
+also pass; four external PostgreSQL checks are covered by that CI run. The Fold
+button contrast was corrected and the final HU decision UI passed Axe and visual
+inspection. The final follow-up changes documentation only.
+PR remains draft; no merge or staging deployment.
+
+Evidence: [preflop execution, exact boundaries and commands](qa/verified-preflop.md),
+[calibration](qa/preflop-calibration.json), [multiway benchmark](qa/preflop-multiway-benchmark.json).
+
+## Previous run — river acceptance (historical)
+
+## MTT GTO accuracy v3 — one working verified river subgame; V3 remains incomplete
+
+Continuing `feature/mtt-gto-accuracy-v3` and draft PR #5. The new `/mtt/river`
+flow actually executes a solver, independently verifies the strategy, publishes
+an immutable artifact to the database, exact-loads it through StrategyProvider,
+displays a segmented matrix, starts real NLHE training, and saves action/recall
+feedback and review progress. Existing application work is preserved.
+
+**Scope:** one conditional river root with 8-handed/15-BB/BBA ancestry, BTN vs BB,
+a fixed five-card board, explicit eight-combo input distributions for each live
+player, and Check / Bet 2.75 BB / Jam followed by Fold/Call. The input distributions
+are study assumptions, not GTO-solved preflop ranges. This is not unrestricted
+NLHE or proof of the earlier streets. **Verified MTT preflop coverage stays 0**
+for all requested 6/8/9-handed stacks, positions and scenarios.
+
+Actual production solution: SciPy 1.16.2 / HiGHS 1.8.0 security LPs. Independent
+TypeScript reconstruction checks every profile policy, all 56 compatible deals,
+all 1081 unblocked combo rows (only 8 supported), reach and action EVs. A second
+full-tree best-response implementation and exhaustive smaller NLHE case cross-check
+the mathematics. Measured NashConv is approximately 1.78e-15 BB/hand (roundoff).
+Server policy adds a conservative 1e-9 BB numerical allowance; no artifact-chosen
+threshold is trusted. Model/source/license approval is restricted to this exact
+conditional game. Imported data and every unsupported model remain unavailable.
+
+Matrix: proportional segments, compact/detailed percentages, action/mixed/reach/EV
+views and physical combo details. Training: actual hole cards at BTN, seats/stacks,
+button, board/pot, legal actions, mixed-aware feedback and independently checked
+EV regret. Frequency Recall, basic per-combo/per-mode Mastery and adaptive due
+dates persist. Smart/weakness/due/mixed selection works within this sole solved
+range. Broad MTT preflop modes, multi-action preflop solutions, full strategic
+mastery weighting and broad postflop coverage are still open.
+
+The browser test verifies protected-route login, matrix, actual action and recall,
+mobile accessibility, logout/login and retained progress. The new route's login
+return whitelist and mobile card/control sizing were fixed during verification.
+Local validation: `pnpm typecheck`, `pnpm lint`, `pnpm test` and `pnpm build`
+passed. Tests: 134 passed; 3 dedicated external-PostgreSQL checks skipped locally.
+All 6 production Playwright flows and all 5 development-access flows passed.
+The real LP was regenerated and independently verified again outside the bundled
+artifact. [CI on application commit 8432ab8](https://github.com/mankenntmich3/poker-learning-platofmr/actions/runs/34717017097)
+passed every gate: fresh Linux checkout, dependency installation, actual solver
+regeneration and independent verification, typecheck/lint, **95 unit + 42 integration
+tests against PostgreSQL 16**, production build, **6 production + 5 development
+browser flows**. The final documentation follow-up changes no application code.
+No merge or new staging deployment has occurred; the existing staging app remains
+on its previous accepted version.
+
+Evidence: [executed river QA and exact boundaries](qa/verified-river.md),
+[calibration](qa/river-calibration.json), [DCFR diagnostics](qa/river-dcfr-crosscheck.json),
+[all 66 requirements](MTT_V3_REQUIREMENTS.md), [original V3 prompt](MTT_GTO_V3_SPEC.md)
+and [solver research](solver-research-v3.md). The earlier fail-closed trust review
+is preserved as historical evidence; policy v3-river1 is the only new approval.
 
 ## Study Engine v2 — deployed and accepted online
 
@@ -8,7 +187,7 @@ PR #4 from `feature/gto-study-engine-v2` is merged. Configurable sized preflop a
 
 Implemented: replayable integer-chip study state; legal bet/raise/call/check/fold/all-in sequences; freely selected Hero and board cards with card removal; preflop-to-flop continuation; two 169-class matrices and physical combos; action-conditioned range funnels; exact hand-vs-hand and sampled weighted range equity; made-hand/draw/nuts densities; qualified Why explanations; saved favorites/history/share links; persisted exact-node questions with 10/25/50/100 decisions and spot/street/full-hand modes; dashboard metrics derived from actual answers; account export/deletion covering new study data.
 
-Strategy is explicitly APPROXIMATED with content-derived versions. There are no NLHE GTO solutions or action EVs. Four-bet calling ranges are unavailable. HU equal effective stacks, 6-max ChipEV, rake/antes zero; no multiway, ICM or real-money settlement. Existing Academy, auth, preflop sessions and development seed remain intact. Additive migrations `006_study_engine.sql` and `007_study_sessions.sql` preserve existing data.
+This previously deployed Cash Study Engine uses explicitly APPROXIMATED strategies with content-derived versions, without solver action EVs. The separate new V3 river subgame above has its own verified solution and is not yet deployed. Four-bet calling ranges are unavailable. HU equal effective stacks, 6-max ChipEV, rake/antes zero; no multiway, ICM or real-money settlement. Existing Academy, auth, preflop sessions and development seed remain intact. Additive migrations `006_study_engine.sql` and `007_study_sessions.sql` preserve existing data.
 
 Local acceptance: typecheck, lint, 83 tests (one external-PostgreSQL check skipped locally), production build, all four production browser flows and five development browser flows passed. [Final-head PostgreSQL CI](https://github.com/mankenntmich3/poker-learning-platofmr/actions/runs/34608143988) passed every gate on `f73ab4c`, whose application tree matches the deployed merge, including frozen fresh-checkout installation and both browser suites. Online HTTPS acceptance verified signup, protected dashboard, sized ranges, flop/turn/river, equity, ten completed full-hand decisions, a saved inline decision, favorite, logout/login retention and full account export. The temporary test account was deleted successfully. See [QA evidence](qa/study-engine-v2.md), [merged PR #4](https://github.com/mankenntmich3/poker-learning-platofmr/pull/4), [architecture decision](decisions/0004-study-engine-v2.md) and [owner brief](STUDY_ENGINE_V2_SPEC.md).
 

@@ -1,0 +1,33 @@
+import { test, expect } from '@playwright/test';
+import AxeBuilder from '@axe-core/playwright';
+import { randomUUID } from 'node:crypto';
+
+test('Tournament ChipEV is the primary verified-only study mode', async ({ page }) => {
+  const browserErrors:string[]=[];
+  page.on('pageerror',error=>browserErrors.push(error.message));
+  page.on('console',message=>{if(message.type()==='error')browserErrors.push(message.text());});
+  const email=`mtt-${randomUUID()}@example.test`,password=`Study-${randomUUID()}`;
+  await page.goto('/');
+  await page.getByRole('button',{name:'Konto erstellen',exact:true}).click();
+  await page.locator('input[name="name"]').fill('MTT Test');
+  await page.locator('input[name="email"]').fill(email);
+  await page.locator('input[name="password"]').fill(password);
+  await page.getByRole('button',{name:'Konto erstellen und starten'}).click();
+  await page.getByRole('link',{name:'Tournament',exact:true}).first().click();
+  await expect(page.getByRole('heading',{name:'Tournament Study'})).toBeVisible();
+  await expect(page.getByLabel('Tournament-Konfiguration')).toContainText('8-handed');
+  await expect(page.getByRole('heading',{name:'HJ · Hijack'})).toBeVisible();
+  await expect(page.getByRole('heading',{name:'Verified GTO solution currently unavailable.'})).toBeVisible();
+  await expect(page.getByText('0 vollständige Preflop-Ranges')).toBeVisible();
+  await page.locator('#mtt-players').selectOption('9');
+  await expect(page.getByRole('img',{name:/9-handed Pokertisch/})).toBeVisible();
+  await page.locator('#mtt-stack').selectOption('20');
+  await expect(page.getByText('9-handed · 20 BB · HJ')).toBeVisible();
+  await page.locator('#mtt-players').selectOption('2');
+  await expect(page.getByRole('img',{name:/Button und Small Blind bei BTN/})).toBeVisible();
+  await expect(page.getByText('BTN / SB',{exact:true})).toBeVisible();
+  await expect(page.getByText('Button und Small Blind · zuerst preflop, zuletzt postflop')).toBeVisible();
+  const violations=await new AxeBuilder({page}).analyze();
+  expect(violations.violations).toEqual([]);
+  expect(browserErrors).toEqual([]);
+});
