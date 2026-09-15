@@ -2,12 +2,19 @@
 
 Repository: `mankenntmich3/poker-learning-platofmr` (confirmed spelling). Updated 2026-09-13.
 
-## Current run — stable V3 staging preview (2026-09-14)
+## Completed — stable V3 staging preview (2026-09-15)
 
 Solver experiments are paused. The separate staging-v3-preview branch starts
 from tested 694b49c; all newer research is preserved on the feature branch at
 90efc59. PR #5 remains Draft and main is unchanged. Existing approved conditional
 HU and river flows are the preview scope; full-prior HU/3/6 remain unavailable.
+Render now serves tested commit `3e75994` from `staging-v3-preview` at
+https://rangeform-staging.onrender.com/. CI passed 165 unit/PostgreSQL integration
+and 12 browser flows, plus typecheck/lint/build. Live desktop/mobile HU, river,
+frequency recall, EV feedback, coverage and logout/login persistence passed.
+Existing accounts and progress were retained. There are 18 verified conditional
+HU nodes and the approved river subgame; no full-prior HU/3/6 release approval.
+The local setup is preserved. No merge or new paid service was made.
 Deployment and live QA: [staging preview evidence](qa/staging-v3-preview.md).
 
 ## Previous run — factorized abstract HU core, not release-approved (2026-09-14)
