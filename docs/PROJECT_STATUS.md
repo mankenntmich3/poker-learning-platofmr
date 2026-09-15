@@ -1,6 +1,6 @@
 # Project status
 
-Repository: `mankenntmich3/poker-learning-platofmr` (confirmed spelling). Updated 2026-09-13.
+Repository: `mankenntmich3/poker-learning-platofmr` (confirmed spelling). Updated 2026-09-15.
 
 ## Completed — stable V3 staging preview (2026-09-15)
 
